@@ -11,13 +11,25 @@
 |
 */
 
+// Route::get('/', 'WelcomeController@index');
+
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('language/{id}', 'WelcomeController@setLanguage');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('404', function()
+{
+    return view('errors.404');
+});
+
 
 // Auth::routes();
-Route::group(['middleware' => ['web']], function() {
+/* */
+// Route::group(['middleware' => ['web']], function() {
 
 // Login Routes...
     Route::get('login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
@@ -33,7 +45,6 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('password/reset', ['as' => 'password.request', 'uses' => 'Auth\ForgotPasswordController@showLinkRequestForm']);
     Route::post('password/reset', ['uses' => 'Auth\ResetPasswordController@reset']);
     Route::get('password/reset/{token}', ['as' => 'password.reset', 'uses' => 'Auth\ResetPasswordController@showResetForm']);
-});
 
-
-Route::get('/home', 'HomeController@index')->name('home');
+// });
+/* */
