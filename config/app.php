@@ -181,6 +181,9 @@ return [
         /*
          * aBillander Service Providers...
          */
+        App\Providers\BillanderServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
+        App\Providers\ViewComposerServiceProvider::class,
 
     ],
 
@@ -232,7 +235,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class,
+        'HTML' => Collective\Html\HtmlFacade::class,
 
     ],
 
