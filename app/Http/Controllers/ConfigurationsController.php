@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Configuration as Configuration;
-use View, Input;
+use View;
 
 class ConfigurationsController extends Controller {
 
@@ -23,10 +23,10 @@ class ConfigurationsController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-        $sort = (!is_null(Input::get('sort')) ? Input::get('sort') : 'name'); 
-		$order = (!is_null(Input::get('order')) ? Input::get('order') : 'asc');
+        $sort  = ($request->has('sort')  ? $request->get('sort')  : 'name'); 
+		$order = ($request->has('order') ? $request->get('order') : 'asc');
 		
         // $configurations = Configuration::orderBy($sort, $order)->paginate(Configuration::get('DEF_PERPAGE'));
         $configurations = Configuration::orderBy($sort, $order)->get();

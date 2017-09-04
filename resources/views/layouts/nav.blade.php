@@ -7,11 +7,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @if( Auth::check() )
+            @auth
                 <a href="{{ URL::to( (Auth::user()->home_page ? Auth::user()->home_page : '/home') ) }}" class="navbar-brand">{!! \App\Configuration::get('HEADER_TITLE') !!}</a>
             @else
                 <a href="{{ URL::to('/') }}" class="navbar-brand"><span style="color:#dddddd"><i class="fa fa-bolt"></i> a<span style="color:#fff">Billander</span></span></a>
-            @endif
+            @endauth
         </div>
         <nav class="collapse navbar-collapse" role="navigation">
             <ul class="nav navbar-nav navbar-right">
@@ -270,16 +270,22 @@
                         <li class="divider"></li>
 
                         <li>
-                            <a href="{{ URL::to('auth/logout') }}">
+                            <a href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();">
                                 <i class="fa fa-power-off"></i> {{l('Logout', [], 'layouts')}}
                             </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
                         </li>
                     </ul>
                 </li>
                 @else
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <a href="{{ URL::to('auth/login') }}">
+                <a href="{{ URL::to('login') }}">
                     <button class="btn btn-default navbar-btn">
                         <i class="fa fa-user"></i> {{l('Login', [], 'layouts')}} 
                     </button>

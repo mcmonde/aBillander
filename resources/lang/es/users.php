@@ -30,6 +30,7 @@ return [
 	'Name'     => 'Nombre',
 	'Surname'     => 'Apellido(s)',
 	'Email'     => 'Correo Electrónico',
+	'your@email.com'     => 'su@email.es',
 	'User home page'     => 'Su Página de Inicio',
 	'Language'     => 'Idioma',
 	'Is Administrator?'     => '¿Es Administrador?',

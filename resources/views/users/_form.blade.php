@@ -6,7 +6,7 @@
 </div>
 <div class="form-group col-lg-6 col-md-6 col-sm-6">
     {!! Form::label('password', l('Password')) !!}
-    {!! Form::text('password', '', array('class' => 'form-control')) !!}
+    {!! Form::password('password', '', array('class' => 'form-control', 'required' => 'required')) !!}
 </div><br />
 </div>
 
@@ -24,7 +24,7 @@
 <div class="row">
 <div class="form-group col-lg-6 col-md-6 col-sm-6">
     {!! Form::label('email', l('Email')) !!}
-    {!! Form::text('email', null, array('placeholder' => 'su@email.es', 'class' => 'form-control')) !!}
+    {!! Form::text('email', null, array('placeholder' => l('your@email.com'), 'class' => 'form-control', 'required' => 'required')) !!}
 </div>
 <div class="form-group col-lg-6 col-md-6 col-sm-6">
     {!! Form::label('home_page', l('User home page')) !!}

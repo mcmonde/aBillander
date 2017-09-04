@@ -34,10 +34,14 @@ class SetContextMiddleware {
 		|
 		*/
 
+		// if ( Auth::check() )
+		// See: https://laracasts.com/discuss/channels/laravel/how-can-i-access-the-authuser-in-a-middleware-class?page=1
+		// if (Auth::guard($guard)->check()) 
 		if ( Auth::check() )
 		{
 			$user = User::with('language')->find( Auth::id() );		// $email = Auth::user()->email;
 			$language = $user->language;
+			abi_r($language, true);
 		} else {
 			$user = NULL;
 			// https://stackoverflow.com/questions/40846244/get-a-cookie-in-laravel-5-middleware
@@ -62,7 +66,7 @@ class SetContextMiddleware {
 		Context::getContext()->company    = $company;
 		Context::getContext()->currency   = $company->currency;
 
-		// Not really "the controller", but enough to retrieve translation file
+		// Not really "the controller", but enough to retrieve translation files
 		Context::getContext()->controller = $request->segment(1);
 		if ($request->segment(3) == 'options' ) Context::getContext()->controller = $request->segment(3);
 		if ($request->segment(3) == 'taxrules') Context::getContext()->controller = $request->segment(3);

@@ -1,4 +1,4 @@
-@if (count($errors->all()) > 0)
+@if (count($errors) > 0)        {{-- $errors->all() --}}
 <div class="alert alert-danger alert-block">
 	<button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>{!! l('Error', [], 'layouts') !!}: </strong>
@@ -77,3 +77,27 @@
     @endif
 </div>
 @endif
+
+{{--
+
+    @foreach ($errors->all('<div class="alert alert-danger">:message</div>') as $error)
+        {!! $error !!}
+    @endforeach
+
+    @if (session()->has('error'))
+        <div class="alert alert-danger">{!! session('error') !!}</div>
+    @endif
+
+    @if (session()->has('alert'))
+        <div class="alert alert-warning">{!! session('alert') !!}</div>
+    @endif
+
+    @if (session()->has('alertSuccess'))
+        <div class="alert alert-success">{!! session('alertSuccess') !!}</div>
+    @endif
+
+    @if (session()->has('alertInfo'))
+        <div class="alert alert-info">{!! session('alertInfo') !!}</div>
+    @endif
+
+--}}

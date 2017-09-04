@@ -22,7 +22,7 @@
     </h2>        
 </div>
 
-<div class="container">
+<!-- div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
@@ -40,17 +40,16 @@
             </div>
         </div>
     </div>
-</div>
+</div -->
 
 <div class="jumbotron">
   <!-- h1>Jumbotron</h1>
   <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
   <p><a class="btn btn-primary btn-lg">Learn more</a></p -->
-<img src="{{URL::to('/assets/theme/images/push_Billander.jpg')}}" title='"Don’t ever fight with Lisbeth Salander. Her attitude towards the rest of the world is that if someone threatens her with a gun, she’ll get a bigger gun.”
-
-― Stieg Larsson, The Girl Who Played with Fire'
+<img src="{{URL::to('/assets/theme/images/Dashboard.jpg')}}" 
+                    title=""
                     class="center-block"
-                    style=" xborder: 2px solid black;
+                    style=" border: 1px solid #dddddd;
                             border-radius: 18px;
                             -moz-border-radius: 18px;
                             -khtml-border-radius: 18px;

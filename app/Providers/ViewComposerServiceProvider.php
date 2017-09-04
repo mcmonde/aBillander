@@ -24,28 +24,28 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Currencies
 		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'companies.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
-		    $view->with('currencyList', \App\Currency::lists('name', 'id'));
+		    $view->with('currencyList', \App\Currency::pluck('name', 'id')->toarray());
 		    
 		});
 
 		// Customer Groups
 		view()->composer(array('customers.edit'), function($view) {
 		    
-		    $view->with('customer_groupList', \App\CustomerGroup::lists('name', 'id'));
+		    $view->with('customer_groupList', \App\CustomerGroup::pluck('name', 'id')->toarray());
 		    
 		});
 
 		// Payment Methods
 		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
-		    $view->with('payment_methodList', \App\PaymentMethod::lists('name', 'id'));
+		    $view->with('payment_methodList', \App\PaymentMethod::pluck('name', 'id')->toarray());
 		    
 		});
 
 		// Sequences
 		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
-		    $view->with('sequenceList', \App\Sequence::lists('name', 'id'));
+		    $view->with('sequenceList', \App\Sequence::pluck('name', 'id')->toarray());
 		    
 		});
 
@@ -59,7 +59,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Carriers
 		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
-		    $view->with('carrierList', \App\Carrier::lists('name', 'id'));
+		    $view->with('carrierList', \App\Carrier::pluck('name', 'id')->toarray());
 		    
 		});
 
@@ -73,7 +73,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Price Lists
 		view()->composer(array('customers.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
-		    $view->with('price_listList', \App\PriceList::lists('name', 'id'));
+		    $view->with('price_listList', \App\PriceList::pluck('name', 'id')->toarray());
 		    
 		});
 
@@ -88,7 +88,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		    }
 
 		    $view->with('warehouseList', $list);
-		    // $view->with('warehouseList', \App\Warehouse::lists('name', 'id'));
+		    // $view->with('warehouseList', \App\Warehouse::pluck('name', 'id')->toarray());
 		    
 		});
 
@@ -101,7 +101,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 
 		view()->composer(array('products.create', 'products.edit', 'prices.edit', 'customer_invoices.create', 'customer_invoices.edit'), function($view) {
 
-		    $view->with('taxpercentList', \App\Tax::lists('percent', 'id'));
+		    $view->with('taxpercentList', \App\Tax::pluck('percent', 'id'));
 		    
 		});
 
@@ -119,7 +119,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Languages
 		view()->composer(array('users.create', 'users.edit'), function($view) {
 		    
-		    $view->with('languageList', \App\Language::lists('name', 'id'));
+		    $view->with('languageList', \App\Language::pluck('name', 'id')->toarray());
 		    
 		});
 

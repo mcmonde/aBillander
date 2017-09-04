@@ -50,12 +50,12 @@ Route::get('404', function()
 
 /* ********************************************************** */
 
-/*
+
 // Secure-Routes
 Route::group(['middleware' => 'auth'], function()
 {
     // Route::get( 'contact', 'ContactMessagesController@create');
-    Route::post('contact', 'ContactMessagesController@store');
+//    Route::post('contact', 'ContactMessagesController@store');
 
     Route::get('soon', function()
     {
@@ -79,83 +79,83 @@ Route::group(['middleware' => 'auth'], function()
         Route::resource('translations', 'TranslationsController', 
                         ['only' => ['index', 'edit', 'update']]);
 
-        Route::resource('sequences', 'SequencesController');
+//        Route::resource('sequences', 'SequencesController');
 
         Route::resource('users', 'UsersController');
 
-        Route::resource('templates', 'TemplatesController');
+//        Route::resource('templates', 'TemplatesController');
 
-        Route::resource('currencies', 'CurrenciesController');
+//        Route::resource('currencies', 'CurrenciesController');
 
-        Route::resource('taxes',          'TaxesController');
-        Route::resource('taxes.taxrules', 'TaxRulesController');
+//        Route::resource('taxes',          'TaxesController');
+//        Route::resource('taxes.taxrules', 'TaxRulesController');
 
-        Route::resource('categories', 'CategoriesController');
-        Route::resource('categories.subcategories', 'CategoriesController');
-        Route::post('categories/{id}/publish', array('uses' => 'CategoriesController@publish', 
-                                                        'as'   => 'categories.publish' ));
+//        Route::resource('categories', 'CategoriesController');
+//        Route::resource('categories.subcategories', 'CategoriesController');
+//        Route::post('categories/{id}/publish', array('uses' => 'CategoriesController@publish', 
+//                                                        'as'   => 'categories.publish' ));
 
-        Route::resource('products', 'ProductsController');
-        Route::resource('products.images', 'ProductImagesController');
+//        Route::resource('products', 'ProductsController');
+//        Route::resource('products.images', 'ProductImagesController');
 
-        Route::post('products/{id}/combine', array('as' => 'products.combine', 'uses'=>'ProductsController@combine'));
-        Route::get('products/ajax/name_lookup'  , array('uses' => 'ProductsController@ajaxProductSearch', 
-                                                        'as'   => 'products.ajax.nameLookup' ));
-        Route::post('products/ajax/options_lookup'  , array('uses' => 'ProductsController@ajaxProductOptionsSearch', 
-                                                        'as'   => 'products.ajax.optionsLookup' ));
-        Route::post('products/ajax/combination_lookup'  , array('uses' => 'ProductsController@ajaxProductCombinationSearch', 
-                                                        'as'   => 'products.ajax.combinationLookup' ));
-        Route::post('products/ajax/price_lookup', array('uses' => 'ProductsController@ajaxProductPriceSearch', 'as' => 'products.ajax.priceLookup'));
+//        Route::post('products/{id}/combine', array('as' => 'products.combine', 'uses'=>'ProductsController@combine'));
+//        Route::get('products/ajax/name_lookup'  , array('uses' => 'ProductsController@ajaxProductSearch', 
+//                                                        'as'   => 'products.ajax.nameLookup' ));
+//        Route::post('products/ajax/options_lookup'  , array('uses' => 'ProductsController@ajaxProductOptionsSearch', 
+//                                                        'as'   => 'products.ajax.optionsLookup' ));
+//        Route::post('products/ajax/combination_lookup'  , array('uses' => 'ProductsController@ajaxProductCombinationSearch', 
+//                                                        'as'   => 'products.ajax.combinationLookup' ));
+//        Route::post('products/ajax/price_lookup', array('uses' => 'ProductsController@ajaxProductPriceSearch', 'as' => 'products.ajax.priceLookup'));
 
-        Route::resource('prices', 'PricesContoller');
+//        Route::resource('prices', 'PricesContoller');
 
-        Route::resource('optiongroups',         'OptionGroupsController');
-        Route::resource('optiongroups.options', 'OptionsController');
+//        Route::resource('optiongroups',         'OptionGroupsController');
+//        Route::resource('optiongroups.options', 'OptionsController');
 
-        Route::resource('combinations', 'CombinationsController');
+//        Route::resource('combinations', 'CombinationsController');
 
-        Route::resource('warehouses', 'WarehousesController');
+//        Route::resource('warehouses', 'WarehousesController');
 
-        Route::resource('stockmovements', 'StockMovementsController');
+//        Route::resource('stockmovements', 'StockMovementsController');
 
-        Route::resource('stockadjustments', 'StockAdjustmentsController');
+//        Route::resource('stockadjustments', 'StockAdjustmentsController');
 
-        Route::resource('customers', 'CustomersController');
-        Route::get('customers/ajax/name_lookup', array('uses' => 'CustomersController@ajaxCustomerSearch', 'as' => 'customers.ajax.nameLookup'));
+//        Route::resource('customers', 'CustomersController');
+//        Route::get('customers/ajax/name_lookup', array('uses' => 'CustomersController@ajaxCustomerSearch', 'as' => 'customers.ajax.nameLookup'));
 
-        Route::resource('addresses', 'AddressesController');
-        Route::resource('customers/{ownwer_id}/addresses', 'AddressesController');
+//        Route::resource('addresses', 'AddressesController');
+//        Route::resource('customers/{ownwer_id}/addresses', 'AddressesController');
 
-        Route::post('mail', 'MailController@store');
+//        Route::post('mail', 'MailController@store');
 
-        Route::resource('paymentmethods', 'PaymentMethodsController');
+//        Route::resource('paymentmethods', 'PaymentMethodsController');
 
-        Route::resource('customergroups', 'CustomerGroupsController');
+//        Route::resource('customergroups', 'CustomerGroupsController');
         
-        Route::resource('salesreps', 'SalesRepsController');
+//        Route::resource('salesreps', 'SalesRepsController');
 
-        Route::resource('carriers', 'CarriersController');
+//        Route::resource('carriers', 'CarriersController');
 
-        Route::resource('manufacturers', 'ManufacturersController');
+//        Route::resource('manufacturers', 'ManufacturersController');
 
-        Route::resource('pricelists', 'PriceListsController');
-
-
-        Route::resource('customerinvoices'      , 'CustomerInvoicesController');
-        Route::get('customerinvoices/pdf/{id}'  , 'CustomerInvoicesController@ShowPDF');
-        Route::post('customerinvoices/sendemail', 'CustomerInvoicesController@SendEmail');
+//        Route::resource('pricelists', 'PriceListsController');
 
 
-        Route::resource('customervouchers'      , 'CustomerVouchersController');
+//        Route::resource('customerinvoices'      , 'CustomerInvoicesController');
+//        Route::get('customerinvoices/pdf/{id}'  , 'CustomerInvoicesController@ShowPDF');
+//        Route::post('customerinvoices/sendemail', 'CustomerInvoicesController@SendEmail');
 
-        Route::get('pdf/{id}', 'PdfController@show');
 
-        Route::resource('images', 'ImagesController');
+//        Route::resource('customervouchers'      , 'CustomerVouchersController');
+
+//        Route::get('pdf/{id}', 'PdfController@show');
+
+//        Route::resource('images', 'ImagesController');
     });
 
 
 });
-*/
+
 
 /* ********************************************************** */
 

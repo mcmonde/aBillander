@@ -40,13 +40,13 @@ Configuración General
       <div class="col-lg-8">
         <div class="radio">
           <label>
-            <input name="MARGIN_METHOD" id="MARGIN_METHOD_1" value="CST" @if(Input::old('MARGIN_METHOD', isset($key_group) ? $key_group['MARGIN_METHOD'] : 'CST')=='CST') checked="checked" @endif type="radio">
+            <input name="MARGIN_METHOD" id="MARGIN_METHOD_1" value="CST" @if(old('MARGIN_METHOD', isset($key_group) ? $key_group['MARGIN_METHOD'] : 'CST')=='CST') checked="checked" @endif type="radio">
             Sobre el Precio de Coste
           </label>
         </div>
         <div class="radio">
           <label>
-            <input name="MARGIN_METHOD" id="MARGIN_METHOD_2" value="PRC" @if(Input::old('MARGIN_METHOD', isset($key_group) ? $key_group['MARGIN_METHOD'] : 'CST')!='CST') checked="checked" @endif type="radio">
+            <input name="MARGIN_METHOD" id="MARGIN_METHOD_2" value="PRC" @if(old('MARGIN_METHOD', isset($key_group) ? $key_group['MARGIN_METHOD'] : 'CST')!='CST') checked="checked" @endif type="radio">
             Sobre el Precio de Venta
           </label>
         </div>
@@ -59,13 +59,13 @@ Configuración General
       <div class="col-lg-8">
         <div class="radio">
           <label>
-            <input name="ALLOW_SALES_WITHOUT_STOCK" id="ALLOW_SALES_WITHOUT_STOCK_1" value="1" @if(Input::old('ALLOW_SALES_WITHOUT_STOCK', isset($key_group) ? $key_group['ALLOW_SALES_WITHOUT_STOCK'] : 0)>0) checked="checked" @endif type="radio">
+            <input name="ALLOW_SALES_WITHOUT_STOCK" id="ALLOW_SALES_WITHOUT_STOCK_1" value="1" @if(old('ALLOW_SALES_WITHOUT_STOCK', isset($key_group) ? $key_group['ALLOW_SALES_WITHOUT_STOCK'] : 0)>0) checked="checked" @endif type="radio">
             Sí
           </label>
         </div>
         <div class="radio">
           <label>
-            <input name="ALLOW_SALES_WITHOUT_STOCK" id="ALLOW_SALES_WITHOUT_STOCK_2" value="0" @if(Input::old('ALLOW_SALES_WITHOUT_STOCK', isset($key_group) ? $key_group['ALLOW_SALES_WITHOUT_STOCK'] : 0)==0) checked="checked" @endif type="radio">
+            <input name="ALLOW_SALES_WITHOUT_STOCK" id="ALLOW_SALES_WITHOUT_STOCK_2" value="0" @if(old('ALLOW_SALES_WITHOUT_STOCK', isset($key_group) ? $key_group['ALLOW_SALES_WITHOUT_STOCK'] : 0)==0) checked="checked" @endif type="radio">
             No
           </label>
         </div>
@@ -78,13 +78,13 @@ Configuración General
       <div class="col-lg-8">
         <div class="radio">
           <label>
-            <input name="ALLOW_SALES_RISK_EXCEEDED" id="ALLOW_SALES_RISK_EXCEEDED_1" value="1" @if(Input::old('ALLOW_SALES_RISK_EXCEEDED', isset($key_group) ? $key_group['ALLOW_SALES_RISK_EXCEEDED'] : 0)>0) checked="checked" @endif type="radio">
+            <input name="ALLOW_SALES_RISK_EXCEEDED" id="ALLOW_SALES_RISK_EXCEEDED_1" value="1" @if(old('ALLOW_SALES_RISK_EXCEEDED', isset($key_group) ? $key_group['ALLOW_SALES_RISK_EXCEEDED'] : 0)>0) checked="checked" @endif type="radio">
             Sí
           </label>
         </div>
         <div class="radio">
           <label>
-            <input name="ALLOW_SALES_RISK_EXCEEDED" id="ALLOW_SALES_RISK_EXCEEDED_2" value="0" @if(Input::old('ALLOW_SALES_RISK_EXCEEDED', isset($key_group) ? $key_group['ALLOW_SALES_RISK_EXCEEDED'] : 0)==0) checked="checked" @endif type="radio">
+            <input name="ALLOW_SALES_RISK_EXCEEDED" id="ALLOW_SALES_RISK_EXCEEDED_2" value="0" @if(old('ALLOW_SALES_RISK_EXCEEDED', isset($key_group) ? $key_group['ALLOW_SALES_RISK_EXCEEDED'] : 0)==0) checked="checked" @endif type="radio">
             No
           </label>
         </div>
@@ -97,7 +97,7 @@ Configuración General
       <div class="col-lg-8">
         <div class="row">
         <div class="col-lg-6">
-        <input class="form-control" type="text" id="SUPPORT_CENTER_EMAIL" name="SUPPORT_CENTER_EMAIL" placeholder="" value="{{ Input::old('SUPPORT_CENTER_EMAIL', isset($key_group) ? $key_group['SUPPORT_CENTER_EMAIL'] : null) }}" />
+        <input class="form-control" type="text" id="SUPPORT_CENTER_EMAIL" name="SUPPORT_CENTER_EMAIL" placeholder="" value="{{ old('SUPPORT_CENTER_EMAIL', isset($key_group) ? $key_group['SUPPORT_CENTER_EMAIL'] : null) }}" />
         {{ $errors->first('SUPPORT_CENTER_EMAIL', '<span class="help-block">:message</span>') }}
         </div>
         <div class="col-lg-6"> </div>
@@ -111,7 +111,7 @@ Configuración General
       <div class="col-lg-8">
         <div class="row">
         <div class="col-lg-6">
-        <input class="form-control" type="text" id="SUPPORT_CENTER_NAME" name="SUPPORT_CENTER_NAME" placeholder="" value="{{ Input::old('SUPPORT_CENTER_NAME', isset($key_group) ? $key_group['SUPPORT_CENTER_NAME'] : null) }}" />
+        <input class="form-control" type="text" id="SUPPORT_CENTER_NAME" name="SUPPORT_CENTER_NAME" placeholder="" value="{{ old('SUPPORT_CENTER_NAME', isset($key_group) ? $key_group['SUPPORT_CENTER_NAME'] : null) }}" />
         {{ $errors->first('SUPPORT_CENTER_NAME', '<span class="help-block">:message</span>') }}
         </div>
         <div class="col-lg-6"> </div>
