@@ -26,7 +26,7 @@
                                     data-content="{{ \App\Configuration::get('MARGIN_METHOD') == 'CST' ?
                                         l('Margin calculation is based on Cost Price', [], 'layouts') :
                                         l('Margin calculation is based on Sales Price', [], 'layouts') }}">
-                                <span class="glyphicon glyphicon-info-sign"></span>
+                                <i class="fa fa-info-circle"></i>
                             </button>
                          </a>
                      {!! Form::text('margin', null, array('class' => 'form-control', 'id' => 'margin', 'autocomplete' => 'off', 
@@ -68,7 +68,7 @@
 
    <div class="panel-footer text-right">
       <button class="btn btn-sm btn-info" type="submit" onclick="this.disabled=true;this.form.submit();">
-         <span class="glyphicon glyphicon-hdd"></span>
+         <i class="fa fa-hdd-o"></i>
          &nbsp; {{l('Save', [], 'layouts')}}
       </button>
    </div>

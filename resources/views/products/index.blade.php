@@ -10,7 +10,7 @@
         <a href="{{ URL::to('products/create') }}" class="btn btn-sm btn-success" 
                 title="{{l('Add New Item', [], 'layouts')}}"><i class="fa fa-plus"></i> {{l('Add New', [], 'layouts')}}</a>
         <button  name="b_search_filter" id="b_search_filter" class="btn btn-sm btn-success" type="button" title="{{l('Filter Records', [], 'layouts')}}">
-           <span class="glyphicon glyphicon-filter"></span>
+           <i class="fa fa-filter"></i>
            &nbsp; {{l('Filter', [], 'layouts')}}
         </button>
     </div>

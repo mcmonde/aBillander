@@ -21,31 +21,31 @@
       <div class="col-lg-2 col-md-2 col-sm-3">
          <div class="list-group">
             <a id="b_main_data" href="#" class="list-group-item active">
-               <span class="glyphicon glyphicon-asterisk"></span>
+               <i class="fa fa-asterisk"></i>
                &nbsp; {{ l('Main Data') }}
             </a>
             <a id="b_purchases" href="#purchases" class="list-group-item">
-               <span class="glyphicon glyphicon-shopping-cart"></span>
+               <i class="fa fa-shopping-cart"></i>
                &nbsp; {{ l('Purchases') }}
             </a>
             <a id="b_sales" href="#sales" class="list-group-item">
-               <span class="glyphicon glyphicon-share"></span>
+               <i class="fa fa-share-square-o"></i>
                &nbsp; {{ l('Sales') }}
             </a>
             <a id="b_inventory" href="#inventory" class="list-group-item">
-               <span class="glyphicon glyphicon-th"></span>
+               <i class="fa fa-th"></i>
                &nbsp; {{ l('Stocks') }}
             </a>
             <a id="b_combinations" href="#combinations" class="list-group-item">
-               <span class="glyphicon glyphicon-tags"></span>
+               <i class="fa fa-tags"></i>
                &nbsp; {{ l('Combinations') }}
             </a>
             <a id="b_images" href="#images" class="list-group-item">
-               <span class="glyphicon glyphicon-picture"></span>
+               <i class="fa fa-picture-o"></i>
                &nbsp; {{ l('Images') }}
             </a>
             <a id="b_internet" href="#internet" class="list-group-item">
-               <span class="glyphicon glyphicon-cloud"></span>
+               <i class="fa fa-cloud"></i>
                &nbsp; {{ l('Internet') }}
             </a>
          </div>

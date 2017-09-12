@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 use App\Country as Country;
 use View;
@@ -27,7 +28,9 @@ class CountriesController extends Controller {
 	{
         $countries = $this->country->orderBy('name', 'asc')->get();
 
-        return view('countries.index', compact('countries'));
+        return $countries;
+
+        // return view('countries.index', compact('countries'));
 	}
 
 	/**
@@ -93,5 +96,15 @@ class CountriesController extends Controller {
 	{
 		//
 	}
+
+    public function getStates($countryId)
+    {
+        // if ( request->ajax() )
+        $country = $this->country->find($countryId);
+
+        $states = $country ? $country->states()->pluck(['id', 'name']) : [] ;
+
+        return Response::json($states);
+    }
 
 }

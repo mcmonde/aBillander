@@ -135,7 +135,7 @@
 
    <div class="panel-footer text-right">
       <button class="btn btn-sm btn-info" type="submit" onclick="this.disabled=true;$('#tab_name_main_data').val('main_data');this.form.submit();">
-         <span class="glyphicon glyphicon-hdd"></span>
+         <i class="fa fa-hdd-o"></i>
          &nbsp; {{l('Save', [], 'layouts')}}
       </button>
    </div>

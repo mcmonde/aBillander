@@ -72,8 +72,8 @@ class CountriesTableSeeder extends Seeder {
 ['Valladolid', 'ES-VA'],
 ['Zamora', 'ES-ZA'],
 ['Zaragoza', 'ES-Z'],
-[' Ceuta', 'ES-CE'],
-[' Melilla', 'ES-ML'],
+['Ceuta', 'ES-CE'],
+['Melilla', 'ES-ML'],
         ];
 
 

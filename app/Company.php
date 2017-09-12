@@ -12,7 +12,6 @@ class Company extends Model {
     public static $rules = array(
     	'name_fiscal' => array('required', 'min:2', 'max:128'),
         'website'     => 'url',
-        'address_id'  => 'exists:addresses,id',
         'currency_id' => 'exists:currencies,id',
     	);
 
@@ -22,18 +21,19 @@ class Company extends Model {
     | Relationships
     |--------------------------------------------------------------------------
     */
- 
-/*   
-    public function addresses()
-    {
-        return $this->hasMany('App\Address', 'owner_id')->where('model_name', '=', 'Company');
-    }
-*/
-
+    
     public function address()
     {
-        // return $this->hasOne('App\Address', 'owner_id')->where('model_name', '=', 'Company');
-        return $this->belongsTo('App\Address')->where('model_name', '=', 'Company');
+        // return $this->morphMany('App\Address', 'addressable')->first();
+        // See: https://stackoverflow.com/questions/22012877/laravel-eloquent-polymorphic-one-to-one
+        // https://laracasts.com/discuss/channels/general-discussion/one-to-one-polymorphic-inverse-relationship-with-existing-database
+        return $this->hasOne('App\Address', 'addressable_id','id')
+                   ->where('addressable_type', 'App\Company');
+    }
+    
+    public function addresses()
+    {
+        return $this->morphMany('App\Address', 'addressable');
     }
 
     public function currency()

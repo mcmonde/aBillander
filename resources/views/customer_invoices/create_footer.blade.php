@@ -2,29 +2,29 @@
       <div class="row">
          <div class="col-lg-6 col-md-6 col-sm-6">
             <button class="btn btn-sm btn-warning" type="button" onclick="window.location.href='{$fsc->url()}';">
-               <span class="glyphicon glyphicon-refresh"></span>
+               <i class="fa fa-refresh"></i>
                &nbsp; Reiniciar
             </button>
             <button type="button" class="btn btn-sm btn-primary xdisabled" data-toggle="tooltip" data-placement="top" title="" data-original-title=" Desactivado hasta que se guarde el documento " xonclick="$('#modal_guardar').modal('show');">
-               <span class="glyphicon glyphicon-print"></span>
+               <i class="fa fa-print"></i>
                &nbsp; Imprimir
             </button>
             <button class="btn btn-sm btn-primary disabled" type="button" onclick="$('#modal_guardar').modal('show');">
-               <span class="glyphicon glyphicon-send"></span>
+               <i class="fa fa-send"></i>
                &nbsp; Enviar
             </button>
          </div>
          <div class="col-lg-6 col-md-6 col-sm-6 text-right">
             <!-- button class="btn btn-sm btn-info" type="button" onclick="$('#modal_guardar').modal('show');">
-               <span class="glyphicon glyphicon-file"></span>
+               <i class="fa fa-file"></i>
                &nbsp; Guardar Borrador
             </button -->
             <button class="btn btn-sm btn-primary" type="button" onclick="$('#modal_guardar').modal('show');">
-               <span class="glyphicon glyphicon-save"></span>
+               <i class="fa fa-download"></i>
                &nbsp; Guardar y Permanecer
             </button>
             <button class="btn btn-sm btn-primary" type="button" onclick="this.disabled=true;this.form.submit();">
-               <span class="glyphicon glyphicon-hdd"></span>
+               <i class="fa fa-hdd-o"></i>
                &nbsp; Guardar...
             </button>
          </div>

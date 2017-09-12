@@ -4,6 +4,21 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
+	| Product Types
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+	'simple'     => 'Simple', 			// a collection of related products that can be purchased individually and only consist of simple products. Simple products are shipped and have no combitions.
+	'virtual'    => 'Servicio', 		// one that doesn’t require shipping or stock management (Services, downloads...)
+	'combinable' => 'Combinable', 		// a product with combitions, each of which may have a different SKU, price, stock option, etc.
+	'grouped'    => 'Agrupado',			// a collection of related products that can be purchased individually and only consist of simple products. 
+
+
+	/*
+	|--------------------------------------------------------------------------
 	| Document Types
 	|--------------------------------------------------------------------------
 	|

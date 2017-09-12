@@ -20,7 +20,7 @@
       <div class="col-lg-2 col-md-2 col-sm-3">
          <div class="list-group">
             <a id="b_generales" href="" class="list-group-item active" onClick="return false;">
-               <span class="glyphicon glyphicon-asterisk"></span>
+               <i class="fa fa-asterisk"></i>
                &nbsp; {{ l('Main Data') }}
             </a>
          </div>
@@ -33,7 +33,7 @@
                </div>
                 {!! Form::model($warehouse, array('method' => 'PATCH', 'route' => array('warehouses.update', $warehouse->id))) !!}
 
-                    @include('warehouses._form_edit')
+                    @include('warehouses._form')
 
                 {!! Form::close() !!}
             </div>

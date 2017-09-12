@@ -53,15 +53,15 @@
 	            {!! Form::text('address[city]', null, array('class' => 'form-control', 'id' => 'city')) !!}
 	            {!! $errors->first('address.city', '<span class="help-block">:message</span>') !!}
 	          </div>
-	          <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('address.state') ? 'has-error' : '' }}">
-	            {{ l('State', [],'addresses') }}
-	            {!! Form::text('address[state]', null, array('class' => 'form-control', 'id' => 'state')) !!}
-	            {!! $errors->first('address.state', '<span class="help-block">:message</span>') !!}
-	          </div>
-	          <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('address.country') ? 'has-error' : '' }}">
+	          <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('address.country_id') ? 'has-error' : '' }}">
 	            {{ l('Country', [],'addresses') }}
-	            {!! Form::text('address[country]', null, array('class' => 'form-control', 'id' => 'country')) !!}
-	            {!! $errors->first('address.country', '<span class="help-block">:message</span>') !!}
+	            {!! Form::select('address[country_id]', array('0' => l('-- Please, select --', [], 'layouts')) + $countryList, null, array('class' => 'form-control', 'id' => 'country_id')) !!}
+	            {!! $errors->first('address.country_id', '<span class="help-block">:message</span>') !!}
+	          </div>
+	          <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('address.state_id') ? 'has-error' : '' }}">
+	            {{ l('State', [],'addresses') }}
+	            {!! Form::select('address[state_id]', array('0' => l('-- Please, select --', [], 'layouts')) + ( isset($stateList) ? $stateList : [] ), null, array('class' => 'form-control', 'id' => 'state_id')) !!}
+	            {!! $errors->first('address.state_id', '<span class="help-block">:message</span>') !!}
 	          </div>
 	</div>
 
@@ -95,3 +95,33 @@
 	        </div>
 	    </div>
 	</div>
+
+	<div class="row">
+	        <div class="form-group col-lg-12 col-md-12 col-sm-12 {{ $errors->has('address.notes') ? 'has-error' : '' }}">
+	          {{ l('Notes', [], 'layouts') }}
+	          {!! Form::textarea('address[notes]', null, array('class' => 'form-control', 'id' => 'notes', 'rows' => '3')) !!}
+	          {!! $errors->first('address.notes', '<span class="help-block">:message</span>') !!}
+	        </div>
+	</div>
+
+
+@section('scripts')  @parent 
+
+    <script type="text/javascript">
+        $('select[name="address[country_id]"]').change(function () {
+            var countryID = $(this).val();
+            
+            $.get('{{ url('/') }}/countries/' + countryID + '/getstates', function (states) {
+                
+
+                $('select[name="address[state_id]"]').empty();
+                $('select[name="address[state_id]"]').append('<option value=0>{{ l('-- Please, select --', [], 'layouts') }}</option>');
+                $.each(states, function (key, value) {
+                    $('select[name="address[state_id]"]').append('<option value=' + value.id + '>' + value.name + '</option>');
+                });
+            });
+        });
+
+    </script>
+
+@append

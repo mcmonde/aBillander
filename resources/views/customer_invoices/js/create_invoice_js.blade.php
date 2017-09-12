@@ -220,7 +220,7 @@ function product_search()
                                  <td class="text-right">'+(val.quantity_onhand+val.quantity_onorder-val.quantity_allocated)+'</td>  \
                                  <td>  \
                                     <a href="javascript:void(0);" onclick="get_customer_price(\''+val.product_id+'\', \''+{{$customer->id}}+'\', \''+val_str+'\')" title=" Más detalles ">  \
-                                       <button class="btn btn-xs btn-success" type="button"><span class="glyphicon glyphicon-zoom-in"></span></button></a></td>  \
+                                       <button class="btn btn-xs btn-success" type="button"><i class="fa fa-search-plus"></i></button></a></td>  \
                                </tr>  \
                         ');
             
@@ -387,7 +387,7 @@ function add_product_to_order(p_string, pc_string)
          '" onkeyup="calculate_line('+nbrlines+')" onchange="calculate_line('+nbrlines+')" autocomplete="off" value="1"/></td>\n\
  \n\
       <td><button class="btn btn-md btn-danger" type="button" onclick="$(\'#line_'+nbrlines+'\').remove();calculate_order();">\n\
-         <span class="glyphicon glyphicon-trash"></span></button><!-- div class="form-control">'+nbrlines+'</div --></td>\n\
+         <i class="fa fa-trash"></i></button><!-- div class="form-control">'+nbrlines+'</div --></td>\n\
  \n\
       <!-- td><div class="form-control">'+jsp_money(p.price_customer)+'</div></td -->\n\
  \n\

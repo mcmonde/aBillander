@@ -177,7 +177,7 @@
                <!-- div class="panel-footer text-right">
                   <input type="hidden" value="" name="tab_name" id="tab_name">
                   <button class="btn xbtn-sm btn-lightblue" xstyle="background-color: #008cba;" type="submit" onclick="this.disabled=true;$('#tab_name').val('addressbook');this.form.submit();">
-                     <span class="glyphicon glyphicon-hdd"></span>
+                     <i class="fa fa-hdd-o"></i>
                      &nbsp; Guardar
                   </button>
                </div -->

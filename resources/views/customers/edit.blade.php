@@ -34,31 +34,31 @@
       <div class="col-lg-2 col-md-2 col-sm-3">
          <div class="list-group">
             <a id="b_main" href="#" class="list-group-item active">
-               <span class="glyphicon glyphicon-user"></span>
+               <i class="fa fa-user"></i>
                &nbsp; {{ l('Main Data') }}
             </a>
             <a id="b_commercial" href="#commercial" class="list-group-item">
-               <span class="glyphicon glyphicon-dashboard"></span>
+               <i class="fa fa-dashboard"></i></span>
                &nbsp; {{ l('Commercial') }}
             </a>
             <!-- a id="b_bankaccounts" href="#bankaccounts" class="list-group-item">
-               <span class="glyphicon glyphicon-briefcase"></span>
+               <i class="fa fa-briefcase"></i>
                &nbsp; Bancos
             </a -->
             <a id="b_addressbook" href="#addressbook" class="list-group-item">
-               <span class="glyphicon glyphicon-road"></span>
+               <i class="fa fa-address-book"></i></span>
                &nbsp; {{ l('Address Book') }}
             </a>
             <!-- a id="b_specialprices" href="#specialprices" class="list-group-item">
-               <span class="glyphicon glyphicon-list-alt"></span>
+               <i class="fa fa-list-alt"></i>
                &nbsp; Precios Especiales
             </a -->
             <!-- a id="b_accounting" href="#accounting" class="list-group-item">
-               <span class="glyphicon glyphicon-book"></span>
+               <i class="fa fa-book"></i></span>
                &nbsp; Contabilidad
             </a -->
             <a id="b_statistics" href="#statistics" class="list-group-item">
-               <span class="glyphicon glyphicon-stats"></span>
+               <i class="fa fa-bar-chart"></i>
                &nbsp; {{ l('Statistics') }}
             </a>
          </div>

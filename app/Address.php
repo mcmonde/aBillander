@@ -9,16 +9,17 @@ class Address extends Model {
 
     protected $dates = ['deleted_at'];
     
-    protected $fillable = [ 'alias', 'webshop_id', 'model_name', 'name_commercial', 
-                            'address1', 'address2', 'postcode', 'city', 'state', 'country', 
+    protected $fillable = [ 'alias', 'webshop_id', 'name_commercial', 
+                            'address1', 'address2', 'postcode', 'city', 'state_id', 'country_id', 
                             'firstname', 'lastname', 'email', 
                             'phone', 'phone_mobile', 'fax', 'notes', 'active', 
                             'latitude', 'longitude',
                           ];
 
     public static $rules = array(
-        'alias'      => 'required|min:2|max:32',
-        'address1'   => 'required|min:2|max:128',
+        'alias'    => 'required|min:2|max:32',
+        'address1' => 'required|min:2|max:128',
+        'state_id' => 'exists:states,id',           // If State exists, Country must do also!
         );
 
     public static function related_rules($rel = 'address')
@@ -39,16 +40,6 @@ class Address extends Model {
     | Relationships
     |--------------------------------------------------------------------------
     */
-    
-
- /*
-    public function company()
-    {
-        if ($this->model_name != 'Company') return NULL;
-
-        return $this->belongsTo('App\Company', 'owner_id')->where('model_name', '=', 'Company');
-    }
-*/
 
     public function customer()
     {
@@ -58,6 +49,11 @@ class Address extends Model {
     public function warehouse()
     {
         return $this->belongsTo('App\Warehouse', 'owner_id')->where('model_name', '=', 'Warehouse');
+    }
+    
+    public function addressable()
+    {
+        return $this->morphTo();
     }
     
 }

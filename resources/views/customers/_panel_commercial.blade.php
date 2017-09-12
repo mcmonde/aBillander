@@ -145,7 +145,7 @@
                <div class="panel-footer text-right">
                   <input type="hidden" value="" name="tab_name" id="tab_name">
                   <button class="btn btn-sm btn-info" type="submit" onclick="this.disabled=true;$('#tab_name').val('commercial');this.form.submit();">
-                     <span class="glyphicon glyphicon-hdd"></span>
+                     <i class="fa fa-hdd-o"></i>
                      &nbsp; {{ l('Save', [], 'layouts') }}
                   </button>
                </div>

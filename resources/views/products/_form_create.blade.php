@@ -122,12 +122,12 @@
                <div class="panel-footer text-right">
                   <a class="btn btn-link" data-dismiss="modal" href="{{ URL::to('products') }}">{{l('Cancel', [], 'layouts')}}</a>
                   <button class="btn btn-primary" type="submit" onclick="this.disabled=true;this.form.submit();">
-                     <span class="glyphicon glyphicon-floppy-disk"></span>
+                     <i class="fa fa-floppy-o"></i>
                      &nbsp; {{l('Save', [], 'layouts')}}
                   </button>
                   <input type="hidden" id="nextAction" name="nextAction" value="" />
                   <button class="btn btn-info" type="submit" onclick="this.disabled=true;$('#nextAction').val('completeProductData');this.form.submit();">
-                     <span class="glyphicon glyphicon-hdd"></span>
+                     <i class="fa fa-hdd-o"></i>
                      &nbsp; {{l('Save & Complete', [], 'layouts')}}
                   </button>
                </div>

@@ -41,7 +41,7 @@
                <a href="javascript:void(0);">
                   <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
                           data-content="{{ l('Include a space between symbol and price (e.g. $1,240.15 -> $ 1,240.15)') }}">
-                      <span class="glyphicon glyphicon-info-sign"></span>
+                      <i class="fa fa-info-circle"></i>
                   </button>
                </a>
          <div>

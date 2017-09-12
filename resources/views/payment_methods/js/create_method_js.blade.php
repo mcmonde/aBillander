@@ -35,7 +35,7 @@ function add_line_to_method()
           'onclick="this.select()" onkeyup="checkFields()" onchange="checkFields()" class="form-control text-right" autocomplete="off"/></td>\n\
     \n\
         <td><button class="btn btn-md btn-danger" type="button" onclick="$(\'#line_'+nbrlines+'\').remove();checkFields();" title="{{l('Delete', [], 'layouts')}}">\n\
-         <span class="glyphicon glyphicon-trash"></span></button></td>\n\
+         <i class="fa fa-trash"></i></button></td>\n\
       </tr>');
   
   $("#nbrlines").val(nbrlines+1);

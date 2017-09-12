@@ -1,4 +1,5 @@
-@if (count($errors) > 0)        {{-- $errors->all() --}}
+@if ( isset($errors) && (count($errors) > 0) )        
+{{-- Google this: "why $errors is not defined" --}}
 <div class="alert alert-danger alert-block">
 	<button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>{!! l('Error', [], 'layouts') !!}: </strong>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\User as User;
+use App\Language as Language;
 use View;
 
 class UsersController extends Controller {
@@ -105,6 +106,11 @@ class UsersController extends Controller {
 		} else {
 			$this->validate($request, array_except( User::$rules, array('password')) );
 			$user->update($request->except(['password']));
+		}
+
+		if ( \Auth::user()->id == $id ) {
+			$language = Language::find( $request->input('language_id') );
+			\App::setLocale($language->iso_code);
 		}
 
 		return redirect('users')

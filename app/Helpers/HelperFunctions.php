@@ -66,3 +66,24 @@ function combos($data, &$all = array(), $group = array(), $val = null, $i = 0)
 	return $all;
 }
 
+/**
+ * https://gist.github.com/aphoe/26495499a014cd8daf9ac7363aa3b5bd
+ * @param $route
+ * @return bool
+ */
+function checkRoute($route='') {
+
+	if ($route=='/') return true;
+
+	$route=ltrim($route, '/');
+
+    $routes = \Route::getRoutes()->getRoutes();
+    foreach($routes as $r){
+//        if($r->getUri() == $route){
+        if($r->uri() == $route){
+            return true;
+        }
+    }
+
+    return false;
+}

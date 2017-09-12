@@ -27,7 +27,7 @@
                <td>
                      <!-- input id="i_new_line_x" class="form-control" type="text" placeholder="Buscar" autocomplete="off"/ -->
                      <button id="i_new_line" class="btn btn-sm btn-primary" type="button">
-                        <span class="glyphicon glyphicon-plus"></span>
+                        <i class="fa fa-plus"></i>
                         &nbsp; Nueva línea...
                      </button>
 

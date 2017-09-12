@@ -52,7 +52,7 @@ Route::get('404', function()
 
 
 // Secure-Routes
-Route::group(['middleware' => 'auth'], function()
+Route::group(['middleware' =>  ['context', 'auth']], function()
 {
     // Route::get( 'contact', 'ContactMessagesController@create');
 //    Route::post('contact', 'ContactMessagesController@store');
@@ -64,7 +64,7 @@ Route::group(['middleware' => 'auth'], function()
 
 
     // See: https://gist.github.com/drawmyattention/8cb599ee5dc0af5f4246
-    Route::group(array('middleware' => 'authAdmin'), function()
+    Route::group(['middleware' => 'authAdmin'], function()
     {
         Route::resource('companies', 'CompaniesController');
         
@@ -73,6 +73,8 @@ Route::group(['middleware' => 'auth'], function()
 
         Route::resource('countries',        'CountriesController');
         Route::resource('countries.states', 'StatesController');
+        Route::get('countries/{countryId}/getstates',   array('uses'=>'CountriesController@getStates', 
+                                                                'as' => 'countries.getstates' ) );
 
         Route::resource('languages', 'LanguagesController');
 
@@ -85,36 +87,39 @@ Route::group(['middleware' => 'auth'], function()
 
 //        Route::resource('templates', 'TemplatesController');
 
-//        Route::resource('currencies', 'CurrenciesController');
+        Route::resource('currencies', 'CurrenciesController');
 
-//        Route::resource('taxes',          'TaxesController');
-//        Route::resource('taxes.taxrules', 'TaxRulesController');
+        Route::resource('taxes',          'TaxesController');
+        Route::resource('taxes.taxrules', 'TaxRulesController');
 
-//        Route::resource('categories', 'CategoriesController');
-//        Route::resource('categories.subcategories', 'CategoriesController');
-//        Route::post('categories/{id}/publish', array('uses' => 'CategoriesController@publish', 
-//                                                        'as'   => 'categories.publish' ));
+        Route::resource('categories', 'CategoriesController');
+        Route::resource('categories.subcategories', 'CategoriesController');
+        Route::post('categories/{id}/publish', array('uses' => 'CategoriesController@publish', 
+                                                        'as'   => 'categories.publish' ));
 
-//        Route::resource('products', 'ProductsController');
-//        Route::resource('products.images', 'ProductImagesController');
+        Route::resource('products', 'ProductsController');
+        Route::resource('products.images', 'ProductImagesController');
 
-//        Route::post('products/{id}/combine', array('as' => 'products.combine', 'uses'=>'ProductsController@combine'));
-//        Route::get('products/ajax/name_lookup'  , array('uses' => 'ProductsController@ajaxProductSearch', 
-//                                                        'as'   => 'products.ajax.nameLookup' ));
-//        Route::post('products/ajax/options_lookup'  , array('uses' => 'ProductsController@ajaxProductOptionsSearch', 
-//                                                        'as'   => 'products.ajax.optionsLookup' ));
-//        Route::post('products/ajax/combination_lookup'  , array('uses' => 'ProductsController@ajaxProductCombinationSearch', 
-//                                                        'as'   => 'products.ajax.combinationLookup' ));
-//        Route::post('products/ajax/price_lookup', array('uses' => 'ProductsController@ajaxProductPriceSearch', 'as' => 'products.ajax.priceLookup'));
+        Route::post('products/{id}/combine', array('as' => 'products.combine', 'uses'=>'ProductsController@combine'));
+        Route::get('products/ajax/name_lookup'  , array('uses' => 'ProductsController@ajaxProductSearch', 
+                                                        'as'   => 'products.ajax.nameLookup' ));
+        Route::post('products/ajax/options_lookup'  , array('uses' => 'ProductsController@ajaxProductOptionsSearch', 
+                                                        'as'   => 'products.ajax.optionsLookup' ));
+        Route::post('products/ajax/combination_lookup'  , array('uses' => 'ProductsController@ajaxProductCombinationSearch', 
+                                                        'as'   => 'products.ajax.combinationLookup' ));
+        Route::post('products/ajax/price_lookup', array('uses' => 'ProductsController@ajaxProductPriceSearch', 'as' => 'products.ajax.priceLookup'));
 
-//        Route::resource('prices', 'PricesContoller');
+        Route::resource('prices',     'PricesContoller');
+        Route::resource('pricelists', 'PriceListsController');
 
-//        Route::resource('optiongroups',         'OptionGroupsController');
-//        Route::resource('optiongroups.options', 'OptionsController');
+        Route::resource('optiongroups',         'OptionGroupsController');
+        Route::resource('optiongroups.options', 'OptionsController');
 
-//        Route::resource('combinations', 'CombinationsController');
+        Route::resource('combinations', 'CombinationsController');
 
-//        Route::resource('warehouses', 'WarehousesController');
+        Route::resource('images', 'ImagesController');
+
+        Route::resource('warehouses', 'WarehousesController');
 
 //        Route::resource('stockmovements', 'StockMovementsController');
 
@@ -138,8 +143,6 @@ Route::group(['middleware' => 'auth'], function()
 
 //        Route::resource('manufacturers', 'ManufacturersController');
 
-//        Route::resource('pricelists', 'PriceListsController');
-
 
 //        Route::resource('customerinvoices'      , 'CustomerInvoicesController');
 //        Route::get('customerinvoices/pdf/{id}'  , 'CustomerInvoicesController@ShowPDF');
@@ -149,8 +152,6 @@ Route::group(['middleware' => 'auth'], function()
 //        Route::resource('customervouchers'      , 'CustomerVouchersController');
 
 //        Route::get('pdf/{id}', 'PdfController@show');
-
-//        Route::resource('images', 'ImagesController');
     });
 
 

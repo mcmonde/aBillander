@@ -27,11 +27,11 @@
       <div class="col-lg-2 col-md-2 col-sm-3">
          <div class="list-group">
             <a id="b_main_data" href="#" class="list-group-item active">
-               <span class="glyphicon glyphicon-asterisk"></span>
+               <i class="fa fa-asterisk"></i>
                &nbsp; {{ l('Main Data') }}
             </a>
             <a id="b_internet" href="#internet" class="list-group-item">
-               <span class="glyphicon glyphicon-cloud"></span>
+               <i class="fa fa-cloud"></i>
                &nbsp; {{ l('Internet') }}
             </a>
          </div>

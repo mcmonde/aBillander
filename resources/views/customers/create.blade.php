@@ -20,7 +20,7 @@
       <div class="col-lg-2 col-md-2 col-sm-3">
          <div class="list-group">
             <a id="b_generales" href="" class="list-group-item active" onClick="return false;">
-               <span class="glyphicon glyphicon-user"></span>
+               <i class="fa fa-user"></i>
                &nbsp; {{ l('Main Data') }}
             </a>
          </div>

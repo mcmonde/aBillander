@@ -25,7 +25,7 @@
                  <a href="javascript:void(0);">
                     <button type="button" xclass="btn btn-xs btn-white" data-toggle="popover" data-placement="top" 
                             data-content="{{ l('Discount on Product Price', [], 'layouts') }}">
-                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <i class="fa fa-info-circle"></i>
                     </button>
                  </a>
              {!! Form::text('discount', null, array('class' => 'form-control', 'id' => 'discount', 'autocomplete' => 'off', 
@@ -38,7 +38,7 @@
                             data-content="{{ \App\Configuration::get('MARGIN_METHOD') == 'CST' ?
                                 l('Margin calculation is based on Cost Price', [], 'layouts') :
                                 l('Margin calculation is based on Sales Price', [], 'layouts') }}">
-                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <i class="fa fa-info-circle"></i>
                     </button>
                  </a>
              {!! Form::text('margin', null, array('class' => 'form-control', 'id' => 'margin', 'autocomplete' => 'off', 

@@ -41,7 +41,7 @@
                <div class="panel-footer text-right">
                   <input type="hidden" value="addressbook" name="tab_name" id="tab_name">
                   <button class="btn xbtn-sm btn-info" type="submit" onclick="this.disabled=true;this.form.submit();">
-                     <span class="glyphicon glyphicon-hdd"></span>
+                     <i class="fa fa-hdd-o"></i>
                      &nbsp; {{l('Save & Complete', [], 'layouts')}}
                   </button>
                </div>

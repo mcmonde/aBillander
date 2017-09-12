@@ -9,7 +9,7 @@
                  <a href="javascript:void(0);">
                     <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
                             data-content="{{ l('This will be displayed to the Customer and on commercial documentation.') }}">
-                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <i class="fa fa-info-circle"></i>
                     </button>
                  </a>
         {!! Form::text('public_name', null, array('class' => 'form-control')) !!}
@@ -22,7 +22,7 @@
                  <a href="javascript:void(0);">
                     <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
                             data-content="{{ l('Use multiples of 10. Use other values to interpolate.') }}">
-                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <i class="fa fa-info-circle"></i>
                     </button>
                  </a>
         {!! Form::text('position', null, array('class' => 'form-control')) !!}

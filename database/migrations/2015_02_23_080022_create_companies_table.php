@@ -19,6 +19,7 @@ class CreateCompaniesTable extends Migration {
 			$table->string('name_fiscal', 128)->nullable(false);			// Company
 			$table->string('name_commercial', 64)->nullable();
 			$table->string('identification', 64)->nullable(false);			// VAT ID or the like (only companies & pro's?)
+			$table->tinyInteger('apply_RE')->default(0);					// Apply Sales Equalization Tax (Recargo de Equivalencia) on purchases
 
 			$table->string('website', 128)->nullable();
 
@@ -28,7 +29,6 @@ class CreateCompaniesTable extends Migration {
 
 			// ToDo: extra fields: "Registro mercantil" and the like
 
-			$table->integer('address_id')->unsigned()->nullable(false); 
 			$table->integer('currency_id')->unsigned()->nullable(false); 
 			
 			$table->timestamps();

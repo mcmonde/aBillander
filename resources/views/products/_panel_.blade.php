@@ -51,7 +51,7 @@
 
    <div class="panel-footer text-right">
       <button class="btn btn-sm btn-info" type="submit" onclick="this.disabled=true;$('#tab_name').val('main_data');this.form.submit();">
-         <span class="glyphicon glyphicon-hdd"></span>
+         <i class="fa fa-hdd-o"></i>
          &nbsp; Guardar
       </button>
    </div>

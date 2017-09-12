@@ -45,10 +45,10 @@
                     onclick="this.select()" onkeyup="checkFields()" onchange="checkFields()" class="form-control text-right" autocomplete="off"/></td>
               @if ($i==0)
                   <td><button id="i_new_line" class="btn btn-md btn-success" type="button" title="{{l('Add New Item', [], 'layouts')}}">
-                   <span class="glyphicon glyphicon-plus"></span></button></td>
+                   <i class="fa fa-plus"></i></button></td>
               @else
                   <td><button class="btn btn-md btn-danger" type="button" onclick="$('#line_{{ $i }}').remove();checkFields();" title="{{l('Delete', [], 'layouts')}}">
-                   <span class="glyphicon glyphicon-trash"></span></button></td>
+                   <i class="fa fa-trash"></i></button></td>
               @endif
                 </tr>
                @endforeach
@@ -92,7 +92,7 @@
                <a href="javascript:void(0);">
                   <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
                           data-content="{{ l('Include invoices (with this method) in automatic payment remittances') }}">
-                      <span class="glyphicon glyphicon-info-sign"></span>
+                      <i class="fa fa-info-circle"></i>
                   </button>
                </a>
  <div>

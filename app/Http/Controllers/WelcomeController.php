@@ -48,7 +48,7 @@ class WelcomeController extends Controller {
 	{
 		$language = \App\Language::findOrFail( $id );
 
-		Cookie::queue('user_language', $language->id, 5*24*60);
+		Cookie::queue('user_language', $language->id, 30*24*60);
 		
 		return redirect('/');
 	}

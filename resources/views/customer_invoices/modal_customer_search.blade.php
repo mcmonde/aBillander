@@ -73,7 +73,7 @@
                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">{{l('Cancel', [], 'layouts')}}</button>
                <input type="hidden" name="submitCustomer_id" value="submitCustomer_id"/>
                <button id="invoice-create-confirm" class="btn btn-sm btn-info" type="submit" onclick="this.disabled=true;this.form.submit();">
-                  <span class="glyphicon glyphicon-play"></span>
+                  <i class="fa fa-play"></i>
                   &nbsp; {{l('Select', [], 'layouts')}}
                </button>
             </div>

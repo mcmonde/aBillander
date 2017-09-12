@@ -14,10 +14,10 @@
 
 
 <div class="jumbotron">
-<img src="{{URL::to('/assets/theme/images/Welcome.png')}}" 
+<img src="{{URL::to('/assets/theme/images/kjpRcYo_2.jpg')}}" 
 					title=""
                     class="center-block"
-                    style=" xborder: 2px solid black;
+                    style=" border: 1px solid #dddddd;
                             border-radius: 18px;
                             -moz-border-radius: 18px;
                             -khtml-border-radius: 18px;

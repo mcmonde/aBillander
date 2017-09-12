@@ -208,7 +208,7 @@ Configuración General
       <div class="col-lg-8 col-lg-offset-4">
         <!-- button class="btn btn-default">Cancelar</button -->
         <button type="submit" class="btn btn-primary">
-          <span class="glyphicon glyphicon-hdd"></span>
+          <i class="fa fa-hdd-o"></i>
                      &nbsp; Guardar
           </button>
       </div>

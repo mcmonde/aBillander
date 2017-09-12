@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
+/* See: https://laracasts.com/discuss/channels/laravel/makeauth-causes-unable-to-prepare-route-apiuser-for-serialization-uses-closure 
+https://laracasts.com/discuss/channels/laravel/why-unable-to-prepare-route-for-serialization-uses-closure
+Google: laravel Unable to prepare route [api/user] for serialization. Uses Closure.
+*/
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

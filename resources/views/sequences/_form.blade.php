@@ -20,7 +20,7 @@
                <a href="javascript:void(0);">
                   <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
                           data-content="{{ l('Document id will be left padded with 0\'es to this length') }}">
-                      <span class="glyphicon glyphicon-info-sign"></span>
+                      <i class="fa fa-info-circle"></i>
                   </button>
                </a>
     {!! Form::text('length', null, array('class' => 'form-control')) !!}
@@ -30,7 +30,7 @@
                <a href="javascript:void(0);">
                   <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
                           data-content="{{ l('To show between document_prefix and document_id') }}">
-                      <span class="glyphicon glyphicon-info-sign"></span>
+                      <i class="fa fa-info-circle"></i>
                   </button>
                </a>
     {!! Form::text('separator', null, array('class' => 'form-control')) !!}

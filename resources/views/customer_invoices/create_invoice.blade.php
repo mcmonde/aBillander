@@ -18,7 +18,7 @@
                                 {{ $invoicing_address->country }}
                                 <br />
                           ">
-                      <span class="glyphicon glyphicon-info-sign"></span>
+                      <i class="fa fa-info-circle"></i>
                   </button>
                </a></span>
              </h2>

@@ -64,7 +64,7 @@
 <div class="panel-footer text-right">
   <a class="btn btn-link" data-dismiss="modal" href="{{ URL::to('warehouses') }}">{{l('Cancel', [], 'layouts')}}</a>
   <button class="btn btn-primary" type="submit" onclick="this.disabled=true;this.form.submit();">
-     <span class="glyphicon glyphicon-floppy-disk"></span>
+     <i class="fa fa-floppy-o"></i>
      &nbsp; {{ l('Save', [], 'layouts') }}
   </button>
 </div>

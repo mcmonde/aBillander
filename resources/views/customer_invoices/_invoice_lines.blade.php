@@ -48,7 +48,7 @@
          onkeyup="calculate_line({{ $i }})" onchange="calculate_line({{ $i }})" autocomplete="off" value="{{ $line->quantity }}"/></td>
  
       <td><button class="btn btn-md btn-danger" type="button" onclick="$('#line_{{ $i }}').remove();calculate_order();">
-         <span class="glyphicon glyphicon-trash"></span></button></td>
+         <i class="fa fa-trash"></i></button></td>
  
       <td><input type="text" id="unit_final_price_{{ $i }}" name="unit_final_price_{{ $i }}" value="{{ $line->unit_final_price }}"
          class="form-control text-right" onkeyup="calculate_line({{ $i }})" onclick="this.select()" autocomplete="off"/></td>
@@ -80,7 +80,7 @@
                <td>
                      <!-- input id="i_new_line_x" class="form-control" type="text" placeholder="Buscar" autocomplete="off"/ -->
                      <button id="i_new_line" class="btn btn-sm btn-primary" type="button">
-                        <span class="glyphicon glyphicon-plus"></span>
+                        <i class="fa fa-plus"></i>
                         &nbsp; {{l('New line...')}}
                      </button>
 

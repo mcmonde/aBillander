@@ -141,7 +141,7 @@ class CompaniesController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		//
+		// Bad idea to reach this point...
 	}
 
 }

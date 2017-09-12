@@ -34,7 +34,7 @@
                   @if (!$product->combinations->count())
                   <a title=" Añadir al Pedido " onclick="add_product_to_order( {{ $product_string }}, '{}' )" href="javascript:void(0);">
                 		<button type="button" class="btn btn-xs btn-success">
-                			<span class="glyphicon glyphicon-shopping-cart"></span>
+                			<i class="fa fa-shopping-cart"></i>
                 		</button>
                 	</a>
                   @endif
@@ -102,7 +102,7 @@
                     
                   <a title=" Añadir al Pedido " onclick="add_product_to_order( {{ $product_string }}, {{ json_encode( array_add( $combination, 'combination_name', $combination->name() ) ) }} )" href="javascript:void(0);">
                     <button type="button" class="btn btn-xs btn-success">
-                      <span class="glyphicon glyphicon-shopping-cart"></span>
+                      <i class="fa fa-shopping-cart"></i>
                     </button>
                   </a>
 

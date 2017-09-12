@@ -26,7 +26,7 @@
                            <input class="form-control" type="text" name="query" autocomplete="off"/>
                            <span class="input-group-btn">
                               <button class="btn btn-primary" type="submit">
-                                 <span class="glyphicon glyphicon-search"></span>
+                                 <i class="fa fa-search"></i>
                               </button>
                            </span>
                         </div>
@@ -87,7 +87,7 @@
 
                <div class="text-right">
                   <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="add_service_to_order();return false;">
-                     <span class="glyphicon glyphicon-shopping-cart"></span>
+                     <i class="fa fa-shopping-cart"></i>
                      &nbsp; {{ l('Save', [], 'layouts') }}</a>
                </div>
             </form>
@@ -115,7 +115,7 @@
 
                <div class="text-right">
                   <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="add_discount_to_order();return false;">
-                     <span class="glyphicon glyphicon-shopping-cart"></span>
+                     <i class="fa fa-shopping-cart"></i>
                      &nbsp; {{ l('Save', [], 'layouts') }}</a>
                </div>
             </form>

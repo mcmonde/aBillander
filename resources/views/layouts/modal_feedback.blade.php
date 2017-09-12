@@ -30,7 +30,7 @@
             </div>
             <div class="modal-footer" id="modal-footer">
                <button type="submit" class="btn btn-sm btn-primary">
-                  <span class="glyphicon glyphicon-send"></span>
+                  <i class="fa fa-send"></i>
                   &nbsp; {{l('Send', [], 'layouts')}}
                </button>
             </div>

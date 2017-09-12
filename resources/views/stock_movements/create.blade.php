@@ -47,7 +47,7 @@
 
            <span class="input-group-btn">
               <button class="btn btn-primary" type="submit" onclick="return false;">
-                 <span class="glyphicon glyphicon-search"></span>
+                 <i class="fa fa-search"></i>
               </button>
            </span>
         </div>
@@ -69,7 +69,7 @@
                <a href="javascript:void(0);">
                   <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
                           data-content="{{ l('Positive: stock increases. Negative: stock decreases.') }}">
-                      <span class="glyphicon glyphicon-info-sign"></span>
+                      <i class="fa fa-info-circle"></i>
                   </button>
                </a>
         {!! Form::text('quantity', null, array('class' => 'form-control')) !!}
@@ -97,7 +97,7 @@
                <div class="panel-footer text-right">
                   <a class="btn btn-link" data-dismiss="modal" href="{{ URL::to('stockmovements') }}">{{l('Cancel', [], 'layouts')}}</a>
                   <button class="btn btn-primary" type="submit" onclick="this.disabled=true;this.form.submit();">
-                     <span class="glyphicon glyphicon-floppy-disk"></span>
+                     <i class="fa fa-floppy-o"></i>
                      &nbsp; {{l('Save', [], 'layouts')}}
                   </button>
                </div>
