@@ -102,13 +102,13 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Taxes
 		view()->composer(array('customer_invoices.create', 'customer_invoices.edit', 'products.create', 'products.edit'), function($view) {
 		    
-		    $view->with('taxList', \App\Tax::orderby('percent', 'desc')->pluck('name', 'id')->toArray());
+		    $view->with('taxList', \App\Tax::orderby('name', 'desc')->pluck('name', 'id')->toArray());
 		    
 		});
 
 		view()->composer(array('products.create', 'products.edit', 'prices.edit', 'customer_invoices.create', 'customer_invoices.edit'), function($view) {
 
-		    $view->with('taxpercentList', \App\Tax::pluck('percent', 'id'));
+		    $view->with('taxpercentList', \App\Tax::get()->pluck('percent', 'id')->toArray());
 		    
 		});
 
@@ -133,7 +133,23 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Categories
 		view()->composer(array('products.index', 'products.create', 'products._panel_main_data'), function($view) {
 		    
-		    $view->with('categoryList', \App\Category::orderby('name', 'asc')->pluck('name', 'id')->toArray());
+		    if ( \App\Configuration::get('ALLOW_PRODUCT_SUBCATEGORIES') ) {
+		    	$tree = [];
+		    	$categories =  \App\Category::where('parent_id', '=', '0')->with('children')->orderby('name', 'asc')->get();
+		    	
+		    	foreach($categories as $category) {
+		    		$tree[$category->name] = $category->children()->orderby('name', 'asc')->pluck('name', 'id')->toArray();
+		    		// foreach($category->children as $child) {
+		    			// $tree[$category->name][$child->id] = $child->name;
+		    		// }
+		    	}
+		    	// abi_r($tree, true);
+		    	$view->with('categoryList', $tree);
+
+		    } else {
+		    	// abi_r(\App\Category::where('parent_id', '=', '0')->orderby('name', 'asc')->pluck('name', 'id')->toArray(), true);
+		    	$view->with('categoryList', \App\Category::where('parent_id', '=', '0')->orderby('name', 'asc')->pluck('name', 'id')->toArray());
+		    }
 		    
 		});
 

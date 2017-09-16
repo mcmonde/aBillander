@@ -60,7 +60,19 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
-	| Price List Types
+	| Margin calculation methods
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+	'CST' => 'Sobre el Precio de Coste',	// Markup Percentage = (Sales Price – Unit Cost)/Unit Cost
+	'PRC' => 'Sobre el Precio de Venta',	// Gross Margin Percentage = (Gross Profit/Sales Price) X 100
+
+	/*
+	|--------------------------------------------------------------------------
+	| Price List CSTPRCTypes
 	|--------------------------------------------------------------------------
 	|
 	| .

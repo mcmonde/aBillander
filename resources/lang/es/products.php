@@ -34,6 +34,7 @@ return [
 	'Customer Price (with Tax)'     => 'Precio de Venta (con Impuestos)',
 	'Cost Price'     => 'Precio de Coste',
 	'Margin'     => 'Margen',
+	'Margin calculation method'     => 'Método de cálculo del Margen',
 	'Average Cost Price'     => 'Precio de Coste Promedio',
 	'Category'     => 'Categoría',
 	'Stock Control?'     => '¿Control de Stock?',

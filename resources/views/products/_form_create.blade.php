@@ -61,10 +61,14 @@
                      {!! $errors->first('cost_price', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('margin') ? 'has-error' : '' }}">
-                     {{ l('Margin') }}
+                     {{ l('Margin') }} (%)
                      {!! Form::text('margin', null, array('class' => 'form-control', 'id' => 'margin', 'autocomplete' => 'off', 
                                       'onclick' => 'this.select()', 'onkeyup' => 'new_price()', 'onchange' => 'new_price()')) !!}
                      {!! $errors->first('margin', '<span class="help-block">:message</span>') !!}
+                  </div>
+                  <div>
+                     {{ l('Margin calculation method') }}
+                     <br /><strong>{{ \App\Configuration::get('MARGIN_METHOD') }}</strong> : {{ l(\App\Configuration::get('MARGIN_METHOD'), [], 'appmultilang') }}
                   </div>
                   <!-- div class="form-group col-lg-3 col-md-3 col-sm-3 { { $errors->has('cost_average') ? 'has-error' : '' } }">
                      { { l('Average Cost Price') } }
@@ -78,6 +82,7 @@
 		            {{ l('Category') }}
 		            {!! Form::select('category_id', array('0' => l('-- Please, select --', [], 'layouts')) + $categoryList, null, array('class' => 'form-control')) !!}
                 {!! $errors->first('category_id', '<span class="help-block">:message</span>') !!}
+                {{-- abi_r($categoryList) --}}
 		         </div>
 
 		          <div class="form-group col-lg-3 col-md-3 col-sm-3" id="div-stock_control">
@@ -137,13 +142,24 @@
 
 @include('products._calculator_js')
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-$(document).ready(function() {
-   $("#cost_price").val( 0.0 );
-   $("#quantity_onhand").val( 0 );
-});
+        $(document).ready(function() {
+           $("#cost_price").val( 0.0 );
+           $("#quantity_onhand").val( 0 );
+        });
 
-</script>
+    </script> 
+
+    <script type="text/javascript">
+        // Select default tax
+        if ( !($('select[name="tax_id"]').val() > 0) ) {
+          var def_taxID = {{ \App\Configuration::get('DEF_TAX') }};
+
+          $('select[name="tax_id"]').val(def_taxID);
+        }
+
+    </script>
+
 
 @append

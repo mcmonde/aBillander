@@ -3,12 +3,16 @@
 use Illuminate\Database\Seeder;
 use App\Tax as Tax;
 use App\TaxRule as TaxRule;
+use App\Country as Country;
   
 class TaxesTableSeeder extends Seeder {
   
     public function run() {
         TaxRule::truncate();
         Tax::truncate();
+
+        $country = Country::where('iso_code', '=', 'ES')->first();
+        $country_id = $country->id;
   
         $tax = Tax::create( [
             'id'      => '1' ,
@@ -19,8 +23,8 @@ class TaxesTableSeeder extends Seeder {
         ] );
   
         $taxRule = TaxRule::create( [
-            'country_id' => 'ES' ,
-            'state_id'   => '' ,
+            'country_id' => $country_id ,
+            'state_id'   => '0' ,
             'sales_equalization' => '0' ,
 
             'name'      => 'IVA Normal (21%)' ,
@@ -35,8 +39,8 @@ class TaxesTableSeeder extends Seeder {
         $tax->taxrules()->save($taxRule);
   
         $taxRule = TaxRule::create( [
-            'country_id' => 'ES' ,
-            'state_id'   => '' ,
+            'country_id' => $country_id ,
+            'state_id'   => '0' ,
             'sales_equalization' => '1' ,
 
             'name'      => 'Recargo de Equivalencia (5.2%)' ,
@@ -59,8 +63,8 @@ class TaxesTableSeeder extends Seeder {
         ] );
   
         $taxRule = TaxRule::create( [
-            'country_id' => 'ES' ,
-            'state_id'   => '' ,
+            'country_id' => $country_id ,
+            'state_id'   => '0' ,
             'sales_equalization' => '0' ,
 
             'name'      => 'IVA Reducido (10.0%)' ,
@@ -75,8 +79,8 @@ class TaxesTableSeeder extends Seeder {
         $tax->taxrules()->save($taxRule);
   
         $taxRule = TaxRule::create( [
-            'country_id' => 'ES' ,
-            'state_id'   => '' ,
+            'country_id' => $country_id ,
+            'state_id'   => '0' ,
             'sales_equalization' => '1' ,
 
             'name'      => 'Recargo de Equivalencia (1.4%)' ,
@@ -99,8 +103,8 @@ class TaxesTableSeeder extends Seeder {
         ] );
   
         $taxRule = TaxRule::create( [
-            'country_id' => 'ES' ,
-            'state_id'   => '' ,
+            'country_id' => $country_id ,
+            'state_id'   => '0' ,
             'sales_equalization' => '0' ,
 
             'name'      => 'IVA Super Reducido (4%)' ,
@@ -115,8 +119,8 @@ class TaxesTableSeeder extends Seeder {
         $tax->taxrules()->save($taxRule);
   
         $taxRule = TaxRule::create( [
-            'country_id' => 'ES' ,
-            'state_id'   => '' ,
+            'country_id' => $country_id ,
+            'state_id'   => '0' ,
             'sales_equalization' => '1' ,
 
             'name'      => 'Recargo de Equivalencia (0.5%)' ,
@@ -139,8 +143,8 @@ class TaxesTableSeeder extends Seeder {
         ] );
   
         $taxRule = TaxRule::create( [
-            'country_id' => 'ES' ,
-            'state_id'   => '' ,
+            'country_id' => $country_id ,
+            'state_id'   => '0' ,
             'sales_equalization' => '0' ,
 
             'name'      => 'IVA Exento' ,
