@@ -22,7 +22,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		// Currencies
-		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'companies.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
+		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'companies._form', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
 		    $view->with('currencyList', \App\Currency::pluck('name', 'id')->toArray());
 		    
@@ -93,7 +93,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		});
 
 		// Countries
-		view()->composer(array('addresses._form_fields_model_related'), function($view) {
+		view()->composer(array('addresses._form_fields_model_related', 'tax_rules._form'), function($view) {
 		    
 		    $view->with('countryList', \App\Country::orderby('name', 'asc')->pluck('name', 'id')->toArray());
 		    

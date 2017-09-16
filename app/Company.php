@@ -4,14 +4,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model {
 
-	protected $fillable = ['name_fiscal', 'name_commercial', 'identification', 'website', 'notes'];
+	protected $fillable = ['name_fiscal', 'name_commercial', 'identification', 'apply_RE', 
+                            'website', 'company_logo','notes', 'currency_id'];
 	
 //    protected $guarded = array('id', 'address_id', 'currency_id');
 
     // Add your validation rules here
     public static $rules = array(
     	'name_fiscal' => array('required', 'min:2', 'max:128'),
-        'website'     => 'url',
+        'website'     => 'nullable|url',
         'currency_id' => 'exists:currencies,id',
     	);
 

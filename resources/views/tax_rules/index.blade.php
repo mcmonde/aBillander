@@ -38,14 +38,14 @@
 	@foreach ($taxrules as $taxrule)
 		<tr>
 			<td>{{ $taxrule->id }}</td>
-            <td>{{ $taxrule->country }}</td>
-            <td>{{ $taxrule->state }}</td>
+            <td>{{ $taxrule->country->name }}</td>
+            <td>{{ $taxrule->state->name }}</td>
 
             <td class="text-center">@if ($taxrule->sales_equalization) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
 
 			<td>{{ $taxrule->name }}</td>
-			<td>{{ $taxrule->percent }}%</td>
-            <td>{{ $taxrule->amount }}</td>
+			<td>{{ $taxrule->percent('percent') }}%</td>
+            <td>{{ $taxrule->money_amount('amount') }}</td>
             <td>{{ $taxrule->position }}</td>
 
 			<td class="text-right">

@@ -48,7 +48,7 @@ class SetContextMiddleware {
 			$language = Language::where('iso_code', '=', \Config::get('app.fallback_locale'))->first();
 
 		if ( !$language ) {
-			$language = new stdClass();
+			$language = new \stdClass();
 			$language->iso_code = \Config::get('app.fallback_locale');
 		}
 		
@@ -57,7 +57,7 @@ class SetContextMiddleware {
 			$company = Company::with('currency')->findOrFail( intval(Configuration::get('DEF_COMPANY')) );
 		} catch (ModelNotFoundException $ex) {
 			// If Company does not found. Not any good here...
-			$company = new stdClass();
+			$company = new \stdClass();
 			$company->currency = NULL;	// Or fallback to Configuration::get('DEF_CURRENCY')
 
 			// Maybe:

@@ -34,8 +34,8 @@ return [
 	|
 	*/
 
-	'Companies - Create' => 'Divisas - Crear',
-	'New Ccompany'     => 'Nueva Empresa',
+	'Companies - Create' => 'Empresas - Crear',
+	'New Company'     => 'Nueva Empresa',
 	'Compay name'     => 'Nombre de la Empresa',
 	
 	''     => '',
@@ -73,7 +73,7 @@ return [
 	'Currency'     => 'Divisa',
 	'(cannot be changed)'     => '(no puede cambiarse)',
 	'Company logo'     => 'Logotipo',
-	''     => '',
+	'Applies Equalization Tax?'     => '¿Aplica Recargo de Equivalencia?',
 	''     => '',
 	''     => '',
 	''     => '',

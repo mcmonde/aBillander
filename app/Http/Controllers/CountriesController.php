@@ -28,9 +28,9 @@ class CountriesController extends Controller {
 	{
         $countries = $this->country->orderBy('name', 'asc')->get();
 
-        return $countries;
+        // return $countries;
 
-        // return view('countries.index', compact('countries'));
+        return view('countries.index', compact('countries'));
 	}
 
 	/**
@@ -102,7 +102,7 @@ class CountriesController extends Controller {
         // if ( request->ajax() )
         $country = $this->country->find($countryId);
 
-        $states = $country ? $country->states()->pluck(['id', 'name']) : [] ;
+        $states = $country ? $country->states()->getQuery()->get(['id', 'name']) : [] ;
 
         return Response::json($states);
     }

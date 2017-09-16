@@ -46,11 +46,6 @@ class Address extends Model {
         return $this->belongsTo('App\Customer', 'owner_id')->where('model_name', '=', 'Customer');
     }
     
-    public function warehouse()
-    {
-        return $this->belongsTo('App\Warehouse', 'owner_id')->where('model_name', '=', 'Warehouse');
-    }
-    
     public function addressable()
     {
         return $this->morphTo();

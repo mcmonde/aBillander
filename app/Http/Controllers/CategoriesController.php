@@ -27,7 +27,7 @@ class CategoriesController extends Controller {
         $parent=null;
         if ($parentId>0) $parent=$this->category->find($parentId);
 
-        $categories = $this->category->where('parent_id', '=', intval($parentId))->orderBy('id', 'asc')->get();
+        $categories = $this->category->with('children')->where('parent_id', '=', intval($parentId))->orderBy('id', 'asc')->get();
 
         return view('categories.index', compact('parentId', 'parent', 'categories'));
         

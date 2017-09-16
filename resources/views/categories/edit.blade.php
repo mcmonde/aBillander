@@ -9,6 +9,7 @@
         <div class="page-header">
             @if ( $parentId>0 )
             <div class="pull-right">
+                <a href="{{ URL::to('categories') }}" class="btn btn-default"><i class="fa fa-mail-reply"></i> {{ l('Back to Product Categories') }}</a>
                 <a href="{{ URL::to('categories/'.$parent->id.'/subcategories') }}" class="btn btn-default"><i class="fa fa-mail-reply"></i> {{ l('Back to :name', ['name' => $parent->name]) }}</a>
             </div>
             <h2><a href="{{ URL::to('categories') }}">{{ l('Product Categories') }}</a> <span style="color: #cccccc;">/</span> <a href="{{ URL::to('categories/'.$parent->id.'/subcategories') }}">{{ $parent->name }}</a> <span style="color: #cccccc;">/</span> {{ l('Edit Category') }}</h2>

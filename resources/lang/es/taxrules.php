@@ -28,6 +28,7 @@ return [
 	'New Tax Rule'     => 'Nueva Regla de Impuesto',
 	'Country'     => 'País',
 	'State'     => 'Provincia',
+	'-- All --'     => '-- Todos --',
 	'Sales Equalization'     => 'Recargo de Equivalencia',
 	'Tax Rule Name'     => 'Nombre de la Regla de Impuesto',
 	'Tax Rule Percent'     => 'Porcentaje ',
@@ -50,7 +51,6 @@ return [
 
 	'Tax Rules - Edit'     => 'Reglas de Impuestos - Modificar',
 	'Edit Tax Rule'     => 'Modificar Regla de Impuesto',
-	''     => '',
 	''     => '',
 	''     => '',
 	''     => '',

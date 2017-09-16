@@ -60,6 +60,7 @@ class WarehousesController extends Controller {
 		$warehouse = $this->warehouse->create(['notes' => $request->input('address.notes'), 'alias' => $request->input('address.alias'), 'active' => $request->input('active')]);
 
 		$data = $request->input('address');
+//		$data['notes'] = '';
 		$address = $this->address->create( $data );
 		$warehouse->addresses()->save($address);
 
@@ -121,6 +122,7 @@ class WarehousesController extends Controller {
 		// abi_r($request->all(), true);
 
 		$data = $request->input('address');
+//		$data['notes'] = '';
 		$address->update( $data );
 
 		return redirect('warehouses')

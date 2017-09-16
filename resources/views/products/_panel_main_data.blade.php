@@ -25,7 +25,7 @@
                     {{ l('Category') }}
                     {!! Form::select('category_id', array('0' => '-- Seleccione--') + $categoryList, null, array('class' => 'form-control')) !!}
                     {!! $errors->first('category_id', '<span class="help-block">:message</span>') !!}
-                    Poner un autocomplete porque puede haber muchas. La lista es diferente dependiendo de USE_PRODUCT_SUBCATEGORIES.
+                    Poner un autocomplete porque puede haber muchas. La lista es diferente dependiendo de ALLOW_PRODUCT_SUBCATEGORIES.
                  </div>
         </div>
 

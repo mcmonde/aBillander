@@ -12,6 +12,7 @@ return [
 	*/
 
 	'Product Categories' => 'Categorías de Productos',
+	'Expand / Collapse'     => 'Ver / Ocultar',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -30,6 +31,8 @@ return [
 	'Main Data'     => 'Datos Generales',
 
 	'Category Name'     => 'Nombre de la Categoría',
+
+	'Back to :name'     => 'Volver a :name',
 
 
 	/*

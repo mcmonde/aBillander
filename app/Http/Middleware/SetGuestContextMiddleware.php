@@ -47,7 +47,7 @@ class SetGuestContextMiddleware {
 			$language = Language::where('iso_code', '=', \Config::get('app.fallback_locale'))->first();
 
 		if ( !$language ) {
-			$language = new stdClass();
+			$language = new \stdClass();
 			$language->iso_code = \Config::get('app.fallback_locale');
 		}
 		

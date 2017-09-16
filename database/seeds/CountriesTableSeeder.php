@@ -9,6 +9,10 @@ class CountriesTableSeeder extends Seeder {
     public function run() {
         Country::truncate();
         State::truncate();
+
+
+        // ******************************************************************* //
+
   
         $country = Country::create( [
             'name'      => 'España' ,
@@ -77,18 +81,107 @@ class CountriesTableSeeder extends Seeder {
         ];
 
 
-foreach ($states_ES as $v){
-        $state = State::create( [
-            'name'      => $v[0] ,
-            'iso_code'     => $v[1] ,
- //           'country_id'    => $country->id ,
+        foreach ($states_ES as $v){
+                $state = State::create( [
+                    'name'      => $v[0] ,
+                    'iso_code'     => $v[1] ,
+         //           'country_id'    => $country->id ,
+                    'active'    => '1' ,
+                            'created_at'  => \Carbon\Carbon::createFromDate(2015,04,01)->toDateTimeString(),
+                            'updated_at'  => \Carbon\Carbon::now()->toDateTimeString(),
+                ] );
+
+                $country->states()->save($state);
+        }
+
+
+        // ******************************************************************* //
+
+  
+        $country_US = Country::create( [
+            'name'      => 'Estados Unidos' ,
+            'iso_code'     => 'US' ,
+            'contains_states'  => '1' ,
             'active'    => '1' ,
                     'created_at'  => \Carbon\Carbon::createFromDate(2015,04,01)->toDateTimeString(),
                     'updated_at'  => \Carbon\Carbon::now()->toDateTimeString(),
         ] );
 
-        $country->states()->save($state);
-}
+        // ------------------------------------------------------------------- //
+  
+        $states_US=[
+['Alabama', 'AL'],
+['Alaska', 'AK'],
+['Arizona', 'AZ'],
+['Arkansas', 'AR'],
+['California', 'CA'],
+['Colorado', 'CO'],
+['Connecticut', 'CT'],
+['Delaware', 'DE'],
+['District of Columbia', 'DC'],
+['Florida', 'FL'],
+['Georgia', 'GA'],
+['Hawaii', 'HI'],
+['Idaho', 'ID'],
+['Illinois', 'IL'],
+['Indiana', 'IN'],
+['Iowa', 'IA'],
+['Kansas', 'KS'],
+['Kentucky', 'KY'],
+['Louisiana', 'LA'],
+['Maine', 'ME'],
+['Maryland', 'MD'],
+['Massachusetts', 'MA'],
+['Michigan', 'MI'],
+['Minnesota', 'MN'],
+['Mississippi', 'MS'],
+['Missouri', 'MO'],
+['Montana', 'MT'],
+['Nebraska', 'NE'],
+['Nevada', 'NV'],
+['New Hampshire', 'NH'],
+['New Jersey', 'NJ'],
+['New Mexico', 'NM'],
+['New York', 'NY'],
+['North Carolina', 'NC'],
+['North Dakota', 'ND'],
+['Ohio', 'OH'],
+['Oklahoma', 'OK'],
+['Oregon', 'OR'],
+['Pennsylvania', 'PA'],
+['Puerto Rico', 'PR'],
+['Rhode Island', 'RI'],
+['South Carolina', 'SC'],
+['South Dakota', 'SD'],
+['Tennessee', 'TN'],
+['Texas', 'TX'],
+['US Virgin Islands', 'VI'],
+['Utah', 'UT'],
+['Vermont', 'VT'],
+['Virginia', 'VA'],
+['Washington', 'WA'],
+['West Virginia', 'WV'],
+['Wisconsin', 'WI'],
+['Wyoming', 'WY'],
+        ];
 
-    }
+
+        foreach ($states_US as $v){
+                $state = State::create( [
+                    'name'      => $v[0] ,
+                    'iso_code'     => $v[1] ,
+         //           'country_id'    => $country_US->id ,
+                    'active'    => '1' ,
+                            'created_at'  => \Carbon\Carbon::createFromDate(2015,04,01)->toDateTimeString(),
+                            'updated_at'  => \Carbon\Carbon::now()->toDateTimeString(),
+                ] );
+
+                $country_US->states()->save($state);
+        }
+
+
+        // ******************************************************************* //
+
+
+    } // run ENDS
 }

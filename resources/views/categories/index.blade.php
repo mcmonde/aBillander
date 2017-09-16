@@ -9,6 +9,10 @@
     <div class="pull-right" style="padding-top: 4px;">
         @if ( $parentId>0 )
         <a href="{{ URL::to('categories') }}" class="btn btn-sm btn-default"><i class="fa fa-mail-reply"></i> {{ l('Back to Product Categories') }}</a>
+        @else
+            @if ( \App\Configuration::get('ALLOW_PRODUCT_SUBCATEGORIES') && $categories->count() )
+                <a xhref="{{ URL::to('categories') }}" class="btn btn-sm btn-success toggle-children"><i class="fa fa-sitemap"></i> {{ l('Expand / Collapse') }}</a>
+            @endif
         @endif
         <a href="{{ URL::to('categories/'.$parentId.'/subcategories/create') }}" class="btn btn-sm btn-success" 
                 title="{{l('Add New Item', [], 'layouts')}}"><i class="fa fa-plus"></i> {{l('Add New', [], 'layouts')}}</a>
@@ -45,7 +49,7 @@
 
             <td class="text-right">
                 @if (  is_null($category->deleted_at) )
-                @if (  $parentId==0 )
+                @if (  \App\Configuration::get('ALLOW_PRODUCT_SUBCATEGORIES') && $parentId==0 )
                 <a class="btn btn-sm btn-blue" href="{{ URL::to('categories/' . $category->id . '/subcategories') }}" title="{{l('Show Sub-Categories')}}"><i class="fa fa-folder-open-o"></i></a>
                 @endif
                 <a class="btn btn-sm btn-warning" href="{{ URL::to('categories/' . $parentId . '/subcategories/' . $category->id . '/edit') }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
@@ -61,6 +65,35 @@
                 @endif
             </td>
         </tr>
+
+@if ( \App\Configuration::get('ALLOW_PRODUCT_SUBCATEGORIES') && $category->parent_id==0 )
+        @foreach ($category->children as $child)
+
+        <tr class="child" style="display: none;">
+            <td> </td>
+            <td>{{ $child->id }} - {{ $child->name }}</td>
+            
+            <td class="text-center">@if ($child->active) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
+
+            <td class="text-right">
+                @if (  is_null($child->deleted_at) )
+                <a class="btn btn-sm btn-warning" href="{{ URL::to('categories/' . $child->parent_id . '/subcategories/' . $child->id . '/edit') }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
+
+                <a class="btn btn-sm btn-danger delete-item" data-html="false" data-toggle="modal" 
+                    href="{{ URL::to('categories/' . $child->parent_id . '/subcategories/' . $child->id ) }}" 
+                    data-content="{{l('You are going to delete a record. Are you sure?', [], 'layouts')}}" 
+                    data-title="{{ l('Categories') }} :: ({{$child->id}}) {{ $child->name }} " 
+                    onClick="return false;" title="{{l('Delete', [], 'layouts')}}"><i class="fa fa-trash-o"></i></a>
+                @else
+                <a class="btn btn-warning" href="{{ URL::to('categories/' . $child->id. '/restore' ) }}"><i class="fa fa-reply"></i></a>
+                <a class="btn btn-danger" href="{{ URL::to('categories/' . $child->id. '/delete' ) }}"><i class="fa fa-trash-o"></i></a>
+                @endif
+            </td>
+        </tr>
+
+        @endforeach
+@endif
+
         @endforeach
     </tbody>
 </table>
@@ -77,3 +110,59 @@
 @stop
 
 @include('layouts/modal_delete')
+
+
+@section('scripts')  @parent 
+
+    <script type="text/javascript">
+    
+        function createCookie(name,value,days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime()+(days*24*60*60*1000));
+                var expires = "; expires="+date.toGMTString();
+            }
+            else var expires = "";
+            document.cookie = name+"="+value+expires+"; path=/";
+        }
+
+        function readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        function eraseCookie(name) {
+            createCookie(name,"",-1);
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        
+        $(".toggle-children").click(function(){ 
+
+          var c = readCookie( 'tree' );
+
+          $(".child").toggle("slow");
+
+          if ( c != 'expanded' )
+            createCookie('tree','expanded',7);
+          else
+            eraseCookie('tree');
+
+        });
+
+        var c = readCookie( 'tree' );
+
+        if ( c == 'expanded' )
+            $(".child").toggle("slow");
+
+    </script>
+
+@append

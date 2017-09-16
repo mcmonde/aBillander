@@ -7,17 +7,20 @@ use Illuminate\Http\Request;
 
 use App\Company as Company;
 use App\Address as Address;
-use App\Configuration; 
+use App\Country as Country;
+use App\Configuration as Configuration; 
 use View;
 
 class CompaniesController extends Controller {
 
 
    protected $company;
+   protected $address;
 
-   public function __construct(Company $company)
+   public function __construct(Company $company, Address $address)
    {
         $this->company = $company;
+        $this->address = $address;
    }
 	/**
 	 * Display a listing of the resource.
@@ -41,14 +44,14 @@ class CompaniesController extends Controller {
 	 */
 	public function create()
 	{
+        return View::make('companies.create');
+
         if ( Configuration::get('DEF_COMPANY') > 0 ) {
         	// Company already created
         	return $this->edit(intval(Configuration::get('DEF_COMPANY')));
         } else {
         
-            $company = $this->company;
-    
-            return View::make('companies.create', compact('company'));
+            return View::make('companies.create');
         }
 	}
 
@@ -58,26 +61,24 @@ class CompaniesController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request)
 	{
-        $input = Input::all();
+		$this->validate($request, $this->company::$rules);
+		$this->validate($request, $this->address::related_rules());
 
-        $v = Validator::make($input, Company::$rules);
+		$request->merge(['notes' => $request->input('address.notes'), 'name_commercial' => $request->input('address.name_commercial')]);
 
-        if ($v->passes())
-        {
-            $this->company = $this->company->create($input);
+		$company = $this->company->create( $request->all() );
 
-            Configuration::updateValue('DEF_COMPANY', $this->company->id);
+		$data = $request->input('address');
+//		$data['notes'] = '';
+		$address = $this->address->create( $data );
+		$company->addresses()->save($address);
 
-            return Redirect::route('companies.index')
-				->with('info', 'El registro se ha creado correctamente: '. $input['name_fiscal']);
-        }
+		Configuration::update('DEF_COMPANY', $this->company->id);
 
-        return Redirect::route('companies.create')
-            ->withInput()
-            ->withErrors($v)
-            ->with('message_error', 'There were validation errors');
+		return redirect('companies/'.$company->id.'/edit')
+				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $company->id], 'layouts') . $request->input('name_fiscal'));
 	}
 
 	/**
@@ -101,9 +102,13 @@ class CompaniesController extends Controller {
 	 */
 	public function edit($id)
 	{
-        $company = $this->company = Company::with('Address')->with('Currency')->findOrFail( intval(Configuration::get('DEF_COMPANY')) );
+        $company = $this->company->with('address')->with('currency')->findOrFail( intval($id) );
+
+        $country = Country::find( $company->address->country_id );
+
+        $stateList = $country ? $country->states()->pluck('name', 'id')->toArray() : [] ;
     
-        return View::make('companies.edit', compact('company'));
+        return View::make('companies.edit', compact('company', 'stateList'));
 	}
 
 	/**
@@ -115,21 +120,22 @@ class CompaniesController extends Controller {
 	 */
 	public function update($id, Request $request)
 	{
-		if (!$request->input('name_commercial')) $request->merge( ['name_commercial' => $request->input('name_fiscal')] );
+		$this->validate($request, $this->company::$rules);
+		$this->validate($request, $this->address::related_rules());
 
-		$company = Company::findOrFail($id);
-		$address = Address::findOrFail($company->address_id);
+		$company = $this->company->findOrFail($id);
+		$address = $company->address;
 
-		$this->validate($request, Company::$rules);
-			$request->merge( ['alias' => $address->alias] );		// Alias is mandatory!
-		$this->validate($request, ['address' => Address::$rules]);
+		$request->merge(['notes' => $request->input('address.notes'), 'name_commercial' => $request->input('address.name_commercial')]);
+		
+		$company->update(  $request->all()  );
 
-		$company->update($request->all());
-			$request->merge($request->input('address'));   // also replace
-		$address->update($request->except(['address']));
+		$data = $request->input('address');
+//		$data['notes'] = '';
+		$address->update( $data );
 
-		return redirect('companies')
-				->with('info', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts') . $request->input('name_commercial'));
+		return redirect('companies/'.$company->id.'/edit')
+				->with('info', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $company->id], 'layouts') . $request->input('name_fiscal'));
 	}
 
 	/**

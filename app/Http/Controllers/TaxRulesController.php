@@ -28,7 +28,7 @@ class TaxRulesController extends Controller {
     public function index($taxId)
     {
         $tax = $this->tax->find($taxId);
-        $taxrules = $this->taxrule->where('tax_id', '=', $taxId)->orderBy('position', 'asc')->orderBy('name', 'asc')->get();
+        $taxrules = $this->taxrule->with('country')->with('state')->where('tax_id', '=', $taxId)->orderBy('position', 'asc')->orderBy('name', 'asc')->get();
 
         return view('tax_rules.index', compact('tax', 'taxrules'));
     }
@@ -53,6 +53,12 @@ class TaxRulesController extends Controller {
     {
         $tax = $this->tax->findOrFail($taxId);
         $this->validate($request, TaxRule::$rules);
+
+        // Handy conversions
+        if ( !$request->input('percent') )  $request->merge( ['percent'  => 0.0] );
+        if ( !$request->input('amount') )   $request->merge( ['amount'   => 0.0] );
+        if ( !$request->input('position') ) $request->merge( ['position' => 0  ] );
+
 
         $taxrule = $this->taxrule->create($request->all());
 
@@ -96,6 +102,12 @@ class TaxRulesController extends Controller {
     public function update($taxId, $id, Request $request)
     {
         $taxrule = TaxRule::findOrFail($id);
+
+        // Handy conversions
+        if ( !$request->input('percent') )  $request->merge( ['percent'  => 0.0] );
+        if ( !$request->input('amount') )   $request->merge( ['amount'   => 0.0] );
+        if ( !$request->input('position') ) $request->merge( ['position' => 0  ] );
+        
 
         $this->validate($request, TaxRule::$rules);
 

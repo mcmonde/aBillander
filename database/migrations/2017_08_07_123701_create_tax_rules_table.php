@@ -16,8 +16,8 @@ class CreateTaxRulesTable extends Migration {
 		Schema::create('tax_rules', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('country_id', 64)->nullable();
-			$table->string('state_id', 64)->nullable();
+			$table->integer('country_id')->unsigned()->default(0);
+			$table->integer('state_id')->unsigned()->default(0);
 			$table->tinyInteger('sales_equalization')->default(0);		// Apply "Recargo de Equivalencia" (sales equalization tax in Spain and Belgium only). Vendors must charge these customers a sales equalization tax in addition to output tax. 
 
 			$table->string('name', 64)->nullable(false);
@@ -31,10 +31,11 @@ class CreateTaxRulesTable extends Migration {
 			$table->timestamps();
 			$table->softDeletes();
 
-			$table->foreign('tax_id')
-			      ->references('id')
-			      ->on('taxes')
-			      ->onDelete('cascade');
+// Commented for seeding to work
+//			$table->foreign('tax_id')
+//			      ->references('id')
+//			      ->on('taxes')
+//			      ->onDelete('cascade');
 		});
 	}
 

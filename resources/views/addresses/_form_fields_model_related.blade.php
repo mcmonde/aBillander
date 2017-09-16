@@ -122,6 +122,13 @@
             });
         });
 
+        // Select default country
+        if ( !($('select[name="address[country_id]"]').val() > 0) ) {
+        	var def_countryID = {{ \App\Configuration::get('DEF_COUNTRY') }};
+
+        	$('select[name="address[country_id]"]').val(def_countryID).change();
+        }
+
     </script>
 
 @append
