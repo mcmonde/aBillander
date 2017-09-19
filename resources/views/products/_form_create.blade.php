@@ -7,7 +7,14 @@
                      {!! Form::text('name', null, array('class' => 'form-control', 'id' => 'name')) !!}
                      {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
                   </div>
-                  <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('reference') ? 'has-error' : '' }}">
+
+                  <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('product_type') ? 'has-error' : '' }}"">
+                      {{ l('Product type') }}
+                      {!! Form::select('product_type', $product_typeList, null, array('class' => 'form-control')) !!}
+                     {!! $errors->first('product_type', '<span class="help-block">:message</span>') !!}
+                  </div>
+
+                  <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('reference') ? 'has-error' : '' }}">
                      {{ l('Reference') }}
                      {!! Form::text('reference', null, array('class' => 'form-control', 'id' => 'reference')) !!}
                      {!! $errors->first('reference', '<span class="help-block">:message</span>') !!}
@@ -78,11 +85,10 @@
         </div>
 
         <div class="row">
-		         <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('category_id') ? 'has-error' : '' }}">
+		         <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('category_id') ? 'has-error' : '' }}">
 		            {{ l('Category') }}
 		            {!! Form::select('category_id', array('0' => l('-- Please, select --', [], 'layouts')) + $categoryList, null, array('class' => 'form-control')) !!}
                 {!! $errors->first('category_id', '<span class="help-block">:message</span>') !!}
-                {{-- abi_r($categoryList) --}}
 		         </div>
 
 		          <div class="form-group col-lg-3 col-md-3 col-sm-3" id="div-stock_control">
@@ -108,9 +114,16 @@
                      {!! Form::text('quantity_onhand', null, array('class' => 'form-control', 'id' => 'quantity_onhand')) !!}
                      {!! $errors->first('quantity_onhand', '<span class="help-block">:message</span>') !!}
                   </div>
-                  <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('warehouse_id') ? 'has-error' : '' }}">
+                  <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('warehouse_id') ? 'has-error' : '' }}">
                       {{ l('Warehouse') }}
                       {!! Form::select('warehouse_id', array('0' => l('-- Please, select --', [], 'layouts')) + $warehouseList, null, array('class' => 'form-control')) !!}
+                      {!! $errors->first('warehouse_id', '<span class="help-block">:message</span>') !!}
+                  </div>
+
+                  <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('quantity_decimal_places') ? 'has-error' : '' }}">
+                      {{ l('Quantity decimals') }}
+                      {!! Form::select('quantity_decimal_places', array('0' => '0', '1' => '1', '2' => '2', '3' => '3' ), null, array('class' => 'form-control')) !!}
+                      {!! $errors->first('quantity_decimal_places', '<span class="help-block">:message</span>') !!}
                   </div>
         </div>
 
@@ -138,7 +151,7 @@
                </div>
 
 
-@section('scripts') 
+@section('scripts')    @parent
 
 @include('products._calculator_js')
 
@@ -146,12 +159,13 @@
 
         $(document).ready(function() {
            $("#cost_price").val( 0.0 );
-           $("#quantity_onhand").val( 0 );
+//           $("#quantity_onhand").val( 0 );
         });
 
     </script> 
 
     <script type="text/javascript">
+
         // Select default tax
         if ( !($('select[name="tax_id"]').val() > 0) ) {
           var def_taxID = {{ \App\Configuration::get('DEF_TAX') }};
@@ -159,7 +173,14 @@
           $('select[name="tax_id"]').val(def_taxID);
         }
 
+        // Select default decimals
+        if ( {{ intval( !isset($product->quantity_decimal_places) ) }} ) {
+          var def_decimalsID = {{ \App\Configuration::get('DEF_QUANTITY_DECIMALS') }};
+
+          $('select[name="quantity_decimal_places"]').val(def_decimalsID);
+        }
+
     </script>
 
 
-@append
+@endsection

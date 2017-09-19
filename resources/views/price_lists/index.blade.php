@@ -46,7 +46,7 @@
 		            @endif
 		            </td>
             <td>@if ($pricelist->type > 0)
-                    {{ $pricelist->amount }}
+                    {{ $pricelist->percent('amount') }}
                 @else
                     -
                 @endif</td>

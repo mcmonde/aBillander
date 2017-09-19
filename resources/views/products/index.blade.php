@@ -125,11 +125,11 @@
                 @else {{ $product->reference }}
                 @endif</td>
 			<td>{{ $product->name }}</td>
-			<td>{{ $product->quantity_onhand }}</td>
-            <td>{{ $product->cost_price }}</td>
-            <td>{{ $product->price }}</td>
+			<td>{{ $product->as_quantity('quantity_onhand') }}</td>
+            <td>{{ $product->as_price('cost_price') }}</td>
+            <td>{{ $product->as_price('price') }}</td>
             <td>{{ $product->tax->name }}</td>
-            <td>{{ App\FP::percent($product->tax->percent) }}</td>
+            <td>{{ $product->as_percentable($product->tax->percent) }}</td>
             <td>@if (isset($product->category->name)) {{ $product->category->name }} @endif</td>
 			<td class="text-center">@if ($product->active) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
            <td class="text-right">

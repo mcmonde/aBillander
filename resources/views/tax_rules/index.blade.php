@@ -44,8 +44,8 @@
             <td class="text-center">@if ($taxrule->sales_equalization) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
 
 			<td>{{ $taxrule->name }}</td>
-			<td>{{ $taxrule->percent('percent') }}%</td>
-            <td>{{ $taxrule->money_amount('amount') }}</td>
+			<td>{{ $taxrule->as_percent('percent') }}%</td>
+            <td>{{ $taxrule->as_money_amount('amount') }}</td>
             <td>{{ $taxrule->position }}</td>
 
 			<td class="text-right">

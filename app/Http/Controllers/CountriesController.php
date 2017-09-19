@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
+// use Illuminate\Support\Facades\Response;
 
 use App\Country as Country;
 use View;
@@ -40,7 +40,7 @@ class CountriesController extends Controller {
 	 */
 	public function create()
 	{
-		//
+		return view('countries.create');
 	}
 
 	/**
@@ -48,9 +48,14 @@ class CountriesController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request)
 	{
-		//
+		$this->validate($request, Country::$rules);
+
+		$country = $this->country->create($request->all());
+
+		return redirect('countries')
+				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $country->id], 'layouts') . $request->input('name'));
 	}
 
 	/**
@@ -61,7 +66,7 @@ class CountriesController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
+		return $this->edit($id);
 	}
 
 	/**
@@ -72,7 +77,9 @@ class CountriesController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+		$country = $this->country->findOrFail($id);
+		
+		return view('countries.edit', compact('country'));
 	}
 
 	/**
@@ -81,9 +88,16 @@ class CountriesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, Request $request)
 	{
-		//
+		$country = $this->country->findOrFail($id);
+
+		$this->validate($request, Country::$rules);
+
+		$country->update($request->all());
+
+		return redirect('countries')
+				->with('success', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts') . $request->input('name'));
 	}
 
 	/**
@@ -94,7 +108,19 @@ class CountriesController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		//
+        // Destroy States
+        $country = $this->country->findOrFail($id);
+
+        if ( $country->states()->count() )
+        	foreach ($country->states as $state) {
+        		$state->delete();
+        	}
+
+        // Destroy Country
+        $country->delete();
+
+        return redirect('countries')
+				->with('success', l('This record has been successfully deleted &#58&#58 (:id) ', ['id' => $id], 'layouts'));
 	}
 
     public function getStates($countryId)

@@ -114,11 +114,17 @@ class ProductsController extends Controller {
 
         $action = $request->input('nextAction', '');
 
-        $this->validate($request, Product::$rules['create']);
+        $rules = Product::$rules['create'];
+        if ($request->input('quantity_onhand')>0)
+            $rules['warehouse_id'] .= '|exists:warehouses,id';
+
+        $this->validate($request, $rules);
 
         // Create Product
-        $product = $this->product->create($request->except('quantity_onhand'));
+//        $product = $this->product->create($request->except('quantity_onhand'));
+        $product = $this->product->create($request->all());
 
+/*
         // Create stock movement (Initial Stock)
         $data = [   'date' =>  \Carbon\Carbon::now(), 
                     'document_reference' => '', 
@@ -145,6 +151,7 @@ class ProductsController extends Controller {
             $price = \App\PriceList::priceCalculator( $list, $product );
             $product->pricelists()->attach($list_id, array('price' => $price));
         }
+*/
 
         if ($action == 'completeProductData')
         return redirect('products/'.$product->id.'/edit')

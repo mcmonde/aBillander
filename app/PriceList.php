@@ -3,15 +3,21 @@
 use Illuminate\Database\Eloquent\Model;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\ViewFormatterTrait;
+
 class PriceList extends Model {
 
-//    use SoftDeletes;
+    use ViewFormatterTrait;
+    //    use SoftDeletes;
 
 //    protected $dates = ['deleted_at'];
 
-	protected $fillable = ['name', 'type', 'price_is_tax_inc', 'amount'];
+	protected $fillable = ['name', 'type', 'price_is_tax_inc', 'amount', 'currency_id'];
 
-	public static $rules = array('name' => 'required');
+	public static $rules = array(
+                                    'name' => 'required',
+                                    'currency_id' => 'exists:currencies,id'
+                                );
 
     /**
      * Handy method

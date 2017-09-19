@@ -3,6 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+// use Illuminate\Validation\Rule;
+
 use App\Traits\ViewFormatterTrait;
 
 class Product extends Model {
@@ -10,11 +12,19 @@ class Product extends Model {
     use ViewFormatterTrait;
     use SoftDeletes;
 
+    public static $types = array(
+            'simple', 
+            'virtual', 
+            'combinable', 
+            'grouped',
+        );
+
     protected $dates = ['deleted_at'];
     
-    protected $fillable = [ 'name', 'reference', 'ean13', 'description', 
-                            'quantity_onhand', 'warranty_period', 
-                            'reorder_point', 'maximum_stock', 'price', 'cost_price', 'supply_lead_time', 
+    protected $fillable = [ 'product_type', 'name', 'reference', 'ean13', 'description', 'description_short', 
+                            'measure_unit', 'quantity_decimal_places', 
+                            'warranty_period', 
+                            'reorder_point', 'maximum_stock', 'price', 'cost_price', 'supplier_reference', 'supply_lead_time', 
                             'location', 'width', 'height', 'depth', 'weight', 
                             'notes', 'stock_control', 'publish_to_web', 'blocked', 'active', 
                             'tax_id', 'category_id', 'main_supplier_id',
@@ -22,18 +32,21 @@ class Product extends Model {
 
     public static $rules = array(
         'create' => array(
-                        	'name'        => 'required|min:2|max:128',
-                        	'reference'   => 'required|min:2|max:32|unique:products,reference', 
-                            'price'       => 'required|numeric|min:0',
-                            'cost_price'      => 'required|numeric|min:0',
-                            'tax_id'      => 'exists:taxes,id',
-                            'category_id' => 'exists:categories,id',
-                            'quantity_onhand' => 'required|numeric|min:0',
-                            'warehouse_id' => 'exists:warehouses,id',
+                            'name'         => 'required|min:2|max:128',
+                            'product_type' => 'required|in:simple,virtual,combinable,grouped',
+//                            'product_type' => 'required|'.Rule::in( self::$types ),
+                        	'reference'    => 'required|min:2|max:32|unique:products,reference', 
+                            'price'        => 'required|numeric|min:0',
+                            'cost_price'   => 'required|numeric|min:0',
+                            'tax_id'       => 'exists:taxes,id',
+                            'category_id'  => 'exists:categories,id',
+                            'quantity_onhand' => 'nullable|numeric|min:0',
+                            'warehouse_id' => 'required_with:quantity_onhand',
+//                            'warehouse_id' => 'required_with:quantity_onhand|exists:warehouses,id',
                     ),
         'main_data' => array(
                             'name'        => 'required|min:2|max:128',
-                            'reference'   => 'sometimes|required|min:2|max:32|unique:products,id,',     // https://laracasts.com/discuss/channels/requests/laravel-5-validation-request-how-to-handle-validation-on-update
+                            'reference'   => 'sometimes|required|min:2|max:32|unique:products,reference,',     // https://laracasts.com/discuss/channels/requests/laravel-5-validation-request-how-to-handle-validation-on-update
                             'tax_id'      => 'exists:taxes,id',
                             'category_id' => 'exists:categories,id',
                     ),

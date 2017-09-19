@@ -1,33 +1,34 @@
 
 <div class="row">
     <div class="form-group col-lg-6 col-md-6 col-sm-6">
-        {!! Form::label('name', l('Option Group name')) !!}
+        {!! Form::label('name', l('Country name')) !!}
         {!! Form::text('name', null, array('class' => 'form-control')) !!}
     </div>
-    <div class="form-group col-lg-6 col-md-6 col-sm-6">
-        {!! Form::label('public_name', l('Group public name')) !!}
-                 <a href="javascript:void(0);">
-                    <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                            data-content="{{ l('This will be displayed to the Customer and on commercial documentation.') }}">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
-                 </a>
-        {!! Form::text('public_name', null, array('class' => 'form-control')) !!}
+    <div class="form-group col-lg-4 col-md-4 col-sm-4">
+        {!! Form::label('iso_code', l('Country ISO code')) !!}
+        {!! Form::text('iso_code', null, array('class' => 'form-control')) !!}
     </div>
 </div>
 
 <div class="row">
-    <div class="form-group col-lg-4 col-md-4 col-sm-4">
-        {!! Form::label('position', l('Position')) !!}
-                 <a href="javascript:void(0);">
-                    <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                            data-content="{{ l('Use multiples of 10. Use other values to interpolate.') }}">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
-                 </a>
-        {!! Form::text('position', null, array('class' => 'form-control')) !!}
+    <div class="form-group col-lg-4 col-md-4 col-sm-4" id="div-active">
+     {!! Form::label('active', l('Active?', [], 'layouts'), ['class' => 'control-label']) !!}
+     <div>
+       <div class="radio-inline">
+         <label>
+           {!! Form::radio('active', '1', true, ['id' => 'active_on']) !!}
+           {!! l('Yes', [], 'layouts') !!}
+         </label>
+       </div>
+       <div class="radio-inline">
+         <label>
+           {!! Form::radio('active', '0', false, ['id' => 'active_off']) !!}
+           {!! l('No', [], 'layouts') !!}
+         </label>
+       </div>
+     </div>
     </div>
 </div>
 
   {!! Form::submit(l('Save', [], 'layouts'), array('class' => 'btn btn-success')) !!}
-  {!! link_to_route('optiongroups.index', l('Cancel', [], 'layouts'), null, array('class' => 'btn btn-warning')) !!}
+  {!! link_to_route('countries.index', l('Cancel', [], 'layouts'), null, array('class' => 'btn btn-warning')) !!}

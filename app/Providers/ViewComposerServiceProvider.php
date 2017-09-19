@@ -22,7 +22,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		// Currencies
-		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'companies._form', 'customer_groups.create', 'customer_groups.edit'), function($view) {
+		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'companies._form', 'price_lists._form', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
 		    $view->with('currencyList', \App\Currency::pluck('name', 'id')->toArray());
 		    
@@ -150,6 +150,19 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		    	// abi_r(\App\Category::where('parent_id', '=', '0')->orderby('name', 'asc')->pluck('name', 'id')->toArray(), true);
 		    	$view->with('categoryList', \App\Category::where('parent_id', '=', '0')->orderby('name', 'asc')->pluck('name', 'id')->toArray());
 		    }
+		    
+		});
+
+		// Product types
+		view()->composer(array('products._form_create'), function($view) {
+		    
+		    $list = [];
+		    foreach (\App\Product::$types as $type) {
+		    	$list[$type] = l($type, [], 'appmultilang');;
+		    }
+
+		    $view->with('product_typeList', $list);
+		    // $view->with('warehouseList', \App\Warehouse::pluck('name', 'id')->toArray());
 		    
 		});
 

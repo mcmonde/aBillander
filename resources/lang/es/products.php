@@ -28,6 +28,7 @@ return [
 	'New Product'     => 'Nuevo Producto',
 
 	'Product Name'     => 'Nombre del Producto',
+	'Product type'     => 'Tipo',
 	'Reference'     => 'Referencia',
 	'Customer Price'     => 'Precio de Venta',
 	'Tax'     => 'Impuesto',
@@ -40,7 +41,7 @@ return [
 	'Stock Control?'     => '¿Control de Stock?',
 	'Quantity'     => 'Stock Inicial',
 	'Warehouse'     => 'Almacén',
-	''     => '',
+	'Quantity decimals'     => 'Decimales',
 
 
 	/*

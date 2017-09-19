@@ -30,7 +30,7 @@ return [
 
 	'Price is Tax Included?'     => 'El Precio es con Impuestos incluidos?',
 	'Tax Included'      => 'Impuestos incluidos',
-	''     => '',
+	'Currency'     => 'Divisa',
 
 
 	/*

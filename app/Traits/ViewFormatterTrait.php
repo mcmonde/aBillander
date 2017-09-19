@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait ViewFormatterTrait
 {
-    public function quantity( $key = '' )
+    public function as_quantity( $key = '' )
     {
         if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
 
@@ -13,7 +13,7 @@ trait ViewFormatterTrait
 
         // Do formatting
         // Get decimal places -> decimal_places model property
-        $decimals = array_key_exists('decimal_places', $this->attributes) ?
+        $decimals = array_key_exists('quantity_decimal_places', $this->attributes) ?
         			$this->decimal_places :
         			intval( \App\Configuration::get('DEF_QUANTITY_DECIMALS') );
         
@@ -22,12 +22,12 @@ trait ViewFormatterTrait
         return $data;
     }
 
-    public function price( $key = '', \App\Currency $currency = null )
+    public function as_price( $key = '', \App\Currency $currency = null )
     {
-        return $this->money_amount( $key, $currency );
+        return $this->as_money_amount( $key, $currency );
     }
 
-    public static function money($amount = 0, \App\Currency $currency = null)
+    public static function as_money($amount = 0, \App\Currency $currency = null)
     {
         if (!$currency)
             $currency = Context::getContext()->currency;
@@ -43,7 +43,7 @@ trait ViewFormatterTrait
         return $number;
     }
 
-    public function money_amount( $key = '', \App\Currency $currency = null )
+    public function as_money_amount( $key = '', \App\Currency $currency = null )
     {
         if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
 
@@ -57,7 +57,7 @@ trait ViewFormatterTrait
         return $number;
     }
 
-    public function percent( $key = '', $decimalPlaces = null )
+    public function as_percent( $key = '', $decimalPlaces = null )
     {
         // abi_r($this->{$key}); 
         // abi_r( strlen($key) > 0  );
@@ -79,12 +79,31 @@ trait ViewFormatterTrait
         return $number;
     }
 
-    public function date( $key = '' )
+    public function as_percentable( $val = 0.0, $decimalPlaces = null )
+    {
+        // abi_r($this->{$key}); 
+        // abi_r( strlen($key) > 0  );
+        // abi_r( array_key_exists($key.$key, $this->attributes), true );
+
+        // if ( !$key || !\property_exists($this, $key) ) return null;
+        $data = floatval( $val ); // abi_r($data, true);
+
+        if ( !$decimalPlaces ) $decimalPlaces = \App\Configuration::get('DEF_PERCENT_DECIMALS');
+
+        // abi_r($decimalPlaces, true);
+
+        
+        $number = number_format($data, $decimalPlaces, '.', '');
+
+        return $number;
+    }
+
+    public function as_date( $key = '' )
     {
         // 
     }
 
-    public static function date_short(\Carbon\Carbon $date, $format = '')
+    public static function as_date_short(\Carbon\Carbon $date, $format = '')
     {
         // http://laravel.io/forum/03-11-2014-date-format
         // https://laracasts.com/forum/?p=764-saving-carbon-dates-from-user-input/0

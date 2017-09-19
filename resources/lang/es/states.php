@@ -4,51 +4,42 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Options Language Lines :: index
+	| States Language Lines :: index
 	|--------------------------------------------------------------------------
 	|
 	| .
 	|
 	*/
 
-	'Options' => 'Opciones',
-	'Back to Option Groups'     => 'Volver a Grupos de Opciones',
-	'Option Groups' => 'Grupos de Opciones',
+	'States' => 'Estados',
+	'Back to States'     => 'Volver a Estados',
+	'States' => 'Estados',
 
 	/*
 	|--------------------------------------------------------------------------
-	| Options Language Lines :: create
+	| States Language Lines :: create
 	|--------------------------------------------------------------------------
 	|
 	| .
 	|
 	*/
 
-	'Options - Create' => 'Opciones - Crear',
-	'New Option'     => 'Nueva Opción',
-	'Option Name'     => 'Nombre de la Opción',
-	'Position'     => 'Posición',
-
-	'Use multiples of 10. Use other values to interpolate.'     => 'Use múltiplos de 10. Use otros valores para intercalar.',
+	'States - Create' => 'Estados - Crear',
+	'New State'     => 'Nuevo Estado',
+	'State Name'     => 'Nombre del Estado',
+	'State ISO code'     => 'Código ISO',
 
 
 	/*
 	|--------------------------------------------------------------------------
-	| Options Language Lines :: edit
+	| States Language Lines :: edit
 	|--------------------------------------------------------------------------
 	|
 	| .
 	|
 	*/
 
-	'Options - Edit'     => 'Opciones - Modificar',
-	'Edit Option'     => 'Modificar Opción',
-	''     => '',
-	''     => '',
-	''     => '',
-	''     => '',
-	''     => '',
-	''     => '',
-	''     => '',
+	'States - Edit'     => 'Estados - Modificar',
+	'Edit State'     => 'Modificar Estado',
 
 ];
