@@ -58,6 +58,24 @@
                                       'onclick' => 'this.select()', 'onkeyup' => 'new_margin_price()', 'onchange' => 'new_margin_price()')) !!}
                      {!! $errors->first('price_tax_inc', '<span class="help-block">:message</span>') !!}
                   </div>
+
+                   <!-- div class="form-group col-lg-3 col-md-3 col-sm-3" id="div-active">
+                     {!! Form::label('price_is_tax_inc', l('Save tax included?'), ['class' => 'control-label']) !!}
+                     <div>
+                       <div class="radio-inline">
+                         <label>
+                           {!! Form::radio('price_is_tax_inc', '1', false, ['id' => 'price_is_tax_inc_on', 'onclick' => 'return false;']) !!}
+                           {!! l('Yes', [], 'layouts') !!}
+                         </label>
+                       </div>
+                       <div class="radio-inline">
+                         <label>
+                           {!! Form::radio('price_is_tax_inc', '0', true, ['id' => 'price_is_tax_inc_off', 'onclick' => 'return false;']) !!}
+                           {!! l('No', [], 'layouts') !!}
+                         </label>
+                       </div>
+                     </div>
+                   </div -->
         </div>
 
         <div class="row">

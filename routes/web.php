@@ -109,8 +109,8 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
                                                         'as'   => 'products.ajax.combinationLookup' ));
         Route::post('products/ajax/price_lookup', array('uses' => 'ProductsController@ajaxProductPriceSearch', 'as' => 'products.ajax.priceLookup'));
 
-        Route::resource('prices',     'PricesContoller');
-        Route::resource('pricelists', 'PriceListsController');
+        Route::resource('pricelists',     'PriceListsController');
+        Route::resource('pricelistlines', 'PriceListLinesController');
 
         Route::resource('optiongroups',         'OptionGroupsController');
         Route::resource('optiongroups.options', 'OptionsController');

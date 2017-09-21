@@ -98,6 +98,18 @@ trait ViewFormatterTrait
         return $number;
     }
 
+    public function as_priceable( $val = 0.0, \App\Currency $currency = null )
+    {
+        $data = floatval( $val );
+
+        if (!$currency)
+            $currency = \App\Context::getContext()->currency;
+
+        $number = number_format($data, $currency->decimalPlaces, '.', '');
+
+        return $number;
+    }
+
     public function as_date( $key = '' )
     {
         // 

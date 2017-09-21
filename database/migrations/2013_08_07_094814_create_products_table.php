@@ -44,6 +44,7 @@ class CreateProductsTable extends Migration {
 			$table->decimal('maximum_stock', 20, 6)->default(0);	
 			
 			$table->decimal('price', 20, 6)->default(0.0);
+			$table->tinyInteger('price_is_tax_inc')->default(0);			// Only applies to sales price
 			$table->decimal('last_purchase_price', 20, 6)->default(0.0);
 			$table->decimal('cost_price', 20, 6)->default(0.0);
 			$table->decimal('cost_average', 20, 6)->default(0.0);			// Should be on per warehouse base?

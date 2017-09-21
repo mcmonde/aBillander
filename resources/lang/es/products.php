@@ -36,6 +36,7 @@ return [
 	'Cost Price'     => 'Precio de Coste',
 	'Margin'     => 'Margen',
 	'Margin calculation method'     => 'Método de cálculo del Margen',
+	'Save tax included?'     => '¿Guardar con IVA incluido?',
 	'Average Cost Price'     => 'Precio de Coste Promedio',
 	'Category'     => 'Categoría',
 	'Stock Control?'     => '¿Control de Stock?',
@@ -66,6 +67,7 @@ return [
 
 	'Ean13'     => 'Ean13',
 	'Description'     => 'Descripción',
+	'Short Description'     => 'Descripción Corta',
 	'Location'     => 'Ubicación',
 	'Width'     => 'Anchura',
 	'Height'     => 'Altura',
@@ -76,6 +78,7 @@ return [
 	'Lead Time'     => 'Plazo de entrega',
 
 	'Price Lists'     => 'Tarifas',
+	'Base Price'     => 'Precio Base',
 	'Price List Name'     => 'Nombre de la Tarifa',
 	'Sales Price'     => 'Precio de Venta',
 	'Discount (%)'     => 'Descuento (%)',

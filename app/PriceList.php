@@ -27,17 +27,7 @@ class PriceList extends Model {
     {
         $features = ' &nbsp; &nbsp;';
 
-        $features .=  $this->type == 0 ? l('Fixed price', [], 'appmultilang') : 
-                    ($this->type == 1 ? l('Discount percentage', [], 'appmultilang') : 
-                    ($this->type == 2 ? l('Margin percentage', [], 'appmultilang') : ''))
-        ;
-
-        if ($this->type == 0){
-            $features .=  $this->price_is_tax_inc ? '. '.l('Tax Included', [], 'pricelists') : '';
-        } else {
-            $features .=  ' ('.\App\FP::percent( $this->amount ).'%) ';
-        }
-
+        $features .=  $this->getType() . ' ' . getExtra();
 
         return $features;
     }
@@ -61,12 +51,36 @@ class PriceList extends Model {
         if ($this->type == 0){
             $features .=  $this->price_is_tax_inc ? l('Tax Included', [], 'pricelists') : '';
         } else {
-            $features .=  ' ('.\App\FP::percent( $this->amount ).'%) ';
+            $features .=  ' ('.$this->as_percent( 'amount' ).'%) ';
         }
 
         return $features;
     }
 
+    public function calculatePrice( \App\Product $product )
+    {
+        switch ($this->type) {
+            // Discount percentage
+            case 1:
+                $price = $product->price*(1.0-($this->amount/100.0));
+                break;
+            // Margin percentage
+            case 2:
+                $price = \App\Calculator::price($product->cost_price, $this->amount);
+                break;
+            // Fixed price
+            case 0:
+            default:
+                $price = $this->price_is_tax_inc
+                         ? $product->price*(1.0+($product->tax->percent/100.0))
+                         : $product->price;
+                break;
+        }
+
+        return $price;
+    }
+
+    // Deprecated 
     public static function priceCalculator( \App\PriceList $plist = null, \App\Product $product )
     {
         if (!$plist) return false;
@@ -88,8 +102,9 @@ class PriceList extends Model {
                 break;
         }
 
-        return $price;
+        return (-1.0)*$price;
     }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -97,13 +112,9 @@ class PriceList extends Model {
     |--------------------------------------------------------------------------
     */
     
-    public function products()
+    public function pricelistlines() 
     {
-        return $this->belongsToMany('App\Product', 'price_list_product', 'price_list_id', 'product_id')->withPivot('price')->withTimestamps();
+        return $this->hasMany('App\PriceListLine');
     }
     
-    public function prices()
-    {
-        return $this->hasMany('App\Price');
-    }
 }

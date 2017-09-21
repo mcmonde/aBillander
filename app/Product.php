@@ -24,7 +24,8 @@ class Product extends Model {
     protected $fillable = [ 'product_type', 'name', 'reference', 'ean13', 'description', 'description_short', 
                             'measure_unit', 'quantity_decimal_places', 
                             'warranty_period', 
-                            'reorder_point', 'maximum_stock', 'price', 'cost_price', 'supplier_reference', 'supply_lead_time', 
+                            'reorder_point', 'maximum_stock', 'price', 'price_is_tax_inc', 'cost_price', 
+                            'supplier_reference', 'supply_lead_time', 
                             'location', 'width', 'height', 'depth', 'weight', 
                             'notes', 'stock_control', 'publish_to_web', 'blocked', 'active', 
                             'tax_id', 'category_id', 'main_supplier_id',
@@ -183,30 +184,24 @@ class Product extends Model {
         return $this->hasMany('App\Price');
     }
     
-    public function price_list( $list )
+    public function priceByList( \App\PriceList $list )
     {
-        $plist_id = is_numeric($list)
-                    ? $list
-                    : $list->id ;
+        // $plist_id = $list->id ;
 
-        $result = $this->hasMany('App\Price')->where('price_list_id', '=', $plist_id)->first();
+        // $result = $this->hasMany('App\Price')->where('price_list_id', '=', $plist_id)->first();
+        $line = $list->pricelistlines()->where('product_id', '=', $this->id)->first();
 
-        if ( $result )
-            return $result;
+        if ( $line )
+            return $line;
        
         // Price not foiund, calculate it
-        $product = \App\Product::find($this->id);
+        $price = $list->calculatePrice( $this );
 
-        $priceObj = \App\Price::create([]);
-        $priceObj->product_id = $product->id;
-        $priceObj->price_list_id = $plist_id;
+        $line = \App\PriceListLine::create( [ 'product_id' => $this->id, 'price' => $price ] );
 
-        $price = \App\PriceList::priceCalculator( \App\PriceList::find($plist_id), $product );
-        $priceObj->price = $price;
+        $list->pricelistlines()->save($line);
         
-        $product->pricelists()->attach($plist_id, ['price' => $price]);
-
-            return $priceObj;
+        return $line;
     }
     
 

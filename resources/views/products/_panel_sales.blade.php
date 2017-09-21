@@ -20,14 +20,12 @@
                      {!! $errors->first('cost_price', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('margin') ? 'has-error' : '' }}">
-                     {{ l('Margin (%)') }}
-                         <a href="javascript:void(0);">
-                            <button type="button" xclass="btn btn-xs btn-white" data-toggle="popover" data-placement="top" 
+                     {{ l('Margin (%)') }} 
+                         <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
                                     data-content="{{ \App\Configuration::get('MARGIN_METHOD') == 'CST' ?
                                         l('Margin calculation is based on Cost Price', [], 'layouts') :
                                         l('Margin calculation is based on Sales Price', [], 'layouts') }}">
-                                <i class="fa fa-info-circle"></i>
-                            </button>
+                                <i class="fa fa-question-circle abi-help"></i>
                          </a>
                      {!! Form::text('margin', null, array('class' => 'form-control', 'id' => 'margin', 'autocomplete' => 'off', 
                                       'onclick' => 'this.select()', 'onkeyup' => 'new_price()', 'onchange' => 'new_price()')) !!}
@@ -99,30 +97,44 @@
                 <th class="text-left">{{l('Sales Price')}}</th>
                 <th class="text-left">{{l('Discount (%)')}}</th>
                 <th class="text-left">{{l('Margin (%)')}}</th>
-                <th class="text-left">{{l('Price with Tax')}}</th>
+                <th class="text-left">{{l('Price with Tax')}} </th>
                 <th class="text-right"> </th>
             </tr>
         </thead>
         <tbody>
+
+            <tr style="color: #3a87ad; background-color: #d9edf7;">
+                <td> </td>
+                <td>{{ l('Base Price') }}</td>
+                <td>{{ $product->as_price('price') }}</td>
+                <td> - </td>
+                <td>{{ $product->as_percentable( \App\Calculator::margin( $product->cost_price, $product->price ) ) }}</td>
+                <td>{{ $product->as_priceable( $product->price*(1.0+($product->tax->percent/100.0)) ) }}</td>
+                <td class="text-right"> </td>
+            </tr>
+            
+
             @foreach ($pricelists as $pricelist)
             <?php $line_price = ( ( ($pricelist->type == 0) AND $pricelist->price_is_tax_inc ) 
-                          ? $product->price_list($pricelist->id)->price/(1.0+($product->tax->percent/100.0))
-                          : $product->price_list($pricelist->id)->price 
+                          ? $product->priceByList($pricelist)->price/(1.0+($product->tax->percent/100.0))
+                          : $product->priceByList($pricelist)->price 
                                 ); ?>
             <tr>
                 <td>{{ $pricelist->id }}</td>
                 <td>{{ $pricelist->name }}<br />
                     <span class="label label-success">{{ $pricelist->getType() }}</span>
                     <span class="label label-warning">{{ $pricelist->getExtra() }}</span></td>
-                <td>{{ $line_price }} {{-- $product->price_list($pricelist->id)->price_tax_excl() --}}</td>
-                <td>{{ \App\FP::percent(\App\Calculator::discount( $product->price, $line_price )) }}</td>
-                <td>{{ \App\FP::percent(\App\Calculator::margin( $product->cost_price, $line_price )) }}</td>
-                <td>{{ $line_price*(1.0+($product->tax->percent/100.0)) }}</td>
+                <td>{{ $product->as_priceable($line_price) }}</td>
+                <td>{{ $product->as_percentable( \App\Calculator::discount( $product->price, $line_price ) ) }}</td>
+                <td>{{ $product->as_percentable( \App\Calculator::margin( $product->cost_price, $line_price ) ) }}</td>
+                <td>{{ $product->as_priceable( $line_price*(1.0+($product->tax->percent/100.0)) ) }}</td>
                 <td class="text-right">
-                    <a class="btn btn-sm btn-warning" href="{{ URL::to('prices/' . $product->price_list($pricelist->id)->id . '/edit?back_route=' . urlencode('products/' . $product->id . '/edit#sales')) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
+                    <a class="btn btn-sm btn-warning" href="{{ URL::to('pricelistlines/' . $product->priceByList($pricelist)->id . '/edit?back_route=' . urlencode('products/' . $product->id . '/edit#sales')) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
                 </td>
             </tr>
+            
             @endforeach
+
         </tbody>
     </table>
     @else

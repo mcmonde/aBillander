@@ -3,6 +3,8 @@
 use Illuminate\Support\ServiceProvider;
 use DB;
 
+use Illuminate\Support\Arr;
+
 /*
 |--------------------------------------------------------------------------
 | Application View Composers
@@ -106,9 +108,10 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		    
 		});
 
-		view()->composer(array('products.create', 'products.edit', 'prices.edit', 'customer_invoices.create', 'customer_invoices.edit'), function($view) {
+		view()->composer(array('products.create', 'products.edit', 'pricelistlines.edit', 'customer_invoices.create', 'customer_invoices.edit'), function($view) {
 
-		    $view->with('taxpercentList', \App\Tax::get()->pluck('percent', 'id')->toArray());
+		    // https://laracasts.com/discuss/channels/eloquent/eloquent-model-lists-id-and-a-custom-accessor-field
+		    $view->with('taxpercentList', Arr::pluck(\App\Tax::all(), 'percent', 'id'));
 		    
 		});
 

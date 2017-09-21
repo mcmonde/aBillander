@@ -143,15 +143,18 @@ class ProductsController extends Controller {
         // Stock movement fulfillment (perform stock movements)
         $stockmovement->fulfill();
 
+*/
         // Prices according to Ptice Lists
         $plists = \App\PriceList::get();
 
         foreach ($plists as $list) {
 
-            $price = \App\PriceList::priceCalculator( $list, $product );
-            $product->pricelists()->attach($list_id, array('price' => $price));
+            $price = $list->calculatePrice( $product );
+            // $product->pricelists()->attach($list->id, array('price' => $price));
+            $line = \App\PriceListLine::create( [ 'product_id' => $product->id, 'price' => $price ] );
+
+            $list->pricelistlines()->save($line);
         }
-*/
 
         if ($action == 'completeProductData')
         return redirect('products/'.$product->id.'/edit')
@@ -200,7 +203,7 @@ class ProductsController extends Controller {
                 }
             }
         } else {
-            $groups = \App\OptionGroup::orderby('position', 'asc')->lists('name', 'id');
+            $groups = \App\OptionGroup::orderby('position', 'asc')->pluck('name', 'id');
         }
 
         $pricelists = \App\PriceList::orderBy('id', 'ASC')->get();
@@ -235,7 +238,7 @@ class ProductsController extends Controller {
 
         if ( isset($vrules['reference']) ) $vrules['reference'] .= $product->id;
 
-        if ($product->has_combinations) 
+        if ($product->product_type == 'combinable') 
         {
             // Remove reference field
             $request->merge(array('reference' => ''));

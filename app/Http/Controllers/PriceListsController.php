@@ -56,8 +56,12 @@ class PriceListsController extends Controller {
 
         foreach ($products as $product) {
 
-            $price = \App\PriceList::priceCalculator( $pricelist, $product );
-            $product->pricelists()->attach($list_id, array('price' => $price));
+            // $price = \App\PriceList::priceCalculator( $pricelist, $product );
+            $price = $pricelist->calculatePrice( $product );
+            // $product->pricelists()->attach($list_id, array('price' => $price));
+            $line = \App\PriceListLine::create( [ 'product_id' => $product->id, 'price' => $price ] );
+
+            $pricelist->pricelistlines()->save($line);
         }
 
 		return redirect('pricelists')

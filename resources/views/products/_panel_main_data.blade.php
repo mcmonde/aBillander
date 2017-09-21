@@ -11,7 +11,7 @@
 <!-- Main Data -->
 
         <div class="row">
-                  <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('reference') ? 'has-error' : '' }}">
+                  <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('reference') ? 'has-error' : '' }}">
                      {{ l('Reference') }}
                      {!! Form::text('reference', null, array('class' => 'form-control', 'id' => 'reference')) !!}
                      {!! $errors->first('reference', '<span class="help-block">:message</span>') !!}
@@ -21,12 +21,10 @@
                      {!! Form::text('name', null, array('class' => 'form-control', 'id' => 'name')) !!}
                      {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
                   </div>
-                 <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('category_id') ? 'has-error' : '' }}">
-                    {{ l('Category') }}
-                    {!! Form::select('category_id', array('0' => '-- Seleccione--') + $categoryList, null, array('class' => 'form-control')) !!}
-                    {!! $errors->first('category_id', '<span class="help-block">:message</span>') !!}
-                    Poner un autocomplete porque puede haber muchas. La lista es diferente dependiendo de ALLOW_PRODUCT_SUBCATEGORIES.
-                 </div>
+                  <div class="form-group col-lg-2 col-md-2 col-sm-2">
+                     {{ l('Product type') }}
+                     {!! Form::text('product_product_type', l($product->product_type, [], 'appmultilang'), array('class' => 'form-control', 'onfocus' => 'this.blur()')) !!}
+                  </div>
         </div>
 
         <div class="row">
@@ -35,11 +33,16 @@
                      {!! Form::text('ean13', null, array('class' => 'form-control', 'id' => 'ean13')) !!}
                      {!! $errors->first('ean13', '<span class="help-block">:message</span>') !!}
                   </div>
-                  <div class="form-group col-lg-7 col-md-7 col-sm-7 {{ $errors->has('description') ? 'has-error' : '' }}">
+                  <div class="form-group col-lg-6 col-md-6 col-sm-6 {{ $errors->has('description') ? 'has-error' : '' }}">
                      {{ l('Description') }}
                      {!! Form::textarea('description', null, array('class' => 'form-control', 'id' => 'description', 'rows' => '3')) !!}
                      {!! $errors->first('description', '<span class="help-block">:message</span>') !!}
                   </div>
+                 <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('category_id') ? 'has-error' : '' }}">
+                    {{ l('Category') }}
+                    {!! Form::select('category_id', array('0' => l('-- Please, select --', [], 'layouts')) + $categoryList, null, array('class' => 'form-control')) !!}
+                    {!! $errors->first('category_id', '<span class="help-block">:message</span>') !!}
+                 </div>
                  <!-- div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('tax_id') ? 'has-error' : '' }}">
                     {{ l('Tax') }}
                     {!! Form::select('tax_id', array('0' => '-- Seleccione --') + $taxList, null, array('class' => 'form-control')) !!}

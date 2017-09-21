@@ -25,13 +25,17 @@ class Tax extends Model {
     |--------------------------------------------------------------------------
     */
 
-    public function getPercentAttribute($v)
+    public function getPercentAttribute()
     {
         // Address / Company models need fixing to retrieve country ISO code
         // $country = Context::getContext()->company->address()->country_ISO;
         $country_id = \App\Configuration::get('DEF_COUNTRY');
 
-        $value = $this->taxrules()->where('country_id', '=', '0')->orWhere('country_id', '=', $country_id)->orderBy('position', 'asc')->first()->percent;
+//        $value = $this->taxrules()->where('country_id', '=', '0')->orWhere('country_id', '=', $country_id)->orderBy('position', 'asc')->first()->percent;
+        $value = $this->taxrules()->where(function ($query) use ($country_id) {
+            $query->where('country_id', '=', '0')
+                  ->OrWhere('country_id', '=', $country_id);
+        })->orderBy('position', 'asc')->first()->percent;
 
         return $value;
     }
@@ -57,7 +61,7 @@ class Tax extends Model {
     
     public function taxrules()
     {
-        return $this->hasMany('App\TaxRule', 'tax_id')->orderby('position', 'asc');
+        return $this->hasMany('App\TaxRule')->orderBy('position', 'asc');
     }
     
     public function products()

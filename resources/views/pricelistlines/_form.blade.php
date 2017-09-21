@@ -22,24 +22,20 @@
 <div class="row">
           <div class="form-group col-lg-4 col-md-4 col-sm-4">
              {!! Form::label('discount', l('Discount (%)')) !!}
-                 <a href="javascript:void(0);">
-                    <button type="button" xclass="btn btn-xs btn-white" data-toggle="popover" data-placement="top" 
-                            data-content="{{ l('Discount on Product Price', [], 'layouts') }}">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
+                 <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('Discount on Product Price', [], 'layouts') }}">
+                        <i class="fa fa-question-circle abi-help"></i>
                  </a>
              {!! Form::text('discount', null, array('class' => 'form-control', 'id' => 'discount', 'autocomplete' => 'off', 
                               'onclick' => 'this.select()', 'onkeyup' => 'apply_discount()', 'onchange' => 'apply_discount()')) !!}
           </div>
           <div class="form-group col-lg-4 col-md-4 col-sm-4">
              {!! Form::label('margin', l('Margin (%)')) !!}
-                 <a href="javascript:void(0);">
-                    <button type="button" xclass="btn btn-xs btn-white" data-toggle="popover" data-placement="top" 
-                            data-content="{{ \App\Configuration::get('MARGIN_METHOD') == 'CST' ?
+                 <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ \App\Configuration::get('MARGIN_METHOD') == 'CST' ?
                                 l('Margin calculation is based on Cost Price', [], 'layouts') :
                                 l('Margin calculation is based on Sales Price', [], 'layouts') }}">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
+                        <i class="fa fa-question-circle abi-help"></i>
                  </a>
              {!! Form::text('margin', null, array('class' => 'form-control', 'id' => 'margin', 'autocomplete' => 'off', 
                               'onclick' => 'this.select()', 'onkeyup' => 'new_price()', 'onchange' => 'new_price()')) !!}
@@ -51,4 +47,4 @@
         <input type="hidden" name="back_route" value="{{$back_route}}"/>
 
 {!! Form::submit(l('Save', [], 'layouts'), array('class' => 'btn btn-success')) !!}
-{!! link_to( ($back_route != '' ? $back_route : 'prices.index') , l('Cancel', [], 'layouts'), array('class' => 'btn btn-warning')) !!}
+{!! link_to( ($back_route != '' ? $back_route : '404') , l('Cancel', [], 'layouts'), array('class' => 'btn btn-warning')) !!}

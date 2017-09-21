@@ -284,3 +284,12 @@ fieldset[disabled] .btn-navy.active {
           filter: none;
   border-bottom: 1px solid #022241;
 }
+
+/* - */
+/* - Hel Icon - */
+
+.abi-help {
+  font-size: 16px !important;
+  margin-left: 2px;
+  color: #2780e3;
+}
