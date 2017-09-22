@@ -104,7 +104,6 @@
                      </div>
                    </div>
 
-
                    <div class="form-group col-lg-2 col-md-2 col-sm-2" id="div-active">
                      {!! Form::label('active', l('Active?', [], 'layouts'), ['class' => 'control-label']) !!}
                      <div>
@@ -122,6 +121,19 @@
                        </div>
                      </div>
                    </div>
+
+                  <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('measure_unit') ? 'has-error' : '' }}">
+                     {{ l('Measure Unit') }}
+                     {!! Form::text('measure_unit', null, array('class' => 'form-control', 'id' => 'measure_unit')) !!}
+                     {!! $errors->first('measure_unit', '<span class="help-block">:message</span>') !!}
+                  </div>
+
+                  <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('quantity_decimal_places') ? 'has-error' : '' }}">
+                      {{ l('Quantity decimals') }}
+                      {!! Form::select('quantity_decimal_places', array('0' => '0', '1' => '1', '2' => '2', '3' => '3' ), null, array('class' => 'form-control')) !!}
+                      {!! $errors->first('quantity_decimal_places', '<span class="help-block">:message</span>') !!}
+                  </div>
+
         </div>
 
         <div class="row">

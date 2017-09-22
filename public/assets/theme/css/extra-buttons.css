@@ -293,3 +293,6 @@ fieldset[disabled] .btn-navy.active {
   margin-left: 2px;
   color: #2780e3;
 }
+.popover {
+  color: #e95420;
+}

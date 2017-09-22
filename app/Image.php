@@ -128,7 +128,7 @@ class Image extends Model {
         }
 
         // delete index.php
-        $files_to_delete[] = $this->image_dir.$this->getImgFolder().'index.php';
+        $files_to_delete[] = $this->image_dir.$this->getImageFolder().'index.php';
 
         foreach ($files_to_delete as $file) {
             if (file_exists($file) && !@unlink($file)) {

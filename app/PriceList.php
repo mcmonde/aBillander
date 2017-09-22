@@ -116,5 +116,10 @@ class PriceList extends Model {
     {
         return $this->hasMany('App\PriceListLine');
     }
+
+    public function currency()
+    {
+        return $this->belongsTo('App\Currency');
+    }
     
 }

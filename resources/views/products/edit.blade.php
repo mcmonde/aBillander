@@ -36,10 +36,16 @@
                <i class="fa fa-th"></i>
                &nbsp; {{ l('Stocks') }}
             </a>
+
+@if ( ($product->product_type == 'simple') || ($product->product_type == 'combinable') )
+
             <a id="b_combinations" href="#combinations" class="list-group-item">
                <i class="fa fa-tags"></i>
                &nbsp; {{ l('Combinations') }}
             </a>
+
+@endif
+
             <a id="b_images" href="#images" class="list-group-item">
                <i class="fa fa-picture-o"></i>
                &nbsp; {{ l('Images') }}
@@ -49,6 +55,15 @@
                &nbsp; {{ l('Internet') }}
             </a>
          </div>
+
+         <div class="list-group"><?php $img = $product->getFeaturedImage() ?>
+@if ( $img )
+            <img src="{{ URL::to( \App\Image::$products_path . $img->getImageFolder() .  $img->id . '-medium_default' . '.' .  $img->extension ) . '?'. 'time='. time() }}" class="img-responsive center-block" style="border: 1px solid #dddddd;">
+@else
+            <img src="{{ URL::to( \App\Image::$products_path . '/default-medium_default.png' ) . '?'. 'time='. time() }}" class="img-responsive center-block" style="border: 1px solid #dddddd;">
+@endif
+         </div>
+
       </div>
       
       <div class="col-lg-10 col-md-10 col-sm-9">
@@ -63,7 +78,11 @@
 
           @include('products._panel_internet')
 
+@if ( ($product->product_type == 'simple') || ($product->product_type == 'combinable') )
+
           @include('products._panel_combinations')
+
+@endif
 
           @include('products._panel_images')
 

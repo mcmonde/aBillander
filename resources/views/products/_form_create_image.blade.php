@@ -22,11 +22,9 @@
     </div>
     <div class="form-group col-lg-2 col-md-2 col-sm-2">
         {!! Form::label('position', l('Position', [], 'layouts')) !!}
-                 <a href="javascript:void(0);">
-                    <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                            data-content="{{ l('Use multiples of 10. Use other values to interpolate.', [], 'layouts') }}">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
+                 <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                        data-content="{{ l('Use multiples of 10. Use other values to interpolate.', [], 'layouts') }}">
+                        <i class="fa fa-question-circle abi-help"></i>
                  </a>
         {!! Form::text('position', null, array('class' => 'form-control')) !!}
     </div>

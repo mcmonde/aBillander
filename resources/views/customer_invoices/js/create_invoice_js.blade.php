@@ -202,7 +202,7 @@ function product_search()
                tr_aux = "<tr class=\"info\">";
             }
 
-            if(val.has_combinations) {
+            if(val.product_type == 'combinable') {
                tr_aux += '  <td>  \
                                     <span class="label label-info">Combinaciones</span>  ';
             }

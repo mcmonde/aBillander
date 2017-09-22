@@ -27,8 +27,10 @@ class Currency extends Model {
     public function getFormatAttribute()
     {
         $format = '';
+        $decimalSeparator = $this->decimalPlaces > 0 ?
+                            $this->decimalSeparator : '';
 
-        $format = 'XX'.$this->thousandsSeparator.'XXX'.$this->decimalSeparator.str_repeat('X',$this->decimalPlaces);
+        $format = 'XX'.$this->thousandsSeparator.'XXX'.$decimalSeparator.str_repeat('X',$this->decimalPlaces);
 
         $blank = $this->blank ? ' ' : '';
         if ( $this->signPlacement > 0 )

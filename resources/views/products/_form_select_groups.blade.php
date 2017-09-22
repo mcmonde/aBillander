@@ -1,3 +1,5 @@
+@if ( $groups->count() )
+
 <div class="row">
 	<div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
 		<div class="panel panel-info">
@@ -27,3 +29,19 @@
 		</div>
 	</div>
 </div>
+
+@else
+
+<div class="row">
+	<div class="col-md-10 col-md-offset-1" style="margin-top: 10px">
+		<div class="panel panel-danger">
+			<div class="panel-heading"><h3 class="panel-title">{{ l('To create Combinations, you must create Option Groups and Options first') }} </h3></div>
+			<!-- div class="panel-body">
+
+
+			</div -->
+		</div>
+	</div>
+</div>
+
+@endif

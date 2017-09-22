@@ -38,12 +38,10 @@
 </div>
 <div class="form-group col-lg-4 col-md-4 col-sm-4" id="div-blank">
          {!! Form::label('blank', l('Spacing'), ['class' => 'control-label']) !!} 
-               <a href="javascript:void(0);">
-                  <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                          data-content="{{ l('Include a space between symbol and price (e.g. $1,240.15 -> $ 1,240.15)') }}">
-                      <i class="fa fa-info-circle"></i>
-                  </button>
-               </a>
+              <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                        data-content="{{ l('Include a space between symbol and price (e.g. $1,240.15 -> $ 1,240.15)') }}">
+                    <i class="fa fa-question-circle abi-help"></i>
+              </a>
          <div>
            <div class="radio-inline">
              <label>
@@ -78,7 +76,11 @@
 
 <div class="row">
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
-    {!! Form::label('currency_conversion_rate', l('Exchange rate')) !!}
+    {!! Form::label('currency_conversion_rate', l('Exchange rate')) !!} 
+             <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                        data-content="{{ l('Monetary units per :name', ['name' => \App\Context::getContext()->currency->name]) }}">
+                    <i class="fa fa-question-circle abi-help"></i>
+             </a>
     {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control')) !!}
 </div>
 

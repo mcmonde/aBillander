@@ -9,10 +9,11 @@
 	<div class="col-md-6 col-md-offset-3" style="margin-top: 50px">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-		          <h3 class="panel-title">{{ l('Edit Price') }} :: ({{$price->product->id}}) {{$price->product->name}} [ {{ $price->product->as_price('price') }} ]</h3>
+		          <h3 class="panel-title">{{ l('Edit Price') }} :: ({{$price->product->id}}) {{$price->product->name}} [ {{ $price->product->as_price('price') }} {{ \App\Context::getContext()->currency->name }} ]</h3>
 		          <h3 class="panel-title" style="margin-top:10px;">{{ l('Price List') }}: ({{$price->pricelist->id}}) {{ $price->pricelist->name }}
 		          	<span class="label label-success">{{ $price->pricelist->getType() }}</span>
-                    <span class="label label-warning">{{ $price->pricelist->getExtra() }}</span></h3>
+                    <span class="label label-warning">{{ $price->pricelist->getExtra() }}</span>
+                    &nbsp;<span class="label label-default">{{ $price->pricelist->currency->name }}</span></h3>
 		    </div>
 			<div class="panel-body">
 

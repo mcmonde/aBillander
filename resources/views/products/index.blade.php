@@ -121,7 +121,7 @@
 	@foreach ($products as $product)
 		<tr>
 			<td>{{ $product->id }}</td>
-			<td>@if ($product->has_combinations) <span class="label label-info">{{ l('Combinations') }}</span>
+			<td>@if ($product->product_type == 'combinable') <span class="label label-info">{{ l('Combinations') }}</span>
                 @else {{ $product->reference }}
                 @endif</td>
 			<td>{{ $product->name }}</td>

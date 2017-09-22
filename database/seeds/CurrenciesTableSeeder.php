@@ -39,7 +39,41 @@ class CurrenciesTableSeeder extends Seeder {
 					'decimalPlaces'      => '2',
 
 					'blank'                    => '0',
-					'currency_conversion_rate' => '0.94',
+					'currency_conversion_rate' => '1.22',
+					'active'                   => '1',
+
+					'created_at'  => \Carbon\Carbon::now()->toDateTimeString(),
+					'updated_at'  => \Carbon\Carbon::now()->toDateTimeString(),		// date('Y-m-d H:i:s');
+					),
+			array(	'name'         => 'Pound Sterling', 
+					'iso_code'     => 'GBP',
+					'iso_code_num' => '826',
+					'sign'         => '£',
+
+					'signPlacement'      => '0',
+					'thousandsSeparator' => ',',
+					'decimalSeparator'   => '.',
+					'decimalPlaces'      => '2',
+
+					'blank'                    => '0',
+					'currency_conversion_rate' => '0.88',
+					'active'                   => '1',
+
+					'created_at'  => \Carbon\Carbon::now()->toDateTimeString(),
+					'updated_at'  => \Carbon\Carbon::now()->toDateTimeString(),		// date('Y-m-d H:i:s');
+					),
+			array(	'name'         => 'Yen', 
+					'iso_code'     => 'JPY',
+					'iso_code_num' => '392',
+					'sign'         => '¥',			// Or: 円 
+
+					'signPlacement'      => '0',
+					'thousandsSeparator' => ',',
+					'decimalSeparator'   => '.',
+					'decimalPlaces'      => '0',
+
+					'blank'                    => '0',
+					'currency_conversion_rate' => '130.0',
 					'active'                   => '1',
 
 					'created_at'  => \Carbon\Carbon::now()->toDateTimeString(),
@@ -50,6 +84,12 @@ class CurrenciesTableSeeder extends Seeder {
 
 		// Uncomment the below to run the seeder
 		DB::table('currencies')->insert($configurations);
+
+		$c = \App\Currency::where('iso_code', '=', 'EUR')->first();
+		\App\Configuration::updateValue('DEF_CURRENCY', $c->id);
+
+		$company = \App\Company::findOrFail( intval(\App\Configuration::get('DEF_COMPANY')) );
+		$company->update( ['currency_id' => $c->id] );
 	}
 
 }

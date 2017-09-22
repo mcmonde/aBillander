@@ -26,6 +26,7 @@ return [
 	'Decimal separator' => 'Separador de decimales',
 	'Decimal places' => 'Decimales',
 	'Exchange rate' => 'Tipo de cambio',
+	'Monetary units per :name' => 'Unidades monetarias por :name',
 	'Currencies' => 'Divisas',
 	'Format' => 'Formato',
 	'Include a space between symbol and price - e.g. $1,240.15 -> $ 1,240.15' => 'Incluye un espacio entre el símbolo y el precio (p.ej. $1,240.15 -> $ 1,240.15)',

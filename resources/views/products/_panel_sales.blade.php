@@ -94,6 +94,7 @@
             <tr>
                 <th class="text-left">{{l('ID', [], 'layouts')}}</th>
                 <th class="text-left">{{l('Price List Name')}}</th>
+                <th class="text-left">{{l('Currency')}}</th>
                 <th class="text-left">{{l('Sales Price')}}</th>
                 <th class="text-left">{{l('Discount (%)')}}</th>
                 <th class="text-left">{{l('Margin (%)')}}</th>
@@ -106,6 +107,7 @@
             <tr style="color: #3a87ad; background-color: #d9edf7;">
                 <td> </td>
                 <td>{{ l('Base Price') }}</td>
+                <td>{{ \App\Context::getContext()->currency->name }}</td>
                 <td>{{ $product->as_price('price') }}</td>
                 <td> - </td>
                 <td>{{ $product->as_percentable( \App\Calculator::margin( $product->cost_price, $product->price ) ) }}</td>
@@ -124,6 +126,7 @@
                 <td>{{ $pricelist->name }}<br />
                     <span class="label label-success">{{ $pricelist->getType() }}</span>
                     <span class="label label-warning">{{ $pricelist->getExtra() }}</span></td>
+                <td>{{ $pricelist->currency->name }}</td>
                 <td>{{ $product->as_priceable($line_price) }}</td>
                 <td>{{ $product->as_percentable( \App\Calculator::discount( $product->price, $line_price ) ) }}</td>
                 <td>{{ $product->as_percentable( \App\Calculator::margin( $product->cost_price, $line_price ) ) }}</td>

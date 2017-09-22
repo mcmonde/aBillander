@@ -114,11 +114,18 @@ class ProductsController extends Controller {
 
         $action = $request->input('nextAction', '');
 
+        if ( !$request->has('measure_unit') ) 
+            $request->merge( ['measure_unit' => \App\Configuration::get('DEF_MEASURE_UNIT')] );
+
         $rules = Product::$rules['create'];
         if ($request->input('quantity_onhand')>0)
             $rules['warehouse_id'] .= '|exists:warehouses,id';
 
         $this->validate($request, $rules);
+
+        // If sequences are used:
+        //
+        // $product_sequences = \App\Sequence::listFor(\App\Product::class);
 
         // Create Product
 //        $product = $this->product->create($request->except('quantity_onhand'));
@@ -203,10 +210,10 @@ class ProductsController extends Controller {
                 }
             }
         } else {
-            $groups = \App\OptionGroup::orderby('position', 'asc')->pluck('name', 'id');
+            $groups = \App\OptionGroup::has('options')->orderby('position', 'asc')->pluck('name', 'id');
         }
 
-        $pricelists = \App\PriceList::orderBy('id', 'ASC')->get();
+        $pricelists = \App\PriceList::with('currency')->orderBy('id', 'ASC')->get();
 
         return view('products.edit', compact('product', 'groups', 'pricelists'));
     }
@@ -296,7 +303,7 @@ class ProductsController extends Controller {
 
         foreach ( $groups as $group ) 
         {
-            $data[] = \App\Option::where('option_group_id', '=', $group)->orderby('position', 'asc')->lists('id');
+            $data[] = \App\Option::where('option_group_id', '=', $group)->orderby('position', 'asc')->pluck('id');
         }
 
         $combos = combos($data);
@@ -313,7 +320,7 @@ class ProductsController extends Controller {
         // Create combinations only alollowed if product->quantity_onhand = 0 
 
         $product->reference = '';
-        $product->has_combinations = 1;
+        $product->product_type = 'combinable';
         $product->save();
 
 
