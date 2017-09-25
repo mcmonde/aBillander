@@ -76,12 +76,12 @@
 
 <div class="row">
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
-    {!! Form::label('currency_conversion_rate', l('Exchange rate')) !!} 
+    {!! Form::label('conversion_rate', l('Exchange rate')) !!} 
              <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
                         data-content="{{ l('Monetary units per :name', ['name' => \App\Context::getContext()->currency->name]) }}">
                     <i class="fa fa-question-circle abi-help"></i>
              </a>
-    {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control')) !!}
+    {!! Form::text('conversion_rate', null, array('class' => 'form-control')) !!}
 </div>
 
 <div class="form-group col-lg-2 col-md-2 col-sm-2">

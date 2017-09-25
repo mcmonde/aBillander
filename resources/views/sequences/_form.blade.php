@@ -17,21 +17,17 @@
 </div>
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
     {!! Form::label('length', l('Length')) !!} 
-               <a href="javascript:void(0);">
-                  <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                          data-content="{{ l('Document id will be left padded with 0\'es to this length') }}">
-                      <i class="fa fa-info-circle"></i>
-                  </button>
+               <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('Document id will be left padded with 0\'es to this length') }}">
+                      <i class="fa fa-question-circle abi-help"></i>
                </a>
     {!! Form::text('length', null, array('class' => 'form-control')) !!}
 </div>
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
     {!! Form::label('separator', l('Separator')) !!} 
-               <a href="javascript:void(0);">
-                  <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                          data-content="{{ l('To show between document_prefix and document_id') }}">
-                      <i class="fa fa-info-circle"></i>
-                  </button>
+               <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('To show between document_prefix and document_id') }}">
+                      <i class="fa fa-question-circle abi-help"></i>
                </a>
     {!! Form::text('separator', null, array('class' => 'form-control')) !!}
 </div>

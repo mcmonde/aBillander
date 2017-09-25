@@ -43,7 +43,7 @@
 
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
     {{ l('Conversion Rate') }}
-    {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control', 'id' => 'currency_conversion_rate')) !!}
+    {!! Form::text('conversion_rate', null, array('class' => 'form-control', 'id' => 'conversion_rate')) !!}
 </div>
 </div>
 

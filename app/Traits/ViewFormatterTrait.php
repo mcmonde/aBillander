@@ -22,39 +22,27 @@ trait ViewFormatterTrait
         return $data;
     }
 
-    public function as_price( $key = '', \App\Currency $currency = null )
+    public static function as_money( $key = '', \App\Currency $currency = null )
     {
-        return $this->as_money_amount( $key, $currency );
-    }
+        if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
 
-    public static function as_money($amount = 0, \App\Currency $currency = null)
-    {
-        if (!$currency)
-            $currency = Context::getContext()->currency;
+        $amount = floatval( $this->{$key} );
 
-        $number = number_format($amount, $currency->decimalPlaces, $currency->decimalSeparator, $currency->thousandsSeparator);
-
-        $blank = $currency->blank ? ' ' : '';
-        if ( $currency->signPlacement > 0 )
-            $number = $number . $blank . $currency->sign;
-        else
-            $number = $currency->sign . $blank . $number;
-
-        return $number;
+        return \App\Currency::viewPriceWithSign($amount, $currency);
     }
 
     public function as_money_amount( $key = '', \App\Currency $currency = null )
     {
         if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
 
-        $data = floatval( $this->{$key} );
+        $amount = floatval( $this->{$key} );
 
-        if (!$currency)
-            $currency = \App\Context::getContext()->currency;
+        return \App\Currency::viewPrice($amount, $currency);
+    }
 
-        $number = number_format($data, $currency->decimalPlaces, '.', '');
-
-        return $number;
+    public function as_price( $key = '', \App\Currency $currency = null )
+    {
+        return $this->as_money_amount( $key, $currency );
     }
 
     public function as_percent( $key = '', $decimalPlaces = null )

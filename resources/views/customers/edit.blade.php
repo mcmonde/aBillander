@@ -84,7 +84,7 @@
 </div>
 @stop
 
-@section('scripts') 
+@section('scripts')     @parent
 <script type="text/javascript">
    function route_url()
    {
@@ -134,4 +134,4 @@
       }
    });
 </script>
-@append
+@endsection

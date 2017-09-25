@@ -249,7 +249,9 @@ class ProductsController extends Controller {
         {
             // Remove reference field
             $request->merge(array('reference' => ''));
+            $request->merge(array('ean13' => ''));
             unset( $vrules['reference'] );
+            unset( $vrules['ean13'] );
         }
         // dd($vrules);
 
@@ -308,9 +310,24 @@ class ProductsController extends Controller {
 
         $combos = combos($data);
 
+        $i=0;
         foreach ( $combos as $combo ) 
         {
-            $combination = \App\Combination::create(array());
+            $i++;
+
+            $combination = \App\Combination::create(
+                array(
+                    'reference'        => $product->reference.'-'.$i,
+                    'reorder_point'    => $product->reorder_point,
+                    'maximum_stock'    => $product->maximum_stock,
+                    'supply_lead_time' => $product->supply_lead_time,
+
+                    'is_default'     => $i == 1 ? 1 : 0,
+                    'active'         => $product->active,
+                    'blocked'        => $product->blocked,
+                    'publish_to_web' => $product->publish_to_web,
+                )
+            );
             $product->combinations()->save($combination);
 
             $combination->options()->attach($combo);;
@@ -320,6 +337,8 @@ class ProductsController extends Controller {
         // Create combinations only alollowed if product->quantity_onhand = 0 
 
         $product->reference = '';
+        $product->ean13 = '';
+        $product->supplier_reference = '';
         $product->product_type = 'combinable';
         $product->save();
 

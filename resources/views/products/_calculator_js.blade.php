@@ -1,5 +1,5 @@
 
-{!! \App\Calculator::marginJSCode( true ) !!}
+{!! \App\Calculator::marginJSCode( \App\Context::getContext()->currency, true ) !!}
 
 <script type="text/javascript">
 

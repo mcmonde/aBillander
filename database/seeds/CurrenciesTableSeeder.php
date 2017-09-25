@@ -22,7 +22,7 @@ class CurrenciesTableSeeder extends Seeder {
 					'decimalPlaces'      => '2',
 
 					'blank'                    => '0',
-					'currency_conversion_rate' => '1.0',
+					'conversion_rate' => '1.0',
 					'active'                   => '1',
 
 					'created_at'  => \Carbon\Carbon::now()->toDateTimeString(),
@@ -39,7 +39,7 @@ class CurrenciesTableSeeder extends Seeder {
 					'decimalPlaces'      => '2',
 
 					'blank'                    => '0',
-					'currency_conversion_rate' => '1.22',
+					'conversion_rate' => '1.22',
 					'active'                   => '1',
 
 					'created_at'  => \Carbon\Carbon::now()->toDateTimeString(),
@@ -56,7 +56,7 @@ class CurrenciesTableSeeder extends Seeder {
 					'decimalPlaces'      => '2',
 
 					'blank'                    => '0',
-					'currency_conversion_rate' => '0.88',
+					'conversion_rate' => '0.88',
 					'active'                   => '1',
 
 					'created_at'  => \Carbon\Carbon::now()->toDateTimeString(),
@@ -73,7 +73,7 @@ class CurrenciesTableSeeder extends Seeder {
 					'decimalPlaces'      => '0',
 
 					'blank'                    => '0',
-					'currency_conversion_rate' => '130.0',
+					'conversion_rate' => '130.0',
 					'active'                   => '1',
 
 					'created_at'  => \Carbon\Carbon::now()->toDateTimeString(),

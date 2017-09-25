@@ -1,7 +1,7 @@
 
 <div class="row">
     <div class="form-group col-lg-4 col-md-4 col-sm-4">
-        <img src="http://localhost/aBillander5/public/{{ \App\Image::$products_path . $image->getImageFolder() . $image->id . '-small_default' . '.' . $image->extension }}" style="border: 1px solid #dddddd;">
+        <img src="{{ URL::to(\App\Image::$products_path . $image->getImageFolder() . $image->id . '-small_default' . '.' . $image->extension) }}" style="border: 1px solid #dddddd;">
     </div>
 
     <div class="form-group col-lg-8 col-md-8 col-sm-8">
@@ -14,11 +14,9 @@
 
     <div class="form-group col-lg-4 col-md-4 col-sm-4">
         {!! Form::label('position', l('Position', [], 'layouts')) !!}
-                 <a href="javascript:void(0);">
-                    <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                            data-content="{{ l('Use multiples of 10. Use other values to interpolate.', [], 'layouts') }}">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
+                 <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('Use multiples of 10. Use other values to interpolate.', [], 'layouts') }}">
+                        <i class="fa fa-question-circle abi-help"></i>
                  </a>
         {!! Form::text('position', null, array('class' => 'form-control')) !!}
     </div>
@@ -45,8 +43,4 @@
 
   {!! Form::submit(l('Save', [], 'layouts'), array('class' => 'btn btn-success')) !!}
   {!! link_to_route('products.edit', l('Cancel', [], 'layouts'), array($product->id,'#images'), array('class' => 'btn btn-warning')) !!}
-
-
-<div class="row">
-    ToDo: lista de combinaciones con checkbox para asociarle esta imagen
-</div>
+  

@@ -9,11 +9,14 @@
    <div class="panel-body">
 
 <!-- Main Data -->
+@php
+    $foo = $product->product_type == 'combinable' ? [ 'onfocus' => 'this.blur()' ] : [] ;
+@endphp
 
         <div class="row">
                   <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('reference') ? 'has-error' : '' }}">
                      {{ l('Reference') }}
-                     {!! Form::text('reference', null, array('class' => 'form-control', 'id' => 'reference')) !!}
+                     {!! Form::text('reference', null, array('class' => 'form-control', 'id' => 'reference') + $foo) !!}
                      {!! $errors->first('reference', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-sm-6 {{ $errors->has('name') ? 'has-error' : '' }}">
@@ -23,14 +26,14 @@
                   </div>
                   <div class="form-group col-lg-2 col-md-2 col-sm-2">
                      {{ l('Product type') }}
-                     {!! Form::text('product_product_type', l($product->product_type, [], 'appmultilang'), array('class' => 'form-control', 'onfocus' => 'this.blur()')) !!}
+                     {!! Form::text('product_type', l($product->product_type, [], 'appmultilang'), array('class' => 'form-control', 'onfocus' => 'this.blur()')) !!}
                   </div>
         </div>
 
         <div class="row">
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('ean13') ? 'has-error' : '' }}">
                      {{ l('Ean13') }}
-                     {!! Form::text('ean13', null, array('class' => 'form-control', 'id' => 'ean13')) !!}
+                     {!! Form::text('ean13', null, array('class' => 'form-control', 'id' => 'ean13') + $foo) !!}
                      {!! $errors->first('ean13', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-sm-6 {{ $errors->has('description') ? 'has-error' : '' }}">

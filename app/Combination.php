@@ -14,7 +14,7 @@ class Combination extends Model {
     protected $fillable = [ 'reference', 'ean13', 'warranty_period', 
                             'reorder_point', 'maximum_stock', 'price', 'cost_price', 'supply_lead_time', 
                             'location', 'width', 'height', 'depth', 'weight', 
-                            'notes', 'publish_to_web', 'blocked', 'active', 
+                            'notes', 'publish_to_web', 'blocked', 'active', 'is_default',
                           ];
 
     public static $rules = array();

@@ -155,8 +155,8 @@
 </div>
 
 
-@section('scripts')
+@section('scripts')    @parent
 <script type="text/javascript">
 
 </script>
-@append
+@endsection

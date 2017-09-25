@@ -40,6 +40,10 @@ return [
 	'Reference'     => 'Referencia',
 	'Ean13'     => 'Ean13',
 	'Location'     => 'Ubicación',
+	
+	'Default?'     => '¿Principal?',
+
+	'Publish to web?'     => '¿Publicar en la web?',
 	''     => '',
 	''     => '',
 	''     => '',

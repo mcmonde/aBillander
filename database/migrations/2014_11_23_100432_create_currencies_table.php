@@ -41,7 +41,7 @@ class CreateCurrenciesTable extends Migration {
 
 			$table->tinyInteger('blank')->default(0);							// Include a space between symbol and price (e.g. $1,240.15 -&gt; $ 1,240.15)
 	//		$table->tinyInteger('decimals')->default(1);						// Display decimals in prices
-			$table->decimal('currency_conversion_rate', 20, 6)->default(1.0);	// Exchange rates are calculated from one unit of your default currency. For example, if the default currency is euros and your chosen currency is dollars, type &quot;1.20&quot; (1&amp;euro; = $1.20)
+			$table->decimal('conversion_rate', 20, 6)->default(1.0);	// Exchange rates are calculated from one unit of your default currency. For example, if the default currency is euros and your chosen currency is dollars, type &quot;1.20&quot; (1&amp;euro; = $1.20)
 			
 			$table->tinyInteger('active')->default(1);
 

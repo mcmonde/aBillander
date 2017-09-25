@@ -24,11 +24,9 @@
 <div class="row">
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
     {!! Form::label('paper', l('Paper')) !!}
-               <a href="javascript:void(0);">
-                  <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                          data-content="{{ l('A4, Letter, etc.') }}">
-                      <i class="fa fa-info-circle"></i>
-                  </button>
+               <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('A4, Letter, etc.') }}">
+                      <i class="fa fa-question-circle abi-help"></i>
                </a>
     {!! Form::text('paper', null, array('class' => 'form-control')) !!}
 </div>

@@ -9,7 +9,7 @@ This project is currently in pre-alpha state. After MS3 will be ready for testin
 
 > MS0: Layout, Authentication and Application wire-frame (85% done)
 
-> MS1: Products and Combinations (75% done)
+> MS1: Products and Combinations (90% done)
 
 > MS2: Stock Movements without a document
 
@@ -23,5 +23,5 @@ This project is currently in pre-alpha state. After MS3 will be ready for testin
 
 Curated by **Lara Billander** (@aBillander)
 
-END of LINE
+Soli Deo Gloria - END of LINE
 

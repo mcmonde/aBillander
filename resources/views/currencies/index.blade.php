@@ -42,7 +42,7 @@
 			<td>{{ $currency->iso_code_num }}</td>
 			<td>{{ $currency->sign }}</td>
 			<td>{{ $currency->format }}</td>
-			<td>{{ $currency->currency_conversion_rate }}</td>
+			<td>{{ $currency->conversion_rate }}</td>
 
             <td class="text-center">@if ($currency->active) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
 

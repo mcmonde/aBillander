@@ -55,16 +55,20 @@ class Image extends Model {
         $image = iImage::make($file->getRealPath())
                 ->save(public_path() . $destinationFolder . $imageName . '.' . $extension);
 
+//        foreach (array_reverse(self::$products_types) as $type => $size) {
         foreach (self::$products_types as $type => $size) {
+            $imager = iImage::make(public_path() . $destinationFolder . $imageName . '.' . $extension);
+
             // This will generate an image with transparent background
             // If you need to have a background you can pass a third parameter (e.g: '#000000')
             $canvas = iImage::canvas($size['width'], $size['height']);
     
-            $image->resize($size['width'], $size['height'], function ($constraint) {
+            $imager->resize($size['width'], $size['height'], function ($constraint) {
                     $constraint->aspectRatio();
+ //                   $constraint->upsize();
                 });
     
-            $canvas->insert($image, 'center');
+            $canvas->insert($imager, 'center');
             $canvas->save(public_path() . $destinationFolder . $imageName . '-' . $type . '.' . $extension, 100);
             // $image->save(public_path() . $destinationFolder . $imageName . '-' . $type . '.' . $extension, 100);
 

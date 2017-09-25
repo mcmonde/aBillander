@@ -24,6 +24,7 @@
         <tr>
             <th class="text-left">{{l('ID', [], 'layouts')}}</th>
             <th class="text-left">{{l('Price List Name')}}</th>
+            <th class="text-left">{{l('Currency')}}</th>
             <th class="text-left">{{l('Price List Type')}}</th>
             <th class="text-left">{{l('Amount')}}</th>
             <th class="text-left">{{l('Price is Tax Included?')}}</th>
@@ -35,6 +36,7 @@
         <tr>
             <td>{{ $pricelist->id }}</td>
             <td>{{ $pricelist->name }}</td>
+            <td>{{ $pricelist->currency->name }}</td>
 		    <td>    @if     ($pricelist->type == 0) 
 		                    {{ l('Fixed price', [], 'appmultilang') }}
 		            @elseif ($pricelist->type == 1)

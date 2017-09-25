@@ -81,10 +81,10 @@
             {!! $errors->first('currency_id', '<span class="help-block">:message</span>') !!}
          </div>
 
-         <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('currency_conversion_rate') ? 'has-error' : '' }}">
+         <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('conversion_rate') ? 'has-error' : '' }}">
             Conversión:
-            <input class="form-control" type="text" name="currency_conversion_rate" id="currency_conversion_rate" placeholder="" value="{{ Input::old('currency_conversion_rate', isset($invoice) ? $invoice->currency_conversion_rate : '') }}" />
-           {!! $errors->first('currency_conversion_rate', '<span class="help-block">:message</span>') !!}
+            <input class="form-control" type="text" name="conversion_rate" id="conversion_rate" placeholder="" value="{{ Input::old('conversion_rate', isset($invoice) ? $invoice->conversion_rate : '') }}" />
+           {!! $errors->first('conversion_rate', '<span class="help-block">:message</span>') !!}
          </div>
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('sales_rep_id') ? 'has-error' : '' }}">

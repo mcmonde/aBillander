@@ -165,4 +165,4 @@
 
     </script>
 
-@append
+@endsection

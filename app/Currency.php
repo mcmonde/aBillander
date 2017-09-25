@@ -12,7 +12,7 @@ class Currency extends Model {
     protected $fillable = [ 'name', 'iso_code', 'iso_code_num', 
                             'sign', 'signPlacement',  'blank',
                             'thousandsSeparator', 'decimalSeparator', 'decimalPlaces', 
-                            'currency_conversion_rate', 'active'
+                            'conversion_rate', 'active'
                           ];
 
     public static $rules = array(
@@ -21,7 +21,7 @@ class Currency extends Model {
     	'iso_code_num' => array('required', 'min:1'),
         'decimalSeparator' => array('required'),
         'decimalPlaces' => array('required', 'min:0'),
-    	'currency_conversion_rate' => array('required', 'min:0'),
+    	'conversion_rate' => array('required', 'min:0'),
     	);
 
     public function getFormatAttribute()
@@ -39,6 +39,134 @@ class Currency extends Model {
         	$format = $this->sign . $blank . $format;
 
         return $format;
+    }
+
+    /**
+    * Return price with currency sign & currency decimal places
+    *
+    * @param float $price Product price
+    * @param object $currency Current currency ( NULL => context currency)
+    * @return string Price correctly formated (sign, decimal separator...)
+    * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+    */
+    public static function viewPriceWithSign($price, Currency $currency = null)
+    {
+        if (!is_numeric($price))
+            return $price;
+
+        if ($currency === null)
+            $currency = \App\Context::getContext()->currency;
+
+        $number = number_format($price, $currency->decimalPlaces, $currency->decimalSeparator, $currency->thousandsSeparator);
+
+        $blank = $currency->blank ? ' ' : '';
+        if ( $currency->signPlacement > 0 )
+            $number = $number . $blank . $currency->sign;
+        else
+            $number = $currency->sign . $blank . $number;
+        
+        // NOTE: negative amounts may require additional formatting for negative sign: -100 / 100- / (100)
+
+        return $number;
+    }
+
+    /**
+     * Alias function
+     */
+    
+    public static function viewMoneyWithSign($amount, Currency $currency = null)
+    {
+        return self::viewPriceWithSign($amount, $currency);
+    }
+
+    /**
+    * Return price with currency decimal places
+    *
+    * @param float $price Product price
+    * @param object $currency Current currency ( NULL => context currency)
+    * @return string Price correctly formated (sign, decimal separator...)
+    * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+    */
+    public static function viewPrice($price, Currency $currency = null)
+    {
+        if (!is_numeric($price))
+            return $price;
+
+        if ($currency === null)
+            $currency = \App\Context::getContext()->currency;
+
+        $number = number_format($price, $currency->decimalPlaces, $currency->decimalSeparator, $currency->thousandsSeparator);
+
+        return $number;
+    }
+
+    /**
+     * Alias function
+     */
+    
+    public static function viewMoney($amount, Currency $currency = null)
+    {
+        return self::viewPrice($amount, $currency);
+    }
+
+    /**
+     *
+     * Convert amount from a currency to an other currency automatically
+     * @param float $amount
+     * @param Currency $currency_from if null we used the default currency
+     * @param Currency $currency_to if null we used the default currency
+     */
+    public static function convertPrice($amount, Currency $currency_from = null, Currency $currency_to = null)
+    {
+        $currency_default = Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+
+        if ($currency_from === null) $currency_from = $currency_default;
+        if ($currency_to   === null) $currency_to   = $currency_default;
+
+        if ($currency_from == $currency_to) return $amount;
+
+
+        if ($currency_from->id == Configuration::get('DEF_CURRENCY')) {
+            $amount *= $currency_to->conversion_rate;
+        } else {
+            // Convert amount to default currency
+            $amount = $amount / $currency_from->conversion_rate;
+            // Convert to new currency
+            $amount *= $currency_to->conversion_rate;
+        }
+
+        return $amount;
+    }
+
+    /**
+     *
+     * Convert amount from default currency to an other currency automatically
+     * @param float $amount
+     * @param Currency $currency_to if null we used the default currency
+     */
+    public static function convertPriceTo($amount, Currency $currency_to = null)
+    {
+        return self::convertPrice($amount, null, $currency_to);
+    }
+
+    /**
+     *
+     * Convert amount from a currency to default currency automatically
+     * @param float $amount
+     * @param Currency $currency_from if null we used the default currency
+     */
+    public static function convertPriceFrom($amount, Currency $currency_from = null)
+    {
+        return self::convertPrice($amount, $currency_from, null);
+    }
+
+    /**
+     * Alias function
+     */
+    
+    public static function convertAmount($amount, Currency $currency_from = null, Currency $currency_to = null)
+    {
+        return self::convertPrice($amount, $currency_from, $currency_to);
     }
     
 

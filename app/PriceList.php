@@ -77,6 +77,14 @@ class PriceList extends Model {
                 break;
         }
 
+        // Convert to Price List Currency
+        $currency = \App\Currency::find( $this->currency_id );
+
+        if ( !$currency ) 
+            $currency = \App\Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+
+        $price *= $currency->conversion_rate;
+
         return $price;
     }
 

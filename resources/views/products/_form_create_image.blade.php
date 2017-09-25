@@ -26,7 +26,7 @@
                         data-content="{{ l('Use multiples of 10. Use other values to interpolate.', [], 'layouts') }}">
                         <i class="fa fa-question-circle abi-help"></i>
                  </a>
-        {!! Form::text('position', null, array('class' => 'form-control')) !!}
+        {!! Form::text('position', 0, array('class' => 'form-control')) !!}
     </div>
     
     <div class="form-group col-lg-2 col-md-2 col-sm-2" id="div-is_featured">

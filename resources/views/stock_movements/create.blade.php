@@ -66,11 +66,9 @@
 <div class="row">
     <div class="form-group col-lg-3 col-md-3 col-sm-3">
         {!! Form::label('quantity', l('Quantity')) !!}
-               <a href="javascript:void(0);">
-                  <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                          data-content="{{ l('Positive: stock increases. Negative: stock decreases.') }}">
-                      <i class="fa fa-info-circle"></i>
-                  </button>
+               <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('Positive: stock increases. Negative: stock decreases.') }}">
+                      <i class="fa fa-question-circle abi-help"></i>
                </a>
         {!! Form::text('quantity', null, array('class' => 'form-control')) !!}
     </div>

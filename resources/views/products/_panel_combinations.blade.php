@@ -38,7 +38,9 @@
           <th>{{l('Options')}}</th>
           <th>{{l('Stock')}}</th>
           <th>{{l('Warehouses - qty')}}</th>
+          <th class="text-center">{{l('Default?')}}</th>
           <th class="text-center">{{l('Active', [], 'layouts')}}</th>
+          <th class="text-center">{{l('Blocked', [], 'layouts')}}</th>
           <th class="text-right"> </th>
         </tr>
       </thead>
@@ -60,7 +62,9 @@
                   {{ $wh->alias }} - {{ $wh->pivot->quantity }}<br />
               @endforeach
           </td>
+          <td class="text-center">@if ($combination->is_default) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
           <td class="text-center">@if ($combination->active) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
+          <td class="text-center">@if ($combination->blocked) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
                <td class="text-right">
                     @if (  is_null($combination->deleted_at))
                     <a class="btn btn-sm btn-warning" href="{{ URL::to('combinations/' . $combination->id . '/edit') }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>

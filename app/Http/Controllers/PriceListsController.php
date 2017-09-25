@@ -25,7 +25,7 @@ class PriceListsController extends Controller {
 	 */
 	public function index()
 	{
-		$pricelists = $this->pricelist->orderBy('id', 'ASC')->get();
+		$pricelists = $this->pricelist->with('currency')->orderBy('id', 'ASC')->get();
 
 		return view('price_lists.index', compact('pricelists'));
 	}

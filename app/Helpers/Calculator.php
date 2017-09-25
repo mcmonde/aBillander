@@ -3,8 +3,15 @@
 class Calculator {
 
     // PHP Margin Calculator
-    public static function margin( $icst, $iprc ) 
+    public static function margin( $icst, $iprc, \App\Currency $currency = null)
     {
+      if ($currency === null)
+            $currency = Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+
+      if ( $currency->id != intval( Configuration::get('DEF_CURRENCY') ) ) {
+        $iprc /= $currency->conversion_rate;
+      }
+
       if ( Configuration::get('MARGIN_METHOD') == 'CST' )  
       {  // margin sobre el precio de coste
 
@@ -42,15 +49,32 @@ class Calculator {
     }
 
     // JavaScript Margin Calculator
-    public static function marginJSCode( $withTags = NULL)
+    public static function marginJSCode( \App\Currency $currency = null, $withTags = NULL)
     {
-        $jscode = '';
+        
+      if ($currency === null)
+            $currency = Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+
+        $jscode = "
+                var crate = " . $currency->conversion_rate . ";
+
+                function discountcalc()
+                {
+                   var base_price = parseFloat( $('#base_price').val() );
+                   var price = parseFloat( $('#price').val() );
+
+                   $('#discount').val( 100.0*(base_price-price/crate)/base_price );   
+                }
+
+               ";
 
         if ( Configuration::get('MARGIN_METHOD') == 'CST' ) {   // {* Margen sobre el precio de coste *}
            $jscode .= "
                function margincalc(icst, iprc)
                {
                   var margin = 0;
+
+                  iprc /= crate;
 
                   if (icst==0) return '-';
 
@@ -66,13 +90,15 @@ class Calculator {
 
                   price = icst*(1+imc);
 
-                  return price;
+                  return price*crate;
                }";
         } else {                                                // {* Default: sobre el precio de venta *}
            $jscode .= "
                function margincalc(icst, iprc)
                {
                   var margin = 0;
+
+                  iprc /= crate;
 
                   if (iprc==0) return '-';
 
@@ -90,7 +116,7 @@ class Calculator {
 
                   price = icst/(1.0-ims);
 
-                  return price;
+                  return price*crate;
                }";
         }
         if ($withTags) $jscode = '<script type="text/javascript">'."\n" . $jscode . "\n".'</script>';
@@ -99,9 +125,12 @@ class Calculator {
     }
 
     // PHP Discount Calculator
-    public static function discount( $pmax, $pmin ) 
+    public static function discount($product_price, $line_price, \App\Currency $currency = null)
     {
-      $discount = 100.0*(1.0-$pmin/$pmax);
+      if ($currency === null)
+            $currency = Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+
+      $discount = 100.0*(1.0-($line_price/$currency->conversion_rate)/$product_price);
 
       return $discount;
     }

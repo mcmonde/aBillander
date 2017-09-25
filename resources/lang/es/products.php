@@ -112,6 +112,7 @@ return [
 	'Warehouses - qty'     => 'Almacenes - ud.',
 	''     => '',
 
+	'Default?'     => '¿Principal?',
 
 	'Publish to web?'     => '¿Publicar en la web?',
 
@@ -145,6 +146,7 @@ return [
 	'Image'     => 'Imagen',
 	
 	'View Image'     => 'Ver Imagen',
+	'Product Images'     => 'Imágenes de Productos',
 
 	'Edit Product Image'     => 'Modificar Imagen',
 

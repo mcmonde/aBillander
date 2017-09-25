@@ -33,11 +33,9 @@
         <div class="row">
             <div class="form-group col-lg-6 col-md-6 col-sm-6">
                 {!! Form::label('date_format_lite_view', l('Date format - View')) !!}
-                 <a href="javascript:void(0);">
-                    <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                            data-content="{{ l('These date format apply to form datepickers') }}">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
+                 <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('These date format apply to form datepickers') }}">
+                        <i class="fa fa-question-circle abi-help"></i>
                  </a>
                 {!! Form::text('date_format_lite_view', null, array('class' => 'form-control')) !!}
             </div>

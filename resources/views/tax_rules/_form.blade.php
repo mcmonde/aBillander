@@ -47,12 +47,10 @@
     </div>
     <div class="form-group col-lg-6 col-md-6 col-sm-6 {{ $errors->has('amount') ? 'has-error' : '' }}">
         {!! Form::label('amount', l('Tax Rule Amount')) !!}
-             <a href="javascript:void(0);">
-                <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                        data-content="{{ l('Use this field when tax is a fixed amount per item.') }}">
-                    <i class="fa fa-info-circle"></i>
-                </button>
-             </a>
+             <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('Use this field when tax is a fixed amount per item.') }}">
+                      <i class="fa fa-question-circle abi-help"></i>
+               </a>
         {!! Form::text('amount', null, array('class' => 'form-control')) !!}
         {!! $errors->first('amount', '<span class="help-block">:message</span>') !!}
     </div>
@@ -61,12 +59,10 @@
 <div class="row">
     <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('position') ? 'has-error' : '' }}">
         {!! Form::label('position', l('Position')) !!}
-                 <a href="javascript:void(0);">
-                    <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                            data-content="{{ l('Use multiples of 10. Use other values to interpolate.') }}">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
-                 </a>
+                 <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('Use multiples of 10. Use other values to interpolate.') }}">
+                      <i class="fa fa-question-circle abi-help"></i>
+               </a>
         {!! Form::text('position', null, array('class' => 'form-control')) !!}
         {!! $errors->first('position', '<span class="help-block">:message</span>') !!}
     </div>
@@ -103,4 +99,4 @@
 
     </script>
 
-@append
+@endsection

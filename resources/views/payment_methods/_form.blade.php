@@ -89,11 +89,9 @@
 </div>
 <div class="form-group col-lg-4 col-md-4 col-sm-4" id="div-auto_direct_debit">
  {!! Form::label('auto_direct_debit', l('Auto Direct Debit'), ['class' => 'control-label']) !!}
-               <a href="javascript:void(0);">
-                  <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
-                          data-content="{{ l('Include invoices (with this method) in automatic payment remittances') }}">
-                      <i class="fa fa-info-circle"></i>
-                  </button>
+               <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                    data-content="{{ l('Include invoices (with this method) in automatic payment remittances') }}">
+                      <i class="fa fa-question-circle abi-help"></i>
                </a>
  <div>
    <div class="radio-inline">

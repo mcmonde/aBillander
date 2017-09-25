@@ -1,5 +1,9 @@
 
-{!! \App\Calculator::marginJSCode( true ) !!}
+{!! \App\Calculator::marginJSCode( $customer->currency, true ) !!}
+
+<script type="text/javascript">
+    alert( 'Revisar la llamada a Calculator::marginJSCode' );
+</script>
 
 <script type="text/javascript">
 

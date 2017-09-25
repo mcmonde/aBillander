@@ -31,7 +31,9 @@
 
 @stop
 
-@section('scripts'){!! \App\Calculator::marginJSCode( true ) !!}
+@section('scripts')    @parent
+
+{!! \App\Calculator::marginJSCode( $price->pricelist->currency, true ) !!}
 
 <script type="text/javascript">
 
@@ -111,14 +113,6 @@ function apply_discount()
    new_margin();   
 }
 
-function discountcalc()
-{
-   var base_price = parseFloat( $("#base_price").val() );
-   var price = parseFloat( $("#price").val() );
-
-   $("#discount").val( 100.0*(base_price-price)/base_price );   
-}
-
 </script>
 
 <script type="text/javascript">
@@ -129,4 +123,4 @@ $(document).ready(function() {
 
 </script>
 
-@append
+@endsection

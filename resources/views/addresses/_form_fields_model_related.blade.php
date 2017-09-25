@@ -131,4 +131,4 @@
 
     </script>
 
-@append
+@endsection
