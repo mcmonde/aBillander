@@ -122,12 +122,12 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
         Route::resource('warehouses', 'WarehousesController');
 
         Route::resource('stockmovements', 'StockMovementsController');
-
+/*
         Route::resource('stockadjustments', 'StockAdjustmentsController', 
                 ['except' => [
                     'index', 'update', 'destroy'
                 ]]);
-
+*/
         Route::resource('customers', 'CustomersController');
         Route::get('customers/ajax/name_lookup', array('uses' => 'CustomersController@ajaxCustomerSearch', 'as' => 'customers.ajax.nameLookup'));
 
