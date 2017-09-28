@@ -18,10 +18,10 @@ class CreateProductWarehouseTable extends Migration {
 			$table->increments('id');
 
 			$table->integer('product_id')->unsigned()->index();
-			$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+//			$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
 			$table->integer('warehouse_id')->unsigned()->index();
-			$table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
+//			$table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
 
 			$table->decimal('quantity', 20, 6)->default(0.0);
 			

@@ -7,11 +7,11 @@ This project is currently in pre-alpha state. After MS3 will be ready for testin
 
 ## ab://ander/milestones
 
-> MS0: Layout, Authentication and Application wire-frame (85% done)
+> MS0: Layout, Authentication and Application wire-frame (90% done)
 
-> MS1: Products and Combinations (90% done)
+> MS1: Products and Combinations (95% done)
 
-> MS2: Stock Movements without a document
+> MS2: Stock Movements without a document (90% done)
 
 > MS3: Customers, Customer Invoices and Payments
 

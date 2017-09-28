@@ -86,7 +86,7 @@ class PriceListLinesController extends Controller {
 		if ( ($price->pricelist->type == 0) AND $price->pricelist->price_is_tax_inc )
 			$price->price = $price->price / (1.0+($price->product->tax->percent/100.0));
 
-		return view('pricelistlines.edit', compact('price', 'back_route'));
+		return view('price_list_lines.edit', compact('price', 'back_route'));
 	}
 
 	/**

@@ -19,7 +19,7 @@
     <div class="form-group col-lg-4 col-md-4 col-sm-4">
         {!! Form::label('date', l('Date')) !!}
         {!! Form::text('date', 
-            \App\FP::date_short( \Carbon\Carbon::now(), \App\Context::getContext()->language->date_format_lite ), 
+            abi_date_short( \Carbon\Carbon::now() ), 
             array('id' => 'date', 'xreadonly' => 'xreadonly', 'class' => 'form-control')) !!}
     </div>
     <div class="form-group col-lg-4 col-md-4 col-sm-4">

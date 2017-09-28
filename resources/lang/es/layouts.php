@@ -112,6 +112,7 @@ return [
 	'Show'     => 'Mostrar',
 	'Save'     => 'Guardar',
 	'Save & Complete'     => 'Guardar y Completar',
+	'Save & Continue'     => 'Guardar y Continuar',
 	'Cancel'     => 'Cancelar',
 	'Confirm'     => 'Confirmar',
 	'Select'     => 'Seleccionar',

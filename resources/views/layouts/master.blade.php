@@ -34,6 +34,7 @@
 
         <!-- Scripts -->
         <script src="{{ asset('assets/plugins/jQuery/jquery.min.js' ) }}" type="text/javascript"></script>
+          <!-- script src="https://code.jquery.com/jquery-1.12.4.js"></script -->
         <script src="{{ asset('assets/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
 
         <script src="{{ asset('js/base.js'  ) }}" type="text/javascript"></script>
@@ -44,17 +45,18 @@
            $("#f_feedback").on('submit', function(e){
               e.preventDefault();
               $.post("{{ URL::to('contact') }}", $(this).serialize(), function(data){
-                 if (data == 0) {
+
+                 if (data == 'ERROR') {
                     $("#error").addClass("alert alert-danger");
                     $("#error").html('<a class="close" data-dismiss="alert" href="#">×</a><li class="error">{{ l('There was an error. Your message could not be sent.', [], 'layouts') }}</li>');
                  } else {
-                    if (isNaN(data)) {
-                       $("#error").addClass("alert alert-danger");
-                       $("#error").html('<a class="close" data-dismiss="alert" href="#">×</a>' + data + '');
-                    } else {
-                       $("#modal-body").html('<div class="alert alert-success">{{ l('Your email has been sent!', [], 'layouts') }}</div>');
-                       $("#modal-footer").html('<button type="button" class="btn btn-sm btn-default" data-dismiss="modal">{{ l('Continue', [], 'layouts') }}</button>');
-                    }
+                     // Reset form
+                     $("#notes").val('');
+                     // $("#email").val('');
+                     // $("#name").val('');
+                     // 
+                     $("#modal-body").html('<div class="alert alert-success">{{ l('Your email has been sent!', [], 'layouts') }}</div>');
+                     $("#modal-footer").html('<button type="button" class="btn btn-sm btn-default" data-dismiss="modal">{{ l('Continue', [], 'layouts') }}</button>');
                  }
               });
            });

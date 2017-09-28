@@ -42,7 +42,7 @@
 	@foreach ($stockmovements as $stockmovement)
 		<tr>
 			<td>{{ $stockmovement->id }}</td>
-			<td>{{ \App\FP::date_short( $stockmovement->date, \App\Context::getContext()->language->date_format_lite ) }}</td>
+			<td>{{ abi_date_short( $stockmovement->date ) }}</td>
             <td>
                  <a href="javascript:void(0);">
                     <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
@@ -64,8 +64,8 @@
                         <br />{{ $stockmovement->combination->name() }}
                     @endif
             </td>
-            <td>{{ $stockmovement->quantity }}</td>
-			<td>{{ $stockmovement->price }}</td>
+            <td>{{ $stockmovement->as_quantity( 'quantity' ) }}</td>
+			<td>{{ $stockmovement->as_price( 'price' ) }}</td>
 			<td>{{ $stockmovement->document_reference }}</td>
             <td class="text-center">
                 @if ($stockmovement->notes)

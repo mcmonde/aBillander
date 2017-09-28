@@ -55,7 +55,7 @@ Route::get('404', function()
 Route::group(['middleware' =>  ['context', 'auth']], function()
 {
     // Route::get( 'contact', 'ContactMessagesController@create');
-//    Route::post('contact', 'ContactMessagesController@store');
+    Route::post('contact', 'ContactMessagesController@store');
 
     Route::get('soon', function()
     {
@@ -81,11 +81,11 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
         Route::resource('translations', 'TranslationsController', 
                         ['only' => ['index', 'edit', 'update']]);
 
-//        Route::resource('sequences', 'SequencesController');
+        Route::resource('sequences', 'SequencesController');
 
         Route::resource('users', 'UsersController');
 
-//        Route::resource('templates', 'TemplatesController');
+        Route::resource('templates', 'TemplatesController');
 
         Route::resource('currencies', 'CurrenciesController');
 
@@ -121,37 +121,40 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
 
         Route::resource('warehouses', 'WarehousesController');
 
-//        Route::resource('stockmovements', 'StockMovementsController');
+        Route::resource('stockmovements', 'StockMovementsController');
 
-//        Route::resource('stockadjustments', 'StockAdjustmentsController');
+        Route::resource('stockadjustments', 'StockAdjustmentsController', 
+                ['except' => [
+                    'index', 'update', 'destroy'
+                ]]);
 
-//        Route::resource('customers', 'CustomersController');
-//        Route::get('customers/ajax/name_lookup', array('uses' => 'CustomersController@ajaxCustomerSearch', 'as' => 'customers.ajax.nameLookup'));
+        Route::resource('customers', 'CustomersController');
+        Route::get('customers/ajax/name_lookup', array('uses' => 'CustomersController@ajaxCustomerSearch', 'as' => 'customers.ajax.nameLookup'));
 
-//        Route::resource('addresses', 'AddressesController');
-//        Route::resource('customers/{ownwer_id}/addresses', 'AddressesController');
+        Route::resource('addresses', 'AddressesController');
+        Route::resource('customers/{ownwer_id}/addresses', 'AddressesController');
 
-//        Route::post('mail', 'MailController@store');
+        Route::post('mail', 'MailController@store');
 
-//        Route::resource('paymentmethods', 'PaymentMethodsController');
+        Route::resource('paymentmethods', 'PaymentMethodsController');
 
-//        Route::resource('customergroups', 'CustomerGroupsController');
+        Route::resource('customergroups', 'CustomerGroupsController');
         
-//        Route::resource('salesreps', 'SalesRepsController');
+        Route::resource('salesreps', 'SalesRepsController');
 
-//        Route::resource('carriers', 'CarriersController');
+        Route::resource('carriers', 'CarriersController');
 
-//        Route::resource('manufacturers', 'ManufacturersController');
-
-
-//        Route::resource('customerinvoices'      , 'CustomerInvoicesController');
-//        Route::get('customerinvoices/pdf/{id}'  , 'CustomerInvoicesController@ShowPDF');
-//        Route::post('customerinvoices/sendemail', 'CustomerInvoicesController@SendEmail');
+        Route::resource('manufacturers', 'ManufacturersController');
 
 
-//        Route::resource('customervouchers'      , 'CustomerVouchersController');
+        Route::resource('customerinvoices'      , 'CustomerInvoicesController');
+        Route::get('customerinvoices/pdf/{id}'  , 'CustomerInvoicesController@ShowPDF');
+        Route::post('customerinvoices/sendemail', 'CustomerInvoicesController@SendEmail');
 
-//        Route::get('pdf/{id}', 'PdfController@show');
+
+        Route::resource('customervouchers'      , 'CustomerVouchersController');
+
+        Route::get('pdf/{id}', 'PdfController@show');
     });
 
 

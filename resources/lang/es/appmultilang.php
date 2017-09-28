@@ -50,7 +50,9 @@ return array(
 
 	31 => 'Devolución de ventas',
 
-	40 => 'Transferencia entre almacenes',
+	40 => 'Transferencia (Salida)',
+
+	41 => 'Transferencia (Entrada)',
 
 	50 => 'Consumo de fabricación',
 

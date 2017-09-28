@@ -131,7 +131,7 @@ class ProductsController extends Controller {
 //        $product = $this->product->create($request->except('quantity_onhand'));
         $product = $this->product->create($request->all());
 
-/*
+
         // Create stock movement (Initial Stock)
         $data = [   'date' =>  \Carbon\Carbon::now(), 
                     'document_reference' => '', 
@@ -139,6 +139,8 @@ class ProductsController extends Controller {
                     'quantity' => $request->input('quantity_onhand'),  
                     'notes' => '',
                     'product_id' => $product->id, 
+                    'currency_id' => \App\Context::getContext()->currency->id, 
+                    'conversion_rate' => \App\Context::getContext()->currency->conversion_rate, 
                     'warehouse_id' => $request->input('warehouse_id'), 
                     'movement_type_id' => 10,
                     'model_name' => '', 'document_id' => 0, 'document_line_id' => 0, 'combination_id' => 0, 'user_id' => \Auth::id()
@@ -148,9 +150,9 @@ class ProductsController extends Controller {
         $stockmovement = \App\StockMovement::create( $data );
 
         // Stock movement fulfillment (perform stock movements)
-        $stockmovement->fulfill();
+        $stockmovement->process();
 
-*/
+
         // Prices according to Ptice Lists
         $plists = \App\PriceList::get();
 
@@ -252,6 +254,8 @@ class ProductsController extends Controller {
             $request->merge(array('ean13' => ''));
             unset( $vrules['reference'] );
             unset( $vrules['ean13'] );
+            if ( isset($vrules['reference']) ) 
+                unset( $vrules['reference'] );
         }
         // dd($vrules);
 
@@ -273,7 +277,9 @@ class ProductsController extends Controller {
     {
         // Any Documents? If any, cannot delete, only disable
 
-        // Delete combinations
+        // Delete Product & Combinations Warehouse lines
+
+        // Delete Combinations
 
         // Delete Images
 

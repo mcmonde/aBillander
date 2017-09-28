@@ -13,6 +13,7 @@ return [
 
 	'Stock Movements' => 'Movimientos de Stock',
 	'Type'     => 'Tipo',
+	'Reference'     => 'Referencia',
 	'Product'     => 'Producto',
 	''     => '',
 
@@ -35,6 +36,7 @@ return [
 	'Product Options'     => 'Opciones de Producto',
 	'Quantity'     => 'Cantidad',
 	'Price'     => 'Precio',
+	'Currency'     => 'Divisa',
 	'Movement type'     => 'Tipo de movimiento',
 
 

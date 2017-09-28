@@ -191,6 +191,13 @@
           $('select[name="tax_id"]').val(def_taxID);
         }
 
+        // Select default warehouse
+        if ( !($('select[name="warehouse_id"]').val() > 0) ) {
+          var def_warehouseID = {{ \App\Configuration::get('DEF_WAREHOUSE') }};
+
+          $('select[name="warehouse_id"]').val(def_warehouseID);
+        }
+
         // Select default decimals
         if ( {{ intval( !isset($product->quantity_decimal_places) ) }} ) {
           var def_decimalsID = {{ \App\Configuration::get('DEF_QUANTITY_DECIMALS') }};

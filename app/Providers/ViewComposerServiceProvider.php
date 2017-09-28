@@ -24,7 +24,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		// Currencies
-		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'companies._form', 'price_lists._form', 'customer_groups.create', 'customer_groups.edit'), function($view) {
+		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'companies._form', 'price_lists._form', 'customer_groups.create', 'customer_groups.edit', 'stock_movements.create'), function($view) {
 		    
 		    $view->with('currencyList', \App\Currency::pluck('name', 'id')->toArray());
 		    
@@ -108,7 +108,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		    
 		});
 
-		view()->composer(array('products.create', 'products.edit', 'pricelistlines.edit', 'customer_invoices.create', 'customer_invoices.edit'), function($view) {
+		view()->composer(array('products.create', 'products.edit', 'price_list_lines.edit', 'customer_invoices.create', 'customer_invoices.edit'), function($view) {
 
 		    // https://laracasts.com/discuss/channels/eloquent/eloquent-model-lists-id-and-a-custom-accessor-field
 		    $view->with('taxpercentList', Arr::pluck(\App\Tax::all(), 'percent', 'id'));

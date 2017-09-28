@@ -18,10 +18,10 @@ class CreateCombinationWarehouseTable extends Migration {
 			$table->increments('id');
 
 			$table->integer('combination_id')->unsigned()->index();
-			$table->foreign('combination_id')->references('id')->on('combinations')->onDelete('cascade');
+//			$table->foreign('combination_id')->references('id')->on('combinations')->onDelete('cascade');
 
 			$table->integer('warehouse_id')->unsigned()->index();
-			$table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
+//			$table->foreign('warehouse_id')->references('id')->on('warehouses')->onDelete('cascade');
 
 			$table->decimal('quantity', 20, 6)->default(0.0);
 			

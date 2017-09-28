@@ -18,17 +18,15 @@
 <div class="row">
     <div class="form-group col-lg-4 col-md-4 col-sm-4">
         {!! Form::label('date', l('Date')) !!}
-        {!! Form::text('date', 
-            \App\FP::date_short( \Carbon\Carbon::now(), \App\Context::getContext()->language->date_format_lite ), 
-            array('id' => 'date', 'xreadonly' => 'xreadonly', 'class' => 'form-control')) !!}
+        {!! Form::text('date', $date, array('id' => 'date', 'xreadonly' => 'xreadonly', 'class' => 'form-control')) !!}
     </div>
     <div class="form-group col-lg-4 col-md-4 col-sm-4">
         {!! Form::label('warehouse_id', l('Warehouse')) !!}
-        {!! Form::select('warehouse_id', array('0' => l('-- Please, select --', [], 'layouts')) + $warehouseList, null, array('class' => 'form-control')) !!}
+        {!! Form::select('warehouse_id', $warehouseList, \App\Configuration::get('DEF_WAREHOUSE'), array('class' => 'form-control')) !!}
     </div>
     <div class="form-group col-lg-4 col-md-4 col-sm-4">
         {!! Form::label('document_reference', l('Document')) !!}
-        {!! Form::text('document_reference', null, array('class' => 'form-control')) !!}
+        {!! Form::text('document_reference', $document_reference, array('class' => 'form-control')) !!}
     </div>
 </div>
     
@@ -64,21 +62,22 @@
 </div>
 
 <div class="row">
-    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+    <div class="form-group col-lg-4 col-md-4 col-sm-4">
+        {!! Form::label('movement_type_id', l('Movement type')) !!}
+        {!! Form::select('movement_type_id', array('0' => l('-- Please, select --', [], 'layouts')) + $movement_typeList, $movement_type_id, array('class' => 'form-control')) !!}
+    </div>
+    <div class="form-group col-lg-2 col-md-2 col-sm-2">
         {!! Form::label('quantity', l('Quantity')) !!}
-               <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
-                                    data-content="{{ l('Positive: stock increases. Negative: stock decreases.') }}">
-                      <i class="fa fa-question-circle abi-help"></i>
-               </a>
         {!! Form::text('quantity', null, array('class' => 'form-control')) !!}
     </div>
-    <div class="form-group col-lg-3 col-md-3 col-sm-3">
+    <div class="form-group col-lg-2 col-md-2 col-sm-2">
         {!! Form::label('price', l('Price')) !!}
         {!! Form::text('price', null, array('class' => 'form-control')) !!}
     </div>
-    <div class="form-group col-lg-6 col-md-6 col-sm-6">
-        {!! Form::label('movement_type_id', l('Movement type')) !!}
-        {!! Form::select('movement_type_id', array('0' => l('-- Please, select --', [], 'layouts')) + $movement_typeList, null, array('class' => 'form-control')) !!}
+    <div class="form-group col-lg-2 col-md-2 col-sm-2">
+        {!! Form::label('currency_id', l('Currency')) !!}
+        {!! Form::select('currency_id', $currencyList, $currency_id, array('class' => 'form-control')) !!}
+        {!! $errors->first('currency_id', '<span class="help-block">:message</span>') !!}
     </div>
 </div>
         
@@ -98,6 +97,11 @@
                      <i class="fa fa-floppy-o"></i>
                      &nbsp; {{l('Save', [], 'layouts')}}
                   </button>
+                  <input type="hidden" id="nextAction" name="nextAction" value="" />
+                  <button class="btn btn-info" type="submit" onclick="this.disabled=true;$('#nextAction').val('saveAndContinue');this.form.submit();">
+                     <i class="fa fa-hdd-o"></i>
+                     &nbsp; {{l('Save & Continue', [], 'layouts')}}
+                  </button>
                </div>
 
 				{!! Form::close() !!}
@@ -111,10 +115,11 @@
 @section('scripts')
 @parent
 
-{{-- Date Picker --}}
+{{-- Date Picker :: http://api.jqueryui.com/datepicker/ --}}
 
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-{!! HTML::script('assets/jquery-ui/datepicker/datepicker-'.\App\Context::getContext()->language->iso_code.'.js'); !!}
+<!-- script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{!! HTML::script('assets/plugins/jQuery-UI/datepicker/datepicker-'.\App\Context::getContext()->language->iso_code.'.js'); !!}
 
 <script>
   $(function() {
@@ -127,7 +132,7 @@
 </script>
 
 
-{{-- AutoComplete --}}
+{{-- AutoComplete :: https://jqueryui.com/autocomplete/--}}
 
 <script>
 
@@ -249,11 +254,15 @@ function findCombination(firstTime)
 
 <style>
   .ui-autocomplete-loading{
-    background: white url("../img/ui-anim_basic_16x16.gif") right center no-repeat;
+    background: white url("{{ asset('assets/theme/images/ui-anim_basic_16x16.gif') }}") right center no-repeat;
   }
   .loading{
-    background: white url("../img/ui-anim_basic_16x16.gif") left center no-repeat;
+    background: white url("{{ asset('assets/theme/images/ui-anim_basic_16x16.gif') }}") left center no-repeat;
   }
+  {{-- See: https://stackoverflow.com/questions/6762174/jquery-uis-autocomplete-not-display-well-z-index-issue
+            https://stackoverflow.com/questions/7033420/jquery-date-picker-z-index-issue
+    --}}
+  .ui-datepicker{ z-index: 9999 !important;}
 </style>
 
 @stop

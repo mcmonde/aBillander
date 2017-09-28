@@ -42,7 +42,7 @@
 	@foreach ($stockmovements as $stockmovement)
 		<tr>
 			<td>{{ $stockmovement->id }}</td>
-			<td>{{ \App\FP::date_short( $stockmovement->date, \App\Context::getContext()->language->date_format_lite ) }}</td>
+			<td>{{ abi_date_short( $stockmovement->date ) }}</td>
             <td>
                  <a href="javascript:void(0);">
                     <button type="button" xclass="btn btn-xs btn-success" data-toggle="popover" data-placement="top" 
