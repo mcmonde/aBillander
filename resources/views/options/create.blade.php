@@ -25,3 +25,16 @@
 </div>
 
 @stop
+
+
+@section('scripts')    @parent
+
+    <script type="text/javascript">
+
+        // Set default position
+        $('input[name="position"]').val( 0 );
+
+    </script>
+
+
+@endsection

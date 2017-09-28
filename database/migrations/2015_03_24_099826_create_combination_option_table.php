@@ -18,10 +18,10 @@ class CreateCombinationOptionTable extends Migration {
 			$table->increments('id');
 
 			$table->integer('combination_id')->unsigned()->index();
-			$table->foreign('combination_id')->references('id')->on('combinations')->onDelete('cascade');
+//			$table->foreign('combination_id')->references('id')->on('combinations')->onDelete('cascade');
 
 			$table->integer('option_id')->unsigned()->index();
-			$table->foreign('option_id')->references('id')->on('options')->onDelete('cascade');
+//			$table->foreign('option_id')->references('id')->on('options')->onDelete('cascade');
 			
 			$table->timestamps();
 		});

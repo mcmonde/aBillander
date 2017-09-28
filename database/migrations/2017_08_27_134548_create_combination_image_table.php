@@ -18,10 +18,10 @@ class CreateCombinationImageTable extends Migration {
 			$table->increments('id');
 
 			$table->integer('combination_id')->unsigned()->index();
-			$table->foreign('combination_id')->references('id')->on('combinations')->onDelete('cascade');
+//			$table->foreign('combination_id')->references('id')->on('combinations')->onDelete('cascade');
 
 			$table->integer('image_id')->unsigned()->index();
-			$table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
+//			$table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
 
 			$table->timestamps();
 		});
