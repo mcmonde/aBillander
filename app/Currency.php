@@ -180,4 +180,9 @@ class Currency extends Model {
     {
         return $this->hasMany('App\Customerinvoice');
     }
+    
+    public function currencyconversionrates()
+    {
+        return $this->hasMany('App\CurrencyConversionRate');
+    }
 }

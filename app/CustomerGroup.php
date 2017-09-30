@@ -15,12 +15,8 @@ class CustomerGroup extends Model {
 
     // Add your validation rules here
     public static $rules = array(
-//    	'name' => array('required', 'min:2', 'max:64', 'unique:taxes,name,{id}'),
-//    	'name'    => array('required', 'min:2', 'max:64'),
-//    	'percent' => array('required', 'numeric', 'between:0,100')
-//        'email' => 'required|email',
         'name' => 'required',
-//       'website' => 'url',
+        'price_list_id' => 'exists:price_lists,id',
     	);
 
     /*

@@ -52,6 +52,17 @@ class StockMovementsController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+		// Valid type?
+		$this->validate($request, StockMovement::validTypeRule());
+
+        if ( $request->input('movement_type_id') == 10 ) {
+        	$product = \App\Product::find( $request->input('product_id') );
+            if ( $product->quantity_onhand > 0.0 )
+				return redirect('stockmovements/create')
+						->with( 'error', l('Can not set Initial Stock &#58&#58 (:id) :name has already non zero stock', ['id' => $product->id, 'name' => $product->name]) );
+        }
+
+		// Move on
 		$action = $request->input('nextAction', '');
 
 		// Has Combination?
@@ -75,7 +86,7 @@ class StockMovementsController extends Controller {
 		$extradata = ['date' =>  $date_view->toDateString(), 
 					  'combination_id' => $combination_id, 'conversion_rate' => $conversion_rate, 'user_id' => \Auth::id()];
 
-		$this->validate($request, StockMovement::$rules);
+		$this->validate($request, StockMovement::getRules( $request->input('movement_type_id') ));
 
 		$stockmovement = $this->stockmovement->create( array_merge( $request->all(), $extradata ) );
 
@@ -86,7 +97,7 @@ class StockMovementsController extends Controller {
 		Cookie::queue('currency_id',        $request->input('currency_id'), 1);
 
 		// Stock movement fulfillment (perform stock movements)
-//		$stockmovement->fulfill();
+		$stockmovement->process();
 
         if ($action == 'saveAndContinue')
         return redirect('stockmovements/create')

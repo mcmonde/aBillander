@@ -13,7 +13,7 @@
 
 				@include('errors.list')
 
-				<form method="POST" action="http://localhost/aBillander5/public/translations/{{$id}}" accept-charset="UTF-8">
+				<form method="POST" action="{{ URL::to('translations/'.$id) }}" accept-charset="UTF-8">
 					<input name="_method" value="PATCH" type="hidden">
 					{{-- csrf_field() --}}
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">

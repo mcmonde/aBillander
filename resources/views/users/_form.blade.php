@@ -35,7 +35,7 @@
 <div class="row">
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
     {!! Form::label('language_id', l('Language')) !!}
-    {!! Form::select('language_id', array('0' => l('-- Please, select --', [], 'layouts')) + $languageList, null, array('class' => 'form-control')) !!}
+    {!! Form::select('language_id', $languageList, null, array('class' => 'form-control')) !!}
 </div>
 
            <div class="form-group col-lg-4 col-md-4 col-sm-4" id="div-is_admin">

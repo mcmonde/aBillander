@@ -54,6 +54,13 @@ class CurrenciesController extends Controller {
 
 		$currency = $this->currency->create($request->all());
 
+		\App\CurrencyConversionRate::create([
+				'date' => \Carbon\Carbon::now(), 
+				'currency_id' => $currency->id, 
+				'conversion_rate' => $currency->conversion_rate, 
+				'user_id' => \Auth::id(),
+			]);
+
 		return redirect('currencies')
 				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $currency->id], 'layouts') . $request->input('name'));
 	}
@@ -99,6 +106,14 @@ class CurrenciesController extends Controller {
 
 		$currency->update($request->all());
 
+		if ( $currency->id != \App\Context::getContext()->currency->id )
+			\App\CurrencyConversionRate::create([
+					'date' => \Carbon\Carbon::now(), 
+					'currency_id' => $currency->id, 
+					'conversion_rate' => $currency->conversion_rate, 
+					'user_id' => \Auth::id(),
+				]);
+
 		return redirect('currencies')
 				->with('success', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts') . $request->input('name'));
 	}
@@ -114,8 +129,26 @@ class CurrenciesController extends Controller {
 	{
         $this->currency->findOrFail($id)->delete();
 
+        // Delete currency conversion rate history
+
         return redirect('currencies')
 				->with('success', l('This record has been successfully deleted &#58&#58 (:id) ', ['id' => $id], 'layouts'));
+	}
+
+	/**
+	 * Display the specified resource.
+	 * GET /currencies/{id}/exchange
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function exchange($id)
+	{
+		$currency = $this->currency->findOrFail($id);
+
+		$ccrs = \App\CurrencyConversionRate::where('currency_id', '=', $currency->id)->with('user')->orderBy('date', 'desc')->get();
+
+        return view('currencies.exchange', compact('currency', 'ccrs'));
 	}
 
 }

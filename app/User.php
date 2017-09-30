@@ -97,4 +97,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\StockMovement');
     }
+    
+    public function currencyconversionrates()
+    {
+        return $this->hasMany('App\CurrencyConversionRate');
+    }
 }

@@ -17,19 +17,122 @@ class StockMovement extends Model {
     protected $fillable = ['date', 'document_reference', 'price', 'currency_id', 'conversion_rate', 'quantity', 'notes',
                            'product_id', 'combination_id', 'warehouse_id', 'movement_type_id'];
 
-    public static $rules = array(
-        'date' => 'required',
 //        'date' => 'required|date|date_format:YY-MM-DD',
 //         See: https://es.stackoverflow.com/questions/57020/validaci%C3%B3n-de-formato-de-fecha-no-funciona-laravel-5-3
 //        'document_reference' => 'required',   <- Stock adjustments & others do not need it!!
-        'price' => 'required',
-        'currency_id' => 'exists:currencies,id',
-        'quantity' => 'required|not_in:0',
-        'product_id' => 'exists:products,id',
-        'combination_id' => 'sometimes|exists:combinations,id',
-        'warehouse_id' => 'exists:warehouses,id',
-        'movement_type_id' => 'required',
-    );
+
+    public static $rules = [
+            '10' => array(
+                    'date' => 'required',
+                    'price' => 'required|min:0|not_in:0',
+                    'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '12' => array(
+                    'date' => 'required',
+ //                   'price' => 'required',
+ //                   'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '20' => array(
+                    'date' => 'required',
+                    'price' => 'required|min:0|not_in:0',
+                    'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '21' => array(
+                    'date' => 'required',
+                    'price' => 'required|min:0|not_in:0',
+                    'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '30' => array(
+                    'date' => 'required',
+                    'price' => 'required|min:0|not_in:0',
+                    'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '31' => array(
+                    'date' => 'required',
+                    'price' => 'required|min:0|not_in:0',
+                    'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '40' => array(
+                    'date' => 'required',
+ //                   'price' => 'required',
+ //                   'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '41' => array(
+                    'date' => 'required',
+   //                 'price' => 'required',
+   //                 'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '50' => array(
+                    'date' => 'required',
+ //                   'price' => 'required',
+ //                   'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '51' => array(
+                    'date' => 'required',
+   //                 'price' => 'required',
+   //                 'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+            '55' => array(
+                    'date' => 'required',
+   //                 'price' => 'required',
+   //                 'currency_id' => 'exists:currencies,id',
+                    'quantity' => 'required',                   //|not_in:0',
+                    'product_id' => 'exists:products,id',
+                    'combination_id' => 'sometimes|exists:combinations,id',
+                    'warehouse_id' => 'exists:warehouses,id',
+                    'movement_type_id' => 'required',
+                    ),
+    ];
 
     public static $rules_adjustment = array(
         'date' => 'date',
@@ -40,6 +143,24 @@ class StockMovement extends Model {
         'warehouse_id' => 'exists:warehouses,id',
 //        'movement_type_id' => 'required',
     );
+
+    public static function validTypeRule()
+    {
+        $rules = array(
+                        'movement_type_id' => 'required|in:'.implode(',', self::validTypes()),
+                    );
+
+        return $rules;
+    }
+
+    public static function getRules( $type )
+    {
+        $r1 = self::$rules[$type];
+
+        $r2 = self::validTypeRule();
+
+        return array_merge($r1,$r2);
+    }
 	
     
     /*
@@ -60,27 +181,39 @@ class StockMovement extends Model {
 	const MANUFACTURING_RETURN = 51;
 	const MANUFACTURING_OUTPUT = 55;
     
-	public static function stockmovementList()
+    public static function validTypes()
+    {
+        $list = array(
+
+            self::INITIAL_STOCK,
+            self::ADJUSTMENT,
+            self::PURCHASE_ORDER,
+            self::PURCHASE_RETURN,
+            self::SALE_ORDER,
+            self::SALE_RETURN,
+            self::TRANSFER_OUT,
+            self::TRANSFER_IN,
+            self::MANUFACTURING_INPUT,
+            self::MANUFACTURING_RETURN,
+            self::MANUFACTURING_OUTPUT,
+
+        );
+
+        return $list;
+    }
+    
+    public static function stockmovementList()
     {
         $list = array();
 
-        $list[self::INITIAL_STOCK]        = self::INITIAL_STOCK.       ' - '.Lang::get('appmultilang.'.StockMovement::INITIAL_STOCK);
-        $list[self::ADJUSTMENT]           = self::ADJUSTMENT.          ' - '.Lang::get('appmultilang.'.StockMovement::ADJUSTMENT);
-        $list[self::PURCHASE_ORDER]       = self::PURCHASE_ORDER.      ' - '.Lang::get('appmultilang.'.StockMovement::PURCHASE_ORDER);
-        $list[self::PURCHASE_RETURN]      = self::PURCHASE_RETURN.     ' - '.Lang::get('appmultilang.'.StockMovement::PURCHASE_RETURN);
-        $list[self::SALE_ORDER]           = self::SALE_ORDER.          ' - '.Lang::get('appmultilang.'.StockMovement::SALE_ORDER);
-        $list[self::SALE_RETURN]          = self::SALE_RETURN.         ' - '.Lang::get('appmultilang.'.StockMovement::SALE_RETURN);
-        $list[self::TRANSFER_OUT]         = self::TRANSFER_OUT.        ' - '.Lang::get('appmultilang.'.StockMovement::TRANSFER_OUT);
-        $list[self::TRANSFER_IN]          = self::TRANSFER_IN.         ' - '.Lang::get('appmultilang.'.StockMovement::TRANSFER_IN);
-        $list[self::MANUFACTURING_INPUT]  = self::MANUFACTURING_INPUT. ' - '.Lang::get('appmultilang.'.StockMovement::MANUFACTURING_INPUT);
-        $list[self::MANUFACTURING_RETURN] = self::MANUFACTURING_RETURN.' - '.Lang::get('appmultilang.'.StockMovement::MANUFACTURING_RETURN);
-        $list[self::MANUFACTURING_OUTPUT] = self::MANUFACTURING_OUTPUT.' - '.Lang::get('appmultilang.'.StockMovement::MANUFACTURING_OUTPUT);
+        foreach (self::validTypes() as $t){
 
-//        echo '<pre>';print_r(array('0' => '-- Seleccione--') + $list);echo '</pre>';
+            $list[$t] = $t.' - '.Lang::get('appmultilang.'.$t);
 
+        }
 
         return $list;
-	}
+    }
     
     
     /*
@@ -101,15 +234,21 @@ class StockMovement extends Model {
     // INITIAL_STOCK
     public function process_10()
     {
+        if ( $this->currency_id != \App\Context::getContext()->currency->id ) {
+            $currency = \App\Currency::find($this->currency_id);
+            $conversion_rate = $currency->conversion_rate;
+            $price = $this->price*$conversion_rate;
+        }
+
         // Update Product
         $product = \App\Product::find($this->product_id);
-        if ( $product->quantity_onhand > 0.0 ) return 'Not allowed';
+        if ( $product->quantity_onhand > 0.0 ) return false;
         
         $quantity_onhand = $this->quantity;
 
         // Average price stuff
         if ( !($this->combination_id > 0) ) {
-            $product->cost_average = $this->price;
+            $product->cost_average = $price;
             $product->last_purchase_price = 0.0;
         }
 
@@ -121,7 +260,7 @@ class StockMovement extends Model {
             $combination = \App\Combination::find($this->combination_id);
             $quantity_onhand = $this->quantity;
 
-            $combination->cost_average = $this->price;
+            $combination->cost_average = $price;
             $combination->last_purchase_price = 0.0;
 
             $combination->quantity_onhand = $quantity_onhand;
@@ -232,6 +371,12 @@ class StockMovement extends Model {
     // PURCHASE_ORDER
     public function process_20()
     {
+        if ( $this->currency_id != \App\Context::getContext()->currency->id ) {
+            $currency = \App\Currency::find($this->currency_id);
+            $conversion_rate = $currency->conversion_rate;
+            $price = $this->price*$conversion_rate;
+        }
+
         // Update Product
         $product = \App\Product::find($this->product_id);
         $quantity_onhand = $product->quantity_onhand + $this->quantity;
@@ -239,10 +384,10 @@ class StockMovement extends Model {
         // Average price stuff
         if ( !($this->combination_id > 0) ) {
             // $cost = $product->cost_average;
-            $cost_average = ($product->quantity_onhand * $product->cost_average + $this->quantity * $this->price) / ($product->quantity_onhand + $this->quantity);
+            $cost_average = ($product->quantity_onhand * $product->cost_average + $this->quantity * $price) / ($product->quantity_onhand + $this->quantity);
 
             $product->cost_average = $cost_average;
-            $product->last_purchase_price = $this->price;
+            $product->last_purchase_price = $price;
         }
 
         $product->quantity_onhand = $quantity_onhand;
@@ -255,10 +400,10 @@ class StockMovement extends Model {
 
             // Average price stuff
             // $cost = $combination->cost_average;
-            $cost_average = ($combination->quantity_onhand * $combination->cost_average + $this->quantity * $this->price) / ($combination->quantity_onhand + $this->quantity);
+            $cost_average = ($combination->quantity_onhand * $combination->cost_average + $this->quantity * $price) / ($combination->quantity_onhand + $this->quantity);
             
             $combination->cost_average = $cost_average;
-            $combination->last_purchase_price = $this->price;
+            $combination->last_purchase_price = $price;
 
             $combination->quantity_onhand = $quantity_onhand;
             $combination->save();
@@ -306,7 +451,83 @@ class StockMovement extends Model {
     // PURCHASE_RETURN
     public function process_21()
     {
-        return true;
+        if ( $this->currency_id != \App\Context::getContext()->currency->id ) {
+            $currency = \App\Currency::find($this->currency_id);
+            $conversion_rate = $currency->conversion_rate;
+            $price = $this->price*$conversion_rate;
+        }
+
+        // Update Product
+        $product = \App\Product::find($this->product_id);
+        $quantity_onhand = $product->quantity_onhand - $this->quantity;
+
+        // Average price stuff
+        if ( !($this->combination_id > 0) ) {
+            // $cost = $product->cost_average;
+            $cost_average = ($product->quantity_onhand * $product->cost_average - $this->quantity * $price) / ($product->quantity_onhand - $this->quantity);
+
+            $product->cost_average = $cost_average;
+//            $product->last_purchase_price = $price;
+        }
+
+        $product->quantity_onhand = $quantity_onhand;
+        $product->save();
+
+        // Update Cpmbination
+        if ($this->combination_id > 0) {
+            $combination = \App\Combination::find($this->combination_id);
+            $quantity_onhand = $combination->quantity_onhand - $this->quantity;
+
+            // Average price stuff
+            // $cost = $combination->cost_average;
+            $cost_average = ($combination->quantity_onhand * $combination->cost_average - $this->quantity * $price) / ($combination->quantity_onhand - $this->quantity);
+            
+            $combination->cost_average = $cost_average;
+//            $combination->last_purchase_price = $price;
+
+            $combination->quantity_onhand = $quantity_onhand;
+            $combination->save();
+        }
+
+        // Update Product-Warehouse relationship (quantity)
+        $whs = $product->warehouses;
+        if ($whs->contains($this->warehouse_id)) {
+            $wh = $product->warehouses()->get();
+            $wh = $wh->find($this->warehouse_id);
+            $quantity = $wh->pivot->quantity - $this->quantity;
+            
+            if ($quantity != 0) {
+                $wh->pivot->quantity = $quantity;
+                $wh->pivot->save(); }
+            else {
+                // Delete record ($quantity = 0)
+                $product->warehouses()->detach($this->warehouse_id); }
+        } else {
+            if ($this->quantity != 0) 
+                // ?
+                $product->warehouses()->attach($this->warehouse_id, array('quantity' => -$this->quantity));
+        }
+
+        // Update Combination-Warehouse relationship (quantity)
+        if ($this->combination_id > 0) {
+            $whs = $combination->warehouses;
+            if ($whs->contains($this->warehouse_id)) {
+                $wh = $combination->warehouses()->get();
+                $wh = $wh->find($this->warehouse_id);
+                $quantity = $wh->pivot->quantity - $this->quantity;
+                
+                if ($quantity != 0) {
+                    $wh->pivot->quantity = $quantity;
+                    $wh->pivot->save(); }
+                else {
+                    // Delete record ($quantity = 0)
+                    $combination->warehouses()->detach($this->warehouse_id); }
+            } else {
+                if ($this->quantity != 0) 
+                    // ?
+                    $combination->warehouses()->attach($this->warehouse_id, array('quantity' => -$this->quantity));
+            }
+        }
     }
 
     // SALE_ORDER
@@ -374,7 +595,81 @@ class StockMovement extends Model {
     // SALE_RETURN
     public function process_31()
     {
-        return true;
+        if ( $this->currency_id != \App\Context::getContext()->currency->id ) {
+            $currency = \App\Currency::find($this->currency_id);
+            $conversion_rate = $currency->conversion_rate;
+            $price = $this->price*$conversion_rate;
+        }
+
+        // Update Product
+        $product = \App\Product::find($this->product_id);
+        $quantity_onhand = $product->quantity_onhand + $this->quantity;
+
+        // Average price stuff
+        if ( !($this->combination_id > 0) ) {
+            // $cost = $product->cost_average;
+            $cost_average = ($product->quantity_onhand * $product->cost_average + $this->quantity * $price) / ($product->quantity_onhand + $this->quantity);
+
+            $product->cost_average = $cost_average;
+//            $product->last_purchase_price = $price;
+        }
+
+        $product->quantity_onhand = $quantity_onhand;
+        $product->save();
+
+        // Update Cpmbination
+        if ($this->combination_id > 0) {
+            $combination = \App\Combination::find($this->combination_id);
+            $quantity_onhand = $combination->quantity_onhand + $this->quantity;
+
+            // Average price stuff
+            // $cost = $combination->cost_average;
+            $cost_average = ($combination->quantity_onhand * $combination->cost_average + $this->quantity * $price) / ($combination->quantity_onhand + $this->quantity);
+            
+            $combination->cost_average = $cost_average;
+ //           $combination->last_purchase_price = $price;
+
+            $combination->quantity_onhand = $quantity_onhand;
+            $combination->save();
+        }
+
+        // Update Product-Warehouse relationship (quantity)
+        $whs = $product->warehouses;
+        if ($whs->contains($this->warehouse_id)) {
+            $wh = $product->warehouses()->get();
+            $wh = $wh->find($this->warehouse_id);
+            $quantity = $wh->pivot->quantity + $this->quantity;
+            
+            if ($quantity != 0) {
+                $wh->pivot->quantity = $quantity;
+                $wh->pivot->save(); }
+            else {
+                // Delete record ($quantity = 0)
+                $product->warehouses()->detach($this->warehouse_id); }
+        } else {
+            if ($this->quantity != 0) 
+                $product->warehouses()->attach($this->warehouse_id, array('quantity' => $this->quantity));
+        }
+
+        // Update Combination-Warehouse relationship (quantity)
+        if ($this->combination_id > 0) {
+            $whs = $combination->warehouses;
+            if ($whs->contains($this->warehouse_id)) {
+                $wh = $combination->warehouses()->get();
+                $wh = $wh->find($this->warehouse_id);
+                $quantity = $wh->pivot->quantity + $this->quantity;
+                
+                if ($quantity != 0) {
+                    $wh->pivot->quantity = $quantity;
+                    $wh->pivot->save(); }
+                else {
+                    // Delete record ($quantity = 0)
+                    $combination->warehouses()->detach($this->warehouse_id); }
+            } else {
+                if ($this->quantity != 0) 
+                    $combination->warehouses()->attach($this->warehouse_id, array('quantity' => $this->quantity));
+            }
+        }
     }
 
     // TRANSFER_OUT
@@ -504,19 +799,215 @@ class StockMovement extends Model {
     // MANUFACTURING_INPUT
     public function process_50()
     {
-        return true;
+        // Update Stock Movement
+ //       $this->price = $product->cost_average;
+        $this->price = $product->cost_price;
+        $this->save();
+
+        // Update Product
+        $product = \App\Product::find($this->product_id);
+        $quantity_onhand = $product->quantity_onhand - $this->quantity;
+
+        // Average price stuff - Not needed!
+
+        $product->quantity_onhand = $quantity_onhand;
+        $product->save();
+
+        // Update Cpmbination
+        if ($this->combination_id > 0) {
+            $combination = \App\Combination::find($this->combination_id);
+            $quantity_onhand = $combination->quantity_onhand - $this->quantity;
+
+            // Average price stuff - Not needed!
+
+            $combination->quantity_onhand = $quantity_onhand;
+            $combination->save();
+        }
+
+        // Update Product-Warehouse relationship (quantity)
+        $whs = $product->warehouses;
+        if ($whs->contains($this->warehouse_id)) {
+            $wh = $product->warehouses()->get();
+            $wh = $wh->find($this->warehouse_id);
+            $quantity = $wh->pivot->quantity - $this->quantity;
+            
+            if ($quantity != 0) {
+                $wh->pivot->quantity = $quantity;
+                $wh->pivot->save(); }
+            else {
+                // Delete record ($quantity = 0)
+                $product->warehouses()->detach($this->warehouse_id); }
+        } else {
+            if ($this->quantity != 0) 
+                $product->warehouses()->attach($this->warehouse_id, array('quantity' => $this->quantity));
+        }
+
+        // Update Combination-Warehouse relationship (quantity)
+        if ($this->combination_id > 0) {
+            $whs = $combination->warehouses;
+            if ($whs->contains($this->warehouse_id)) {
+                $wh = $combination->warehouses()->get();
+                $wh = $wh->find($this->warehouse_id);
+                $quantity = $wh->pivot->quantity - $this->quantity;
+                
+                if ($quantity != 0) {
+                    $wh->pivot->quantity = $quantity;
+                    $wh->pivot->save(); }
+                else {
+                    // Delete record ($quantity = 0)
+                    $combination->warehouses()->detach($this->warehouse_id); }
+            } else {
+                if ($this->quantity != 0) 
+                    $combination->warehouses()->attach($this->warehouse_id, array('quantity' => $this->quantity));
+            }
+        }
     }
 
     // MANUFACTURING_RETURN
     public function process_51()
     {
-        return true;
+        if ( $this->currency_id != \App\Context::getContext()->currency->id ) {
+            $currency = \App\Currency::find($this->currency_id);
+            $conversion_rate = $currency->conversion_rate;
+            $price = $this->price*$conversion_rate;
+        }
+
+        // Update Product
+        $product = \App\Product::find($this->product_id);
+        $quantity_onhand = $product->quantity_onhand + $this->quantity;
+
+        // Average price stuff
+        if ( !($this->combination_id > 0) ) {
+            // $cost = $product->cost_average;
+            $cost_average = ($product->quantity_onhand * $product->cost_average + $this->quantity * $price) / ($product->quantity_onhand + $this->quantity);
+
+            $product->cost_average = $cost_average;
+//            $product->last_purchase_price = $price;
+        }
+
+        $product->quantity_onhand = $quantity_onhand;
+        $product->save();
+
+        // Update Cpmbination
+        if ($this->combination_id > 0) {
+            $combination = \App\Combination::find($this->combination_id);
+            $quantity_onhand = $combination->quantity_onhand + $this->quantity;
+
+            // Average price stuff
+            // $cost = $combination->cost_average;
+            $cost_average = ($combination->quantity_onhand * $combination->cost_average + $this->quantity * $price) / ($combination->quantity_onhand + $this->quantity);
+            
+            $combination->cost_average = $cost_average;
+//            $combination->last_purchase_price = $price;
+
+            $combination->quantity_onhand = $quantity_onhand;
+            $combination->save();
+        }
+
+        // Update Product-Warehouse relationship (quantity)
+        $whs = $product->warehouses;
+        if ($whs->contains($this->warehouse_id)) {
+            $wh = $product->warehouses()->get();
+            $wh = $wh->find($this->warehouse_id);
+            $quantity = $wh->pivot->quantity + $this->quantity;
+            
+            if ($quantity != 0) {
+                $wh->pivot->quantity = $quantity;
+                $wh->pivot->save(); }
+            else {
+                // Delete record ($quantity = 0)
+                $product->warehouses()->detach($this->warehouse_id); }
+        } else {
+            if ($this->quantity != 0) 
+                $product->warehouses()->attach($this->warehouse_id, array('quantity' => $this->quantity));
+        }
+
+        // Update Combination-Warehouse relationship (quantity)
+        if ($this->combination_id > 0) {
+            $whs = $combination->warehouses;
+            if ($whs->contains($this->warehouse_id)) {
+                $wh = $combination->warehouses()->get();
+                $wh = $wh->find($this->warehouse_id);
+                $quantity = $wh->pivot->quantity + $this->quantity;
+                
+                if ($quantity != 0) {
+                    $wh->pivot->quantity = $quantity;
+                    $wh->pivot->save(); }
+                else {
+                    // Delete record ($quantity = 0)
+                    $combination->warehouses()->detach($this->warehouse_id); }
+            } else {
+                if ($this->quantity != 0) 
+                    $combination->warehouses()->attach($this->warehouse_id, array('quantity' => $this->quantity));
+            }
+        }
     }
 
     // MANUFACTURING_OUTPUT
     public function process_55()
     {
-        return true;
+        // Update Stock Movement
+ //       $this->price = $product->cost_average;
+        $this->price = $product->cost_price;
+        $this->save();
+
+        // Update Product
+        $product = \App\Product::find($this->product_id);
+        $quantity_onhand = $product->quantity_onhand + $this->quantity;
+
+        // Average price stuff - Not needed!
+
+        $product->quantity_onhand = $quantity_onhand;
+        $product->save();
+
+        // Update Cpmbination
+        if ($this->combination_id > 0) {
+            $combination = \App\Combination::find($this->combination_id);
+            $quantity_onhand = $combination->quantity_onhand + $this->quantity;
+
+            // Average price stuff - Not needed!
+
+            $combination->quantity_onhand = $quantity_onhand;
+            $combination->save();
+        }
+
+        // Update Product-Warehouse relationship (quantity)
+        $whs = $product->warehouses;
+        if ($whs->contains($this->warehouse_id)) {
+            $wh = $product->warehouses()->get();
+            $wh = $wh->find($this->warehouse_id);
+            $quantity = $wh->pivot->quantity + $this->quantity;
+            
+            if ($quantity != 0) {
+                $wh->pivot->quantity = $quantity;
+                $wh->pivot->save(); }
+            else {
+                // Delete record ($quantity = 0)
+                $product->warehouses()->detach($this->warehouse_id); }
+        } else {
+            if ($this->quantity != 0) 
+                $product->warehouses()->attach($this->warehouse_id, array('quantity' => $this->quantity));
+        }
+
+        // Update Combination-Warehouse relationship (quantity)
+        if ($this->combination_id > 0) {
+            $whs = $combination->warehouses;
+            if ($whs->contains($this->warehouse_id)) {
+                $wh = $combination->warehouses()->get();
+                $wh = $wh->find($this->warehouse_id);
+                $quantity = $wh->pivot->quantity + $this->quantity;
+                
+                if ($quantity != 0) {
+                    $wh->pivot->quantity = $quantity;
+                    $wh->pivot->save(); }
+                else {
+                    // Delete record ($quantity = 0)
+                    $combination->warehouses()->detach($this->warehouse_id); }
+            } else {
+                if ($this->quantity != 0) 
+                    $combination->warehouses()->attach($this->warehouse_id, array('quantity' => $this->quantity));
+            }
+        }
     }
     
     public function fulfill()

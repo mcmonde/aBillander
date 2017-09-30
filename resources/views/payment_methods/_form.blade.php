@@ -28,8 +28,8 @@
       <table class="table table-condensed">
          <thead>
             <tr>
-               <th class="text-left">Días</th>
-               <th class="text-left">Porcentaje</th>
+               <th class="text-left">{{ l('Days') }}</th>
+               <th class="text-left">{{ l('Percent') }}</th>
                <th class="text-left"> </th>
             </tr>
          </thead>
@@ -58,12 +58,12 @@
 
 <div class="alert alert-danger alert-block" name="percentages_check_sum" id="percentages_check_sum" style="display: none;">
   <strong>{!! l('Error', [], 'layouts') !!}: </strong>
-    {!! l('Los porcentajes no suman 100') !!}
+    {!! l('Percentages do not add up to 100') !!}
 </div>
 
 <div class="alert alert-danger alert-block" name="percentages_check" id="percentages_check" style="display: none;">
   <strong>{!! l('Error', [], 'layouts') !!}: </strong>
-    {!! l('Algunos porcentajes son incorrectos') !!}
+    {!! l('Some percentages are incorrect') !!}
 </div>
 
 </div>
@@ -87,7 +87,7 @@
    </div>
  </div>
 </div>
-<div class="form-group col-lg-4 col-md-4 col-sm-4" id="div-auto_direct_debit">
+<div class="form-group col-lg-5 col-md-5 col-sm-5" id="div-auto_direct_debit">
  {!! Form::label('auto_direct_debit', l('Auto Direct Debit'), ['class' => 'control-label']) !!}
                <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
                                     data-content="{{ l('Include invoices (with this method) in automatic payment remittances') }}">
@@ -108,7 +108,7 @@
    </div>
  </div>
 </div>
-<div class="form-group col-lg-4 col-md-4 col-sm-4" id="div-active">
+<div class="form-group col-lg-3 col-md-3 col-sm-3" id="div-active">
  {!! Form::label('active', l('Active?', [], 'layouts'), ['class' => 'control-label']) !!}
  <div>
    <div class="radio-inline">

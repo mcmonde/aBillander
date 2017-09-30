@@ -14,7 +14,7 @@ trait ViewFormatterTrait
         // Do formatting
         // Get decimal places -> decimal_places model property
         $decimals = array_key_exists('quantity_decimal_places', $this->attributes) ?
-        			$this->decimal_places :
+        			$this->quantity_decimal_places :
         			intval( \App\Configuration::get('DEF_QUANTITY_DECIMALS') );
         
         $data = number_format($data, $decimals, '.', '');
@@ -76,7 +76,7 @@ trait ViewFormatterTrait
         // if ( !$key || !\property_exists($this, $key) ) return null;
         $data = floatval( $val ); // abi_r($data, true);
 
-        if ( !$decimalPlaces ) $decimalPlaces = \App\Configuration::get('DEF_PERCENT_DECIMALS');
+        if ( $decimalPlaces === null ) $decimalPlaces = \App\Configuration::get('DEF_PERCENT_DECIMALS');
 
         // abi_r($decimalPlaces, true);
 
@@ -96,6 +96,24 @@ trait ViewFormatterTrait
         $number = number_format($data, $currency->decimalPlaces, '.', '');
 
         return $number;
+    }
+    public function as_quantityable( $val = 0.0, $decimalPlaces = null )
+    {
+        $data = floatval( $val );
+
+        // Do formatting
+        // Get decimal places -> decimal_places model property
+        if ( $decimalPlaces === null ) {
+            $decimals = array_key_exists('quantity_decimal_places', $this->attributes) ?
+                        $this->quantity_decimal_places :
+                        intval( \App\Configuration::get('DEF_QUANTITY_DECIMALS') );
+        } else {
+            $decimals = $decimalPlaces;
+        }
+
+        $data = number_format($data, $decimals, '.', '');
+
+        return $data;
     }
 
     public function as_date( $key = '' )

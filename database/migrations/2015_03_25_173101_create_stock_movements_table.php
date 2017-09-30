@@ -24,7 +24,7 @@ class CreateStockMovementsTable extends Migration {
 //			$table->integer('document_id')->unsigned()->default(0);	// id of model_name
 			$table->integer('stockmovementable_line_id')->unsigned()->default(0);	// line id of document_id
 
-			$table->string('document_reference', 64);				// document_prefix + document_id of model_name (or supplier reference, etc.)
+			$table->string('document_reference', 64)->nullable();				// document_prefix + document_id of model_name (or supplier reference, etc.)
 
 			$table->decimal('quantity', 20, 6);
 			$table->decimal('price', 20, 6);

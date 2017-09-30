@@ -56,10 +56,10 @@
               <br /> --}}
               {!! $combination->name() !!}
           </td>
-          <td>{{ $combination->quantity_onhand }}</td>
+          <td>{{ $product->as_quantityable($combination->quantity_onhand) }}</td>
           <td>
               @foreach ($combination->warehouses as $wh)
-                  {{ $wh->alias }} - {{ $wh->pivot->quantity }}<br />
+                  {{ $wh->alias }} - {{ $product->as_quantityable($wh->pivot->quantity) }}<br />
               @endforeach
           </td>
           <td class="text-center">@if ($combination->is_default) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>

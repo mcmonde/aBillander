@@ -59,14 +59,14 @@
       @foreach ($product->warehouses as $wh)
         <tr>
           <td>{{ $wh->alias }}</td>
-          <td>{{ $wh->pivot->quantity }}</td>
+          <td>{{ $product->as_quantityable($wh->pivot->quantity) }}</td>
                <td class="text-right">
                 </td>
         </tr>
       @endforeach
         <tr>
           <td class="text-right">{{ l('TOTAL') }}:</td>
-          <td>{{ $product->quantity_onhand }}</td>
+          <td>{{ $product->as_quantity('quantity_onhand') }}</td>
                <td class="text-right">
                 </td>
         </tr>

@@ -87,7 +87,13 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
 
         Route::resource('templates', 'TemplatesController');
 
+// If Stock Counting is in progress, disable these routes:
+// if ( ! \App\Configuration::get('STOCK_COUNT_IN_PROGRESS') ) {
+
         Route::resource('currencies', 'CurrenciesController');
+        Route::get('currencies/{id}/exchange',   array('uses'=>'CurrenciesController@exchange', 
+                                                                'as' => 'currencies.exchange' ) );     
+// }
 
         Route::resource('taxes',          'TaxesController');
         Route::resource('taxes.taxrules', 'TaxRulesController');
@@ -122,12 +128,12 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
         Route::resource('warehouses', 'WarehousesController');
 
         Route::resource('stockmovements', 'StockMovementsController');
-/*
+
         Route::resource('stockadjustments', 'StockAdjustmentsController', 
                 ['except' => [
                     'index', 'update', 'destroy'
                 ]]);
-*/
+
         Route::resource('customers', 'CustomersController');
         Route::get('customers/ajax/name_lookup', array('uses' => 'CustomersController@ajaxCustomerSearch', 'as' => 'customers.ajax.nameLookup'));
 
