@@ -58,4 +58,9 @@ class Warehouse extends Model {
         return $this->hasMany('App\StockMovement');
     }
     
+    public function stockcounts()
+    {
+        return $this->hasMany('App\StockCount');
+    }
+    
 }

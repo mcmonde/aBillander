@@ -14,7 +14,7 @@ class StockCountLinesController extends Controller
      */
     public function index()
     {
-        //
+        return redirect('soon');
     }
 
     /**

@@ -22,7 +22,7 @@ class CreateStockCountsTable extends Migration
             $table->string('document_reference', 64);                           // document_prefix + document_id of model_name (or supplier reference, etc.)
 
             $table->integer('warehouse_id')->unsigned()->nullable(false);
-            $table->tinyInteger('initial_inventory')->default(0);
+            $table->tinyInteger('initial_inventory')->default(0);               // Is initial Inventory?
             $table->text('notes')->nullable();
 
             $table->timestamps();

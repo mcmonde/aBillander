@@ -26,7 +26,10 @@ return array(
 	|
 	*/
 
+    'Product' => 'Producto', 
+    'Customer' => 'Cliente', 
 	'CustomerInvoice' => 'Factura de Cliente',
+    'StockCount' => 'Inventario de Almacén',
 	
 
 	/*

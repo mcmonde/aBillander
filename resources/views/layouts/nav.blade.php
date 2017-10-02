@@ -147,6 +147,12 @@
                             </a>
                         </li>
                          <li>
+                            <a href="{{ URL::to('stockcounts') }}">
+                                 {{l('Inventory Count', [], 'layouts')}}
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                         <li>
                             <a href="{{ URL::to('stockadjustments/create') }}">
                                  {{l('Inventory Adjustments', [], 'layouts')}}
                             </a>

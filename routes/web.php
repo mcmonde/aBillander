@@ -118,6 +118,9 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
         Route::resource('pricelists',     'PriceListsController');
         Route::resource('pricelistlines', 'PriceListLinesController');
 
+        Route::resource('stockcounts',                 'StockCountsController');
+        Route::resource('stockcounts.stockcountlines', 'StockCountLinesController');
+
         Route::resource('optiongroups',         'OptionGroupsController');
         Route::resource('optiongroups.options', 'OptionsController');
 

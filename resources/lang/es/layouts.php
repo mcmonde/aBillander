@@ -56,6 +56,7 @@ return [
 
 	'Warehouse'     => 'Almacén',
 	'Stock Movements'     => 'Movimientos de Almacén',
+	'Inventory Count'     => 'Inventario de Almacén',
 	'Inventory Adjustments'     => 'Regularización de Almacén',
 
 	'Invoicing'     => 'Facturación',

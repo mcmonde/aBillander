@@ -13,6 +13,7 @@ class Sequence extends Model {
             'Product', 
             'Customer', 
             'CustomerInvoice',
+            'StockCount',
         );
 
     // Move this to config folder? Maybe yes...
@@ -38,22 +39,19 @@ class Sequence extends Model {
     
     public static function listFor( $model = '' )
     {
-        if ( !$model ) return null;
+        if ( !$model ) return [];
 
-        return
-            isset( self::$models[$model] )
-            ?   self::$models[$model]
-            :   null;
+        return \App\Sequence::where('model_name', '=', $model)->pluck('name', 'id')->toArray();
     }
 
     public static function documentList()
     {
         $list = array();
 
-        $list[CustomerInvoice::class]    = Lang::get('appmultilang.'.'CustomerInvoice');
+        $types = (self::$types);
 
-//        echo '<pre>';print_r(array('0' => '-- Seleccione --') + $list);echo '</pre>';
-
+        foreach($types as $type)
+            $list[$type]    = Lang::get('appmultilang.'.$type);
 
         return $list;
     }

@@ -31,6 +31,7 @@ class CustomerInvoice extends Model {
 	public static $rules = [
                             'document_date' => 'date',
                             'delivery_date' => 'date',
+                            'sequence_id' => 'exists:sequences,id',
                             'warehouse_id' => 'exists:warehouses,id',
                             'currency_id' => 'exists:currencies,id',
                             'payment_method_id' => 'exists:payment_methods,id',
@@ -88,7 +89,12 @@ class CustomerInvoice extends Model {
 
     public function invoicingaddress()
     {
-        return $this->belongsTo('App\Address', 'invoicing_address_id');
+        return $this->belongsTo('App\Address', 'invoicing_address_id')->withTrashed();
+    }
+
+    public function shippingaddress()
+    {
+        return $this->belongsTo('App\Address', 'shipping_address_id')->withTrashed();
     }
 
     
