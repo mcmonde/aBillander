@@ -41,7 +41,10 @@ class Sequence extends Model {
     {
         if ( !$model ) return [];
 
-        return \App\Sequence::where('model_name', '=', $model)->pluck('name', 'id')->toArray();
+        $list = \App\Sequence::where('model_name', '=', $model)->pluck('name', 'id')->toArray();
+        if (!$list) $list = array();
+
+        return $list;
     }
 
     public static function documentList()

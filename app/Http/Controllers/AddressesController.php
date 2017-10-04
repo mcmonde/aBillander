@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php 
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -130,21 +132,23 @@ class AddressesController extends Controller {
 	public function edit($id, Request $request)
 	{
 		$address = Address::find($id);
-		$model_name = $address->model_name;
+		$model_name = $address->addressable_type;
 		$back_route = $request->has('back_route') ? urldecode($request->input('back_route')) : '' ;
 
 	//	if ( !Route::has($back_route) AND !Route::hasNamedRoute($back_route) )
 
 
 		// Check that the class exists before trying to use it
-		if( !class_exists('\App\\'.$model_name) ) {
+		if( !class_exists($model_name) ) {
 		    // Do stuff for when class does not exist
-		    echo $model_name.' NO existe'; die();
+		    echo $model_name.' NO existe '.$model_name; die();
 		}
 
 	    $model_var = strtolower($model_name);
-	    $model_name_full = '\App\\'.$model_name;
-	    $$model_var = $model_name_full::find($address->owner_id);
+	    $model_name_full = $model_name;
+	    $customer = $model_name_full::find($address->addressable_id);
+
+//	    abi_r($customer, true);
 
 		// $customer = Customer::find($owner_id);
 

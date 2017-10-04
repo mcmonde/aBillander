@@ -3,8 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\ViewFormatterTrait;
+
 class Customer extends Model {
 
+    use ViewFormatterTrait;
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
@@ -87,15 +90,27 @@ class Customer extends Model {
     {
         return $this->morphMany('App\BankAccount', 'bank_accountable');
     }
-	
+    
     public function addresses()
     {
-        return $this->hasMany('App\Address', 'owner_id')->where('model_name', '=', 'Customer');
+        return $this->morphMany('App\Address', 'addressable');
     }
 
     public function address()
     {
-        return $this->belongsTo('App\Address', 'invoicing_address_id')->where('addresses.model_name', '=', 'Customer');
+        return $this->invoicing_address();
+    }
+    
+    public function invoicing_address()
+    {   
+        return $this->belongsTo('App\Address', 'invoicing_address_id')
+                   ->where('addresses.addressable_type', 'App\Customer');
+    }
+    
+    public function shipping_address()
+    {
+        return $this->belongsTo('App\Address', 'shipping_address_id')
+                   ->where('addresses.addressable_type', 'App\Customer');
     }
 
     public function currency()

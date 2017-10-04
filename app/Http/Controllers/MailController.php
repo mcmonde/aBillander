@@ -57,19 +57,25 @@ class MailController extends Controller {
 
 		if ( !stripos( $body, '<br' ) ) $body = nl2br($body);
 
-		$send = Mail::send('emails.'.\App\Context::getContext()->language->iso_code.'.basic',
-	        array(
-	            'user_email'   => $request->input('from_email'),
-	            'user_name'    => $request->input('from_name'),
-	            'user_message' => $body,
-	        ), function($message) use ( $request )
-	    {
-	        $message->from(    $request->input('from_email'), $request->input('from_name') );
-	        $message->replyTo( $request->input('from_email'), $request->input('from_name') );
-	        $message->to(      $request->input('to_email'  ), $request->input('to_name')   )->subject( $request->input('subject') );
-	    });
+		// See ContactMessagesController
+		try{
+			$send = Mail::send('emails.'.\App\Context::getContext()->language->iso_code.'.basic',
+		        array(
+		            'user_email'   => $request->input('from_email'),
+		            'user_name'    => $request->input('from_name'),
+		            'user_message' => $body,
+		        ), function($message) use ( $request )
+		    {
+		        $message->from(    $request->input('from_email'), $request->input('from_name') );
+		        $message->replyTo( $request->input('from_email'), $request->input('from_name') );
+		        $message->to(      $request->input('to_email'  ), $request->input('to_name')   )->subject( $request->input('subject') );
+		    });
+		}
+		catch(Exception $e){
+		    	return 'ERROR';
+		}
 
-		return $send;
+		return 'OK';
 	}
 
 	/**

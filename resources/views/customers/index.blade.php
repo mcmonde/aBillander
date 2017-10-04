@@ -40,7 +40,7 @@
             <td>{{ $customer->identification }}</td>
             <td>{{ $customer->address->email }}</td>
             <td>{{ $customer->address->phone }}</td>
-            <td @if ( ($customer->outstanding_amount - $customer->outstanding_amount_allowed)>0 ) class="alert alert-danger" @endif>{{ \App\FP::money($customer->outstanding_amount, $customer->currency) }}</td>
+            <td @if ( ($customer->outstanding_amount - $customer->outstanding_amount_allowed)>0 ) class="alert alert-danger" @endif>{{ $customer->as_money('outstanding_amount', $customer->currency) }}</td>
             <td class="text-center">@if ($customer->blocked) <i class="fa fa-lock" style="color: #df382c;"></i> @else <i class="fa fa-unlock" style="color: #38b44a;"></i> @endif</td>
             <td class="text-right">
                 @if (  is_null($customer->deleted_at))

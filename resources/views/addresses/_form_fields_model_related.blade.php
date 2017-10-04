@@ -5,7 +5,7 @@
 	            {!! Form::text('address[name_commercial]', null, array('class' => 'form-control', 'id' => 'name_commercial')) !!}
 	            {!! $errors->first('address.name_commercial', '<span class="help-block">:message</span>') !!}
 	          </div>
-	          <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('address.alias') ? 'has-error' : '' }}">
+	          <div id="alias_field" name="alias_field" class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('address.alias') ? 'has-error' : '' }}">
 	            {{ l('Alias', [],'addresses') }}
 	            {!! Form::text('address[alias]', null, array('class' => 'form-control', 'id' => 'alias')) !!}
 	            {!! $errors->first('address.alias', '<span class="help-block">:message</span>') !!}
@@ -97,7 +97,7 @@
 	</div>
 
 	<div class="row">
-	        <div class="form-group col-lg-12 col-md-12 col-sm-12 {{ $errors->has('address.notes') ? 'has-error' : '' }}">
+	        <div id="notes_field" name="notes_field" class="form-group col-lg-12 col-md-12 col-sm-12 {{ $errors->has('address.notes') ? 'has-error' : '' }}">
 	          {{ l('Notes', [], 'layouts') }}
 	          {!! Form::textarea('address[notes]', null, array('class' => 'form-control', 'id' => 'notes', 'rows' => '3')) !!}
 	          {!! $errors->first('address.notes', '<span class="help-block">:message</span>') !!}
@@ -110,6 +110,8 @@
     <script type="text/javascript">
         $('select[name="address[country_id]"]').change(function () {
             var countryID = $(this).val();
+        	var stateID = {{ null !== old('address.state_id') ? old('address.state_id') : 
+        				( isset($customer->address->state_id) ? $customer->address->state_id : 0 ) }};
             
             $.get('{{ url('/') }}/countries/' + countryID + '/getstates', function (states) {
                 
@@ -119,6 +121,11 @@
                 $.each(states, function (key, value) {
                     $('select[name="address[state_id]"]').append('<option value=' + value.id + '>' + value.name + '</option>');
                 });
+                
+		        if ( stateID > 0 ) {
+		        	$('select[name="address[state_id]"]').val(stateID);
+		        }
+
             });
         });
 
@@ -126,8 +133,10 @@
         if ( !($('select[name="address[country_id]"]').val() > 0) ) {
         	var def_countryID = {{ \App\Configuration::get('DEF_COUNTRY') }};
 
-        	$('select[name="address[country_id]"]').val(def_countryID).change();
+        	$('select[name="address[country_id]"]').val(def_countryID);
         }
+
+        $('select[name="address[country_id]"]').change();
 
     </script>
 

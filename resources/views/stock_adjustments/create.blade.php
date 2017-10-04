@@ -236,10 +236,10 @@ function findCombination(firstTime)
 
 <style>
   .ui-autocomplete-loading{
-    background: white url("../img/ui-anim_basic_16x16.gif") right center no-repeat;
+    background: white url("{{ asset('assets/theme/images/ui-anim_basic_16x16.gif') }}") right center no-repeat;
   }
   .loading{
-    background: white url("../img/ui-anim_basic_16x16.gif") left center no-repeat;
+    background: white url("{{ asset('assets/theme/images/ui-anim_basic_16x16.gif') }}") left center no-repeat;
   }
 </style>
 

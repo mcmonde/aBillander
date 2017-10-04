@@ -2,9 +2,9 @@
 {!! Form::hidden('back_route', $back_route, array('id' => 'back_route')) !!}
 
 <ul class="nav nav-tabs lead" style="font-size: 16px; margin-top: 10px;">
-  <li class="active"><a href="#main_data" data-toggle="tab">Dirección</a></li>
-  <li><a href="#contact_data" data-toggle="tab">Contacto</a></li>
-  <li><a href="#extra_data" data-toggle="tab">Otros</a></li>
+  <li class="active"><a href="#main_data" data-toggle="tab">{{ l('Address', [],'addresses') }}</a></li>
+  <li><a href="#contact_data" data-toggle="tab">{{ l('Contact', [],'addresses') }}</a></li>
+  <li><a href="#extra_data" data-toggle="tab">{{ l('Other', [],'addresses') }}</a></li>
 </ul>
 
 <div id="myTabContent" class="tab-content" style="padding-top: 20px;">
@@ -47,16 +47,19 @@
                       {!! Form::text('city', null, array('class' => 'form-control', 'id' => 'city')) !!}
                       {!! $errors->first('city', '<span class="help-block">:message</span>') !!}
                   </div>
-                  <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('state') ? 'has-error' : '' }}">
-                      {{ l('State', [],'addresses') }}
-                      {!! Form::text('state', null, array('class' => 'form-control', 'id' => 'state')) !!}
-                      {!! $errors->first('state', '<span class="help-block">:message</span>') !!}
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('state_id') ? 'has-error' : '' }}">
+                    {{ l('State', [],'addresses') }}
+                    {!! Form::select('state_id', array('0' => l('-- Please, select --', [], 'layouts')) + ( isset($stateList) ? $stateList : [] ), null, array('class' => 'form-control', 'id' => 'state_id')) !!}
+                    {!! $errors->first('state_id', '<span class="help-block">:message</span>') !!}
                   </div>
-                  <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('country') ? 'has-error' : '' }}">
-                      {{ l('Country', [],'addresses') }}
-                      {!! Form::text('country', null, array('class' => 'form-control', 'id' => 'country')) !!}
-                      {!! $errors->first('country', '<span class="help-block">:message</span>') !!}
+
+                  <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('country_id') ? 'has-error' : '' }}">
+                    {{ l('Country', [],'addresses') }}
+                    {!! Form::select('country_id', array('0' => l('-- Please, select --', [], 'layouts')) + $countryList, null, array('class' => 'form-control', 'id' => 'country_id')) !!}
+                    {!! $errors->first('country_id', '<span class="help-block">:message</span>') !!}
                   </div>
+
         </div>
 
         <!-- div class="row">
@@ -130,22 +133,29 @@
         </div -->
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
                 <div class="form-group {{ $errors->has('longitude') ? 'has-error' : '' }}">
                       {{ l('Longitude') }}
                      {!! Form::text('longitude', null, array('class' => 'form-control', 'id' => 'longitude')) !!}
                      {!! $errors->first('longitude', '<span class="help-block">:message</span>') !!}
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
                 <div class="form-group {{ $errors->has('latitude') ? 'has-error' : '' }}">
                       {{ l('Latitude') }}
                      {!! Form::text('latitude', null, array('class' => 'form-control', 'id' => 'latitude')) !!}
                      {!! $errors->first('latitude', '<span class="help-block">:message</span>') !!}
                 </div>
             </div>
+            <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                <div class="form-group {{ $errors->has('webshop_id') ? 'has-error' : '' }}">
+                      {{ l('Webshop ID') }}
+                     {!! Form::text('webshop_id', null, array('class' => 'form-control', 'id' => 'webshop_id')) !!}
+                     {!! $errors->first('webshop_id', '<span class="help-block">:message</span>') !!}
+                </div>
+            </div>
 
-                   <div class="form-group col-lg-4 col-md-4 col-sm-4" id="div-active">
+                   <div class="form-group col-lg-3 col-md-3 col-sm-3" id="div-active">
                      {!! Form::label('active', l('Active?', [], 'layouts'), ['class' => 'control-label']) !!}
                      <div>
                        <div class="radio-inline">
@@ -190,4 +200,40 @@
 		{!! Form::submit(l('Save', [], 'layouts'), array('class' => 'btn btn-success')) !!}
         {!! link_to( ($back_route != '' ? $back_route : 'addresses.index'), l('Cancel', [], 'layouts'), array('class' => 'btn btn-warning')) !!}
 
-        {!! link_to_route('addresses.index', 'Todas las Direcciones', null, array('class' => 'btn btn-warning pull-right')) !!}
+
+@section('scripts')  @parent 
+
+    <script type="text/javascript">
+        $('select[name="country_id"]').change(function () {
+            var countryID = $(this).val();
+          var stateID = {{ null !== old('state_id') ? old('state_id') : 
+                ( isset($address->state_id) ? $address->state_id : 0 ) }};
+            
+            $.get('{{ url('/') }}/countries/' + countryID + '/getstates', function (states) {
+                
+
+                $('select[name="state_id"]').empty();
+                $('select[name="state_id"]').append('<option value=0>{{ l('-- Please, select --', [], 'layouts') }}</option>');
+                $.each(states, function (key, value) {
+                    $('select[name="state_id"]').append('<option value=' + value.id + '>' + value.name + '</option>');
+                });
+                
+            if ( stateID > 0 ) {
+              $('select[name="state_id"]').val(stateID);
+            }
+
+            });
+        });
+
+        // Select default country
+        if ( !($('select[name="country_id"]').val() > 0) ) {
+          var def_countryID = {{ \App\Configuration::get('DEF_COUNTRY') }};
+
+          $('select[name="country_id"]').val(def_countryID);
+        }
+
+        $('select[name="country_id"]').change();
+
+    </script>
+
+@endsection

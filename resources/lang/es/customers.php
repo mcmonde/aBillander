@@ -81,7 +81,8 @@ return [
 	'Shipping Address'     => 'Dirección de Envío',
 	'Carrier'     => 'Transportista',
 	'Webshop ID'     => 'Código en la Tienda Web',
-	'Payment Day'     => 'Día de Pago',
+	'Payment Day(s)'     => 'Día(s) de Pago',
+	'Comma separated list of days, like: 3,17' => 'Lista separada por comas, como: 3,17',
 
 	'Special Addresses'     => 'Direcciones especiales',
 	'Fiscal (main) Address'     => 'Dirección Fiscal (principal)',
@@ -95,5 +96,13 @@ return [
 
 	'Fiscal'     => 'Fiscal',
 	'Shipping'     => 'Envío',
+
+	'You need one Address at list, for Customer (:id) :name'     => 'Debe crear al menos una Dirección Postal para el Cliente (:id) :name',
+	'Shipping Address has been updated for Customer (:id) :name'     => 'Se ha actualizado la Dirección de Envío del Cliente (:id) :name',
+	'Main Address has been updated for Customer (:id) :name'     => 'Se ha actualizado la Dirección Principal del Cliente (:id) :name',
+	'Default Shipping Address has been updated for Customer (:id) :name'     => 'Se ha actualizado la Dirección de Envío por defecto para el Cliente (:id) :name',
+	'You should set the Main Address for Customer (:id) :name'     => 'Debe indicar la Dirección Principal para el Cliente (:id) :name',
+	''     => '',
+	''     => '',
 
 ];

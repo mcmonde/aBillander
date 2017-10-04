@@ -44,17 +44,17 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		    
 		});
 
-		// Sequences
-		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
+/*		// Sequences
+		view()->composer(array('customer_invoices.create', 'customer_invoices.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
 		    $view->with('sequenceList', \App\Sequence::pluck('name', 'id')->toArray());
 		    
-		});
+		}); */
 
 		// Invoice Template
 		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
-		    $view->with('customerinvoicetemplateList', \App\Template::where('model_name', '=', 'CustomerInvoice')->pluck('name', 'id'));
+		    $view->with('customerinvoicetemplateList', \App\Template::where('model_name', '=', 'CustomerInvoice')->pluck('name', 'id')->toArray());
 		    
 		});
 
@@ -68,7 +68,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Sales Representatives
 		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit'), function($view) {
 		    
-		    $view->with('salesrepList', \App\SalesRep::select(DB::raw('alias as name, id'))->pluck('name', 'id'));
+		    $view->with('salesrepList', \App\SalesRep::select(DB::raw('alias as name, id'))->pluck('name', 'id')->toArray());
 		    
 		});
 
@@ -95,7 +95,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		});
 
 		// Countries
-		view()->composer(array('addresses._form_fields_model_related', 'tax_rules._form'), function($view) {
+		view()->composer(array('addresses._form', 'addresses._form_fields_model_related', 'tax_rules._form'), function($view) {
 		    
 		    $view->with('countryList', \App\Country::orderby('name', 'asc')->pluck('name', 'id')->toArray());
 		    

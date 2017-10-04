@@ -4,6 +4,11 @@
 	<button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>{!! l('Error', [], 'layouts') !!}: </strong>
     {!! l('Please check the form below for errors', [], 'layouts') !!}
+
+    @foreach ($errors->all('<div class="alert alert-danger">:message</div>') as $error)
+        {!! $error !!}
+    @endforeach
+
 </div>
 @endif
 

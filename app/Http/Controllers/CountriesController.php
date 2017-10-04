@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Response;		// Prevent error: Class 'App\Http\Controllers\Response' not found
 
 use App\Country as Country;
 use View;

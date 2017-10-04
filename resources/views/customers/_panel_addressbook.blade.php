@@ -90,8 +90,8 @@
                 </td>
                 <td>{{ $addr->name_commercial }}<br />
                     {{ $addr->address1 }} {{ $addr->address2 }}<br />
-                    {{ $addr->postcode }} {{ $addr->city }}, {{ $addr->state }}<br />
-                    {{ $addr->country }}
+                    {{ $addr->postcode }} {{ $addr->city }}, {{ $addr->state->name }}<br />
+                    {{ $addr->country->name }}
                 </td>
                 <td>{{ $addr->firstname }} {{ $addr->lastname }}<br />
                     {{ $addr->phone }} &nbsp; {{ $addr->phone_mobile }}<br />
@@ -118,13 +118,13 @@
                             data-from_name = "{{ \App\Context::getContext()->user->getFullName() }}" 
                             data-from_email = "{{ \App\Context::getContext()->user->email }}" 
                             onClick="return false;" title="{{l('Send eMail', [], 'layouts')}}"><i class="fa fa-envelope"></i></a>               
-                    
+                    <a class="btn btn-sm btn-warning" href="{{ URL::to( 'customers/'.$customer->id.'/addresses/' . $addr->id . '/edit?back_route=' . urlencode('customers/' . $customer->id . '/edit#addressbook') ) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
+
                       @if ( $customer->invoicing_address_id != $addr->id )
-                    <a class="btn btn-sm btn-warning" href="{{ URL::to( 'addresses/' . $addr->id . '/edit?back_route=' . urlencode('customers/' . $customer->id . '/edit#addressbook') ) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
                     <a class="btn btn-sm btn-danger delete-item" data-html="false" data-toggle="modal" 
-                            href="{{ URL::to('addresses/' . $addr->id . '?back_route=' . ('customers/' . $customer->id . '/edit#addressbook') ) }}" 
+                            href="{{ URL::to('customers/'.$customer->id.'/addresses/' . $addr->id . '?back_route=' . urlencode('customers/' . $customer->id . '/edit#addressbook') ) }}" 
                             data-content="{{l('You are going to delete a record. Are you sure?', [], 'layouts')}}" 
-                            data-title="{{ l('Addressess') }} :: ({{$addr->id}}) {{ $addr->alias }} " 
+                            data-title="{{ l('Address Book') }} :: ({{$addr->id}}) {{ $addr->alias }} " 
                             onClick="return false;" title="{{l('Delete', [], 'layouts')}}"><i class="fa fa-trash-o"></i></a>
                       @endif
                     @else

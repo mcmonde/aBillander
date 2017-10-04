@@ -1,6 +1,11 @@
-<?php
+<?php namespace App\Http\Controllers;
 
-class ManufacturersController extends \BaseController {
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
+class ManufacturersController extends Controller {
 
 	/**
 	 * Display a listing of the resource.

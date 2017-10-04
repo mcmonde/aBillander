@@ -13,11 +13,6 @@
               {!! Form::text('name_fiscal', null, array('class' => 'form-control', 'id' => 'name_fiscal')) !!}
               {!! $errors->first('name_fiscal', '<span class="help-block">:message</span>') !!}
             </div>
-            <div class="form-group col-lg-4 col-md-4 col-sm-4 {!! $errors->has('name_commercial') ? 'has-error' : '' !!}">
-              {{ l('Name', [],'addresses') }}
-              {!! Form::text('name_commercial', null, array('class' => 'form-control', 'id' => 'name_commercial')) !!}
-              {!! $errors->first('name_commercial', '<span class="help-block">:message</span>') !!}
-            </div>
             <div class="form-group col-lg-2 col-md-2 col-sm-2 {!! $errors->has('identification') ? 'has-error' : '' !!}">
               {{ l('Identification') }}
               {!! Form::text('identification', null, array('class' => 'form-control', 'id' => 'identification')) !!}
@@ -25,7 +20,7 @@
             </div>
         </div>
 
-@include('addresses._form_fields_customers_related')
+@include('addresses._form_fields_model_related')
 
         <div class="row">
             <div class="form-group col-lg-3 col-md-3 col-sm-3">
@@ -99,3 +94,27 @@
                   </button>
                </div>
             </div>
+
+
+@section('scripts')  @parent 
+
+    <script type="text/javascript">
+
+        // Hide Alias field
+        $('#alias_field').hide();
+
+        // Hide Notes field
+        $('#notes_field').hide();
+
+        // Disable Main Address edition
+        $("#address1").attr( {"disabled" : "disabled"} );
+        $("#address2").attr( {"disabled" : "disabled"} );
+        $("#postcode").attr( {"disabled" : "disabled"} );
+
+        $("#city").attr( {"disabled" : "disabled"} );
+        $("#country_id").attr( {"disabled" : "disabled"} );
+        $("#state_id").attr( {"disabled" : "disabled"} );
+
+    </script>
+
+@endsection

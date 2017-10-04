@@ -126,12 +126,17 @@
          $("#b_main").addClass('active');
          // document.f_cliente.nombre.focus();
       }
+
+      // Gracefully scrolls to the top of the page
+      $("html, body").animate({ scrollTop: 0 }, "slow");
    }
+   
    $(document).ready(function() {
       route_url();
       window.onpopstate = function(){
          route_url();
       }
    });
+
 </script>
 @endsection

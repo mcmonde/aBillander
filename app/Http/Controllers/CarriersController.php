@@ -10,7 +10,7 @@ use View;
 
 class CarriersController extends Controller {
    
-   use Traits\ActivableTrait;
+//   use Traits\ActivableTrait;
 
 
    protected $carrier;

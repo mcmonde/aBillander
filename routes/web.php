@@ -140,8 +140,8 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
         Route::resource('customers', 'CustomersController');
         Route::get('customers/ajax/name_lookup', array('uses' => 'CustomersController@ajaxCustomerSearch', 'as' => 'customers.ajax.nameLookup'));
 
-        Route::resource('addresses', 'AddressesController');
-        Route::resource('customers/{ownwer_id}/addresses', 'AddressesController');
+//        Route::resource('addresses', 'AddressesController');
+        Route::resource('customers.addresses', 'CustomerAddressesController');
 
         Route::post('mail', 'MailController@store');
 
@@ -164,6 +164,8 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
         Route::resource('customervouchers'      , 'CustomerVouchersController');
 
         Route::get('pdf/{id}', 'PdfController@show');
+
+//        Route::resource('images', 'ImagesController');
     });
 
 

@@ -10,15 +10,13 @@
 		<div class="panel panel-info">
 			<div class="panel-heading">
 		          <h3 class="panel-title">Modificar Dirección: ({{$address->id}}) {{$address->alias}}</h3>
-		          <h3 class="panel-title" style="margin-top:10px;">Pertenece a: ({{ $model_name }} {{$customer->id}}) {{$customer->name_fiscal}}</h3>
+		          <h3 class="panel-title" style="margin-top:10px;">Pertenece a: ({{$customer->id}}) {{$customer->name_fiscal}}</h3>
 	      	</div>
 			<div class="panel-body"> 
 
         		@include('errors.list')
 
-				{!! Form::model($address, array('method' => 'PATCH', 'route' => array('addresses.update', $address->id))) !!}
-
-					{{-- !! Form::hidden('model_name', $model_name, array('id' => 'model_name')) !! --}}
+				{!! Form::model($address, array('method' => 'PATCH', 'route' => array('customers.addresses.update', $customer->id, $address->id), 'name' => 'update_address', 'class' => 'form')) !!}
 
          			@include('addresses._form')
 

@@ -43,12 +43,22 @@ class Address extends Model {
 
     public function customer()
     {
-        return $this->belongsTo('App\Customer', 'owner_id')->where('model_name', '=', 'Customer');
+//        return $this->belongsTo('App\Customer', 'owner_id')->where('model_name', '=', 'Customer');
     }
     
     public function addressable()
     {
         return $this->morphTo();
+    }
+
+    public function country()
+    {
+        return $this->belongsTo('App\Country');
+    }
+
+    public function state()
+    {
+        return $this->belongsTo('App\State');
     }
     
 }

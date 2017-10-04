@@ -34,7 +34,7 @@ class CreateCustomersTable extends Migration {
 			$table->text('notes')->nullable();
 			$table->tinyInteger('sales_equalization')->default(0);				// Charge Sales equalization tax? (only Spain)
 			$table->tinyInteger('allow_login')->default(0);						// Allow login to Customer Center
-			$table->tinyInteger('accept_einvoice')->default(1);					// Accept electronic invoice
+			$table->tinyInteger('accept_einvoice')->default(0);					// Accept electronic invoice
 			$table->tinyInteger('blocked')->default(0);							// Sales not allowed
 			$table->tinyInteger('active')->default(1);
 			

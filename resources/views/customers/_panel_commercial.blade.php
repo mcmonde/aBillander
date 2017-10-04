@@ -10,22 +10,22 @@
         <div class="row">
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('sequence_id') ? 'has-error' : '' }}">
                      {{ l('Sequence for Invoices') }}
-                     {!! Form::select('sequence_id', array('0' => l('-- Please, select --', [], 'layouts')) + $sequenceList, Input::old('sequence_id', isset($customer) ? $customer->sequence_id : 0), array('class' => 'form-control')) !!}
+                     {!! Form::select('sequence_id', array('0' => l('-- Please, select --', [], 'layouts')) + $sequenceList, null, array('class' => 'form-control')) !!}
                      {!! $errors->first('sequence_id', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('invoice_template_id') ? 'has-error' : '' }}">
                      {{ l('Template for Invoices') }}
-                     {!! Form::select('invoice_template_id', array('0' => l('-- Please, select --', [], 'layouts')) + $customerinvoicetemplateList, Input::old('invoice_template_id', isset($customer) ? $customer->invoice_template_id : 0), array('class' => 'form-control')) !!}
+                     {!! Form::select('invoice_template_id', array('0' => l('-- Please, select --', [], 'layouts')) + $customerinvoicetemplateList, null, array('class' => 'form-control')) !!}
                      {!! $errors->first('invoice_template_id', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('payment_method_id') ? 'has-error' : '' }}">
                      {{ l('Payment Method') }}
-                     {!! Form::select('payment_method_id', array('0' => l('-- Please, select --', [], 'layouts')) + $payment_methodList, Input::old('payment_method_id', isset($customer) ? $customer->payment_method_id : 0), array('class' => 'form-control')) !!}
+                     {!! Form::select('payment_method_id', array('0' => l('-- Please, select --', [], 'layouts')) + $payment_methodList, null, array('class' => 'form-control')) !!}
                      {!! $errors->first('payment_method_id', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('currency_id') ? 'has-error' : '' }}">
                      {{ l('Payment Currency') }}
-                     {!! Form::select('currency_id', array('0' => l('-- Please, select --', [], 'layouts')) + $currencyList, Input::old('currency_id', isset($customer) ? $customer->currency_id : 0), array('class' => 'form-control')) !!}
+                     {!! Form::select('currency_id', array('0' => l('-- Please, select --', [], 'layouts')) + $currencyList, null, array('class' => 'form-control')) !!}
                      {!! $errors->first('currency_id', '<span class="help-block">:message</span>') !!}
                   </div>
         </div>
@@ -52,19 +52,19 @@
 
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('outstanding_amount_allowed') ? 'has-error' : '' }}">
                      {{ l('Outstanding Amount Allowed') }}
-                     <input class="form-control" type="text" name="outstanding_amount_allowed" id="outstanding_amount_allowed" placeholder="" value="{{ Input::old('outstanding_amount_allowed', isset($customer) ? $customer->outstanding_amount_allowed : null) }}" />
+                     {!! Form::text('outstanding_amount_allowed', $customer->as_money('outstanding_amount_allowed', \App\Context::getContext()->language->currency), array('class' => 'form-control', 'id' => 'outstanding_amount_allowed')) !!}
                     {!! $errors->first('outstanding_amount_allowed', '<span class="help-block">:message</span>') !!}
                   </div>
 
                   <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('outstanding_amount') ? 'has-error' : '' }}">
                      {{ l('Outstanding Amount') }}
-                     <input class="form-control" type="text" name="outstanding_amount" id="outstanding_amount" disabled="disabled" value="{{ isset($customer) ? $customer->outstanding_amount : 0 }}" />
+                     {!! Form::text('outstanding_amount', $customer->as_money('outstanding_amount', \App\Context::getContext()->language->currency), array('class' => 'form-control', 'id' => 'outstanding_amount', 'disabled' => "disabled")) !!}
                     {!! $errors->first('outstanding_amount', '<span class="help-block">:message</span>') !!}
                   </div>
 
                   <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('unresolved_amount') ? 'has-error' : '' }}">
                      {{ l('Unresolved Amount') }}
-                     <input class="form-control" type="text" name="unresolved_amount" id="unresolved_amount" disabled="disabled" value="{{ isset($customer) ? $customer->unresolved_amount : 0 }}" />
+                     {!! Form::text('unresolved_amount', $customer->as_money('unresolved_amount', \App\Context::getContext()->language->currency), array('class' => 'form-control', 'id' => 'unresolved_amount', 'disabled' => "disabled")) !!}
                     {!! $errors->first('unresolved_amount', '<span class="help-block">:message</span>') !!}
                   </div>
         </div>
@@ -91,17 +91,17 @@
 
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('customer_group_id') ? 'has-error' : '' }}">
                      {{ l('Customer Group') }}
-                     {!! Form::select('customer_group_id', array('0' => l('-- Please, select --', [], 'layouts')) + $customer_groupList, Input::old('customer_group_id', isset($customer) ? $customer->customer_group_id : 0), array('class' => 'form-control')) !!}
+                     {!! Form::select('customer_group_id', array('0' => l('-- Please, select --', [], 'layouts')) + $customer_groupList, null, array('class' => 'form-control')) !!}
                      {!! $errors->first('customer_group_id', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('price_list_id') ? 'has-error' : '' }}">
                      {{ l('Price List') }}
-                     {!! Form::select('price_list_id', array('0' => l('-- Please, select --', [], 'layouts')) + $price_listList, Input::old('price_list_id', isset($customer) ? $customer->price_list_id : 0), array('class' => 'form-control')) !!}
+                     {!! Form::select('price_list_id', array('0' => l('-- Please, select --', [], 'layouts')) + $price_listList, null, array('class' => 'form-control')) !!}
                      {!! $errors->first('price_list_id', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('sales_rep_id') ? 'has-error' : '' }}">
                      {{ l('Sales Representative') }}
-                     {!! Form::select('sales_rep_id', array('0' => l('-- Please, select --', [], 'layouts')) + $salesrepList, Input::old('sales_rep_id', isset($customer) ? $customer->sales_rep_id : 0), array('class' => 'form-control')) !!}
+                     {!! Form::select('sales_rep_id', array('0' => l('-- Please, select --', [], 'layouts')) + $salesrepList, null, array('class' => 'form-control')) !!}
                      {!! $errors->first('sales_rep_id', '<span class="help-block">:message</span>') !!}
                   </div>
         </div>
@@ -110,7 +110,6 @@
                   <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('shipping_address_id') ? 'has-error' : '' }}">
                      {{ l('Shipping Address') }}
                     <select class="form-control" name="shipping_address_id" id="shipping_address_id" @if ( count($aBook)==1 ) disabled="disabled" @endif>
-                        <option {{ $customer->shipping_address_id <= 0 ? 'selected="selected"' : '' }} value="0">{{ l('-- Please, select --', [], 'layouts') }}</option>
                         @foreach ($aBook as $country)
                         <option {{ $customer->shipping_address_id == $country->id ? 'selected="selected"' : '' }} value="{{ $country->id }}">{{ $country->alias }}</option>
                         @endforeach
@@ -119,13 +118,13 @@
                   </div>
                   <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('carrier_id') ? 'has-error' : '' }}">
                      {{ l('Carrier') }}
-                     {!! Form::select('carrier_id', array('0' => l('-- Please, select --', [], 'layouts')) + $carrierList, Input::old('carrier_id', isset($customer) ? $customer->carrier_id : 0), array('class' => 'form-control')) !!}
+                     {!! Form::select('carrier_id', array('0' => l('-- Please, select --', [], 'layouts')) + $carrierList, null, array('class' => 'form-control')) !!}
                      {!! $errors->first('carrier_id', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="col-md-4">
                       <div class="form-group {{ $errors->has('webshop_id') ? 'has-error' : '' }}">
                           {{ l('Webshop ID') }}
-                          <input class="form-control" type="text" name="webshop_id" id="webshop_id" placeholder="" value="{{ Input::old('webshop_id', isset($customer) ? $customer->webshop_id : null) }}" />
+                          {!! Form::text('webshop_id', null, array('class' => 'form-control', 'id' => 'webshop_id')) !!}
                           {!! $errors->first('webshop_id', '<span class="help-block">:message</span>') !!}
                       </div>
                   </div>
@@ -133,9 +132,13 @@
 
         <div class="row">
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('payment_day') ? 'has-error' : '' }}">
-                     {{ l('Payment Day') }}
-                     <input class="form-control" type="text" name="payment_day" id="payment_day" placeholder="" value="{{ Input::old('payment_day', isset($customer) ? $customer->payment_day : null) }}" />
-                    {!! $errors->first('payment_day', '<span class="help-block">:message</span>') !!}
+                     {{ l('Payment Day(s)') }}
+                         <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
+                                            data-content="{{ l('Comma separated list of days, like: 3,17') }}">
+                                <i class="fa fa-question-circle abi-help"></i>
+                         </a>
+                     {!! Form::text('payment_day', null, array('class' => 'form-control', 'id' => 'payment_day')) !!}
+                     {!! $errors->first('payment_day', '<span class="help-block">:message</span>') !!}
                   </div>
         </div>
 

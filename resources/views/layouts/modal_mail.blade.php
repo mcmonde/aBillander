@@ -115,25 +115,21 @@
     });
 
 
+        // See master.blade.php
         $(function(){
            $("#f_sendEmail").on('submit', function(e){  // ToDo: check fields before submit
               e.preventDefault();
               $("#subject").addClass('loading');
               $.post("{{ URL::to('mail') }}", $(this).serialize(), function(data){
                  $("#subject").removeClass('loading');
-                 if (data == 0) {
+                 if (data == 'ERROR') {
                     $("#error-mail").addClass("alert alert-danger");
                     $("#error-mail").html('<a class="close" data-dismiss="alert" href="#">×</a><li class="error">{{ l('There was an error. Your message could not be sent.', [], 'layouts') }}</li>');
                  } else {
-                    if (isNaN(data)) {
-                       $("#error-mail").addClass("alert alert-danger");
-                       $("#error-mail").html('<a class="close" data-dismiss="alert" href="#">×</a>' + data + '');
-                    } else {
-                       $("#modal-body-mail").hide();
-                       $("#modal-footer-mail").hide();
-                       $("#modal-body-mail_success").show();
-                       $("#modal-footer-mail_success").show();
-                    }
+                     $("#modal-body-mail").hide();
+                     $("#modal-footer-mail").hide();
+                     $("#modal-body-mail_success").show();
+                     $("#modal-footer-mail_success").show();
                  }
               });
            });
@@ -147,7 +143,7 @@
 
 <style>
   .loading{
-    background: white url("img/ui-anim_basic_16x16.gif") left center no-repeat;
+    background: white url("{{ asset('assets/theme/images/ui-anim_basic_16x16.gif') }}") left center no-repeat;
   }
 </style>
 

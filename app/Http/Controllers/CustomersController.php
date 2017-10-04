@@ -26,7 +26,12 @@ class CustomersController extends Controller {
      */
     public function index()
     {
-        $customers = $this->customer->with('addresses')->with('currency')->get();
+        $customers = $this->customer
+                        ->with('address')
+                        ->with('address.country')
+                        ->with('address.state')
+                        ->with('currency')
+                        ->get();
         
         return view('customers.index', compact('customers'));
         
@@ -92,12 +97,15 @@ Event::listen('illuminate.query', function($sql)
         $action = $request->input('nextAction', '');
 
         $request->merge( ['outstanding_amount_allowed' => \App\Configuration::get('DEF_OUTSTANDING_AMOUNT')] );
-        if ( !$request->input('name_commercial') ) $request->merge( ['name_commercial' => $request->input('name_fiscal')] );
+        if ( !$request->input('address.name_commercial') ) {
+            $request->merge( ['address.name_commercial' => $request->input('name_fiscal'),
+                                'name_commercial' => $request->input('name_fiscal')] );
+        }
         $this->validate($request, Customer::$rules);
 
-        $request->merge( ['alias' => l('Main Address', [],'addresses')] );
-        if ( !$request->input('country') ) $request->merge( ['country' => \App\Configuration::get('DEF_COUNTRY_NAME')] );
-        $this->validate($request, Address::$rules);
+        $request->merge( ['address.alias' => l('Main Address', [],'addresses')] );
+
+        $this->validate($request, Address::related_rules());
 
         if ( !$request->has('currency_id') ) $request->merge( ['currency_id' => \App\Configuration::get('DEF_CURRENCY')] );
 
@@ -106,8 +114,10 @@ Event::listen('illuminate.query', function($sql)
         // ToDO: put default accept einvoice in a configuration key
         
         $customer = $this->customer->create($request->all());
-            $request->merge( ['model_name' => 'Customer'] );
-        $address = $this->address->create($request->all());
+
+        $data = $request->input('address');
+
+        $address = $this->address->create($data);
         $customer->addresses()->save($address);
 
         $customer->invoicing_address_id = $address->id;
@@ -141,7 +151,9 @@ Event::listen('illuminate.query', function($sql)
      */
     public function edit($id)
     {
-        $customer = $this->customer->with('addresses', 'address')->findOrFail($id); 
+        $sequenceList = \App\Sequence::listFor('Customer');
+
+        $customer = $this->customer->with('addresses', 'address', 'address.country', 'address.state')->findOrFail($id); 
 
         $aBook       = $customer->addresses;
         $mainAddressIndex = -1;
@@ -162,7 +174,7 @@ Event::listen('illuminate.query', function($sql)
 
             // Issue Warning!
             return View::make('customers.edit', compact('customer', 'aBook', 'mainAddressIndex'))
-                ->with('warning', 'Debe crear al menos una Dirección Postal para el Cliente: ('.$customer->id.') '.$customer->name_fiscal);
+                ->with('warning', l('You need one Address at list, for Customer (:id) :name', ['id' => $customer->id, 'name' => $customer->name_fiscal]));
         };
 
         if ( $aBookCount == 1 ) 
@@ -174,19 +186,19 @@ Event::listen('illuminate.query', function($sql)
             {
                 $customer->shipping_address_id  = $addr->id;
                 // $customer->save();
-                $warning[] = 'Se ha actualizado la Dirección de Envío del Cliente: ('.$customer->id.') '.$customer->name_fiscal;
+                $warning[] = l('Shipping Address has been updated for Customer (:id) :name', ['id' => $customer->id, 'name' => $customer->name_fiscal]);
             }
             if( $customer->invoicing_address_id != $addr->id)
             {
                 $customer->invoicing_address_id  = $addr->id;
                 // $customer->save();
-                $warning[] = 'Se ha actualizado la Dirección Principal del Cliente: ('.$customer->id.') '.$customer->name_fiscal;
+                $warning[] = l('Main Address has been updated for Customer (:id) :name', ['id' => $customer->id, 'name' => $customer->name_fiscal]);
             }
             if ( $customer->isDirty() ) $customer->save();   // Model has changed
 
             $mainAddressIndex = 0;
 
-            return View::make('customers.edit', compact('customer', 'aBook', 'mainAddressIndex'))
+            return View::make('customers.edit', compact('customer', 'aBook', 'mainAddressIndex', 'sequenceList'))
                 ->with('warning', $warning);
 
         } else {
@@ -198,7 +210,7 @@ Event::listen('illuminate.query', function($sql)
                 if ($customer->shipping_address_id != 0) 
                 {
                     $customer->shipping_address_id  = 0;
-                    $warning[] = 'Se ha actualizado la Dirección de Envío por defecto para el Cliente: ('.$customer->id.') '.$customer->name_fiscal;
+                    $warning[] = l('Default Shipping Address has been updated for Customer (:id) :name', ['id' => $customer->id, 'name' => $customer->name_fiscal]);
                 }
             }
             // Check Invoicing Address
@@ -207,7 +219,7 @@ Event::listen('illuminate.query', function($sql)
                 if ($customer->invoicing_address_id != 0) 
                 {
                     $customer->invoicing_address_id  = 0;
-                    $warning[] = 'Debe indicar la Dirección Principal para el Cliente: ('.$customer->id.') '.$customer->name_fiscal;
+                    $warning[] = l('You should set the Main Address for Customer (:id) :name', ['id' => $customer->id, 'name' => $customer->name_fiscal]);
                 }
             }
             if ( $customer->isDirty() ) $customer->save();   // Model has changed
@@ -227,7 +239,9 @@ Event::listen('illuminate.query', function($sql)
         // echo '<pre>'; print_r($aBook); echo '</pre>'; die();
         // echo '<pre>'; print_r($customer); echo '</pre>'; die();
 
-        return View::make('customers.edit', compact('customer', 'aBook', 'mainAddressIndex'))
+//        abi_r($sequenceList1, true);
+
+        return view('customers.edit', compact('customer', 'aBook', 'mainAddressIndex', 'sequenceList'))
                 ->with('warning', $warning);
     }
 
@@ -251,9 +265,10 @@ Event::listen('illuminate.query', function($sql)
             $input['invoicing_address_id'] = $request->input('invoicing_address_id', 0); // Should be in address Book
             $input['shipping_address_id']  = $request->input('shipping_address_id', 0);  // Should be in address Book or 0
 
-            $rules['invoicing_address_id'] = 'exists:addresses,id,owner_id,'.intval($id);
+            $rules['invoicing_address_id'] = 'exists:addresses,id,addressable_id,'.intval($id);
             if ($input['shipping_address_id']>0)
-                $rules['shipping_address_id'] = 'exists:addresses,id,model_name,Customer|exists:addresses,id,owner_id,'.intval($id);
+//                $rules['shipping_address_id'] = 'exists:addresses,id,addressable_type,\\App\\Customer|exists:addresses,id,addressable_id,'.intval($id);
+                $rules['shipping_address_id'] = 'exists:addresses,id,addressable_id,'.intval($id);
             else
                 $input['shipping_address_id'] = 0;
 
@@ -263,7 +278,7 @@ Event::listen('illuminate.query', function($sql)
                 $customer->update($input);
 
                 return redirect(route('customers.edit', $id) . $section)
-                    ->with('info', 'El registro se ha actualizado correctamente.');
+                    ->with('info', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts') . $request->input('name_commercial'));
 
         }
 
@@ -272,14 +287,16 @@ Event::listen('illuminate.query', function($sql)
         $address = $customer->address;
 
         $this->validate($request, Customer::$rules);
-            $request->merge(['address.alias' => $address->alias]);  
-        $this->validate($request, Address::related_rules());
+        
+//        $this->validate($request, Address::related_rules());
+
+        $request->merge( ['name_commercial' => $request->input('address.name_commercial')] );
 
         // $customer->update( array_merge($request->all(), ['name_commercial' => $request->input('address.name_commercial')] ) );
         $customer->update( $request->all() );
-            $request->merge($request->input('address'));
-            $request->merge(['name_commercial' => $request->input('name_commercial'), 'notes' => '']);  
-        $address->update($request->except(['address']));
+        if ( !$request->input('address.name_commercial') ) $request->merge( ['address.name_commercial' => $request->input('name_fiscal')] );
+        $data = $request->input('address');
+        $address->update($data);
 
 
         if ($action != 'completeCustomerData')
@@ -299,10 +316,16 @@ Event::listen('illuminate.query', function($sql)
      */
     public function destroy($id)
     {
-        $this->customer->find($id)->delete();
+        $c = $this->customer->find($id);
 
-        return Redirect::route('customers.index')
-				->with('info', 'El registro se ha eliminado correctamente');
+        // Addresses
+        $c->addresses()->delete();
+
+        // Customer
+        $c->delete();
+
+        return redirect('customers')
+				->with('success', l('This record has been successfully deleted &#58&#58 (:id) ', ['id' => $id], 'layouts'));
     }
 
     

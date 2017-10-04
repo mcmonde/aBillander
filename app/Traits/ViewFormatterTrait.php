@@ -22,7 +22,7 @@ trait ViewFormatterTrait
         return $data;
     }
 
-    public static function as_money( $key = '', \App\Currency $currency = null )
+    public function as_money( $key = '', \App\Currency $currency = null )
     {
         if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
 
