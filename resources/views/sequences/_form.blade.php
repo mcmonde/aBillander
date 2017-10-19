@@ -1,4 +1,8 @@
+@php
 
+  $editable = isset($sequence->model_name) ? ['onfocus'=>'this.blur();'] : [] ;
+
+@endphp
 <div class="row">
 <div class="form-group col-lg-6 col-md-6 col-sm-6">
     {!! Form::label('name', l('Sequence name')) !!}
@@ -6,7 +10,7 @@
 </div>
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
     {!! Form::label('model_name', l('Document type')) !!}
-    {!! Form::select('model_name', array('0' => l('-- Please, select --', [], 'layouts')) + $document_typeList, null, array('class' => 'form-control')) !!}
+    {!! Form::select('model_name', array('0' => l('-- Please, select --', [], 'layouts')) + $document_typeList, null, array('class' => 'form-control')+$editable) !!}
 </div>
 </div>
 

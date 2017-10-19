@@ -75,7 +75,7 @@ class CompaniesController extends Controller {
 		$address = $this->address->create( $data );
 		$company->addresses()->save($address);
 
-		Configuration::update('DEF_COMPANY', $this->company->id);
+		Configuration::updateValue('DEF_COMPANY', $this->company->id);
 
 		return redirect('companies/'.$company->id.'/edit')
 				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $company->id], 'layouts') . $request->input('name_fiscal'));

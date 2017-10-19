@@ -1,4 +1,6 @@
-<?php namespace App;
+<?php 
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,11 +22,13 @@ class Product extends Model {
         );
 
     protected $dates = ['deleted_at'];
+
+    protected $appends = ['quantity_available'];
     
     protected $fillable = [ 'product_type', 'name', 'reference', 'ean13', 'description', 'description_short', 
                             'measure_unit', 'quantity_decimal_places', 
                             'warranty_period', 
-                            'reorder_point', 'maximum_stock', 'price', 'price_is_tax_inc', 'cost_price', 
+                            'reorder_point', 'maximum_stock', 'price', 'price_tax_inc', 'cost_price', 
                             'supplier_reference', 'supply_lead_time', 
                             'location', 'width', 'height', 'depth', 'weight', 
                             'notes', 'stock_control', 'publish_to_web', 'blocked', 'active', 
@@ -37,8 +41,9 @@ class Product extends Model {
                             'product_type' => 'required|in:simple,virtual,combinable,grouped',
 //                            'product_type' => 'required|'.Rule::in( self::$types ),
                         	'reference'    => 'required|min:2|max:32|unique:products,reference', 
-                            'price'        => 'required|numeric|min:0',
-                            'cost_price'   => 'required|numeric|min:0',
+                            'price'         => 'required|numeric|min:0',
+                            'price_tax_inc' => 'required|numeric|min:0',
+                            'cost_price'    => 'required|numeric|min:0',
                             'tax_id'       => 'exists:taxes,id',
                             'category_id'  => 'exists:categories,id',
                             'quantity_onhand' => 'nullable|numeric|min:0',
@@ -55,7 +60,8 @@ class Product extends Model {
                             
                     ),
         'sales' => array(
-                            
+                            'price'         => 'required|numeric|min:0',
+                            'price_tax_inc' => 'required|numeric|min:0', 
                     ),
         'inventory' => array(
                             
@@ -64,6 +70,31 @@ class Product extends Model {
                             
                     ),
         );
+    
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Accessors
+    |--------------------------------------------------------------------------
+    */
+
+    public function getQuantityAvailableAttribute()
+    {
+        $value =      $this->quantity_onhand  
+                    + $this->quantity_onorder 
+                    - $this->quantity_allocated 
+                    + $this->quantity_onorder_mfg 
+                    - $this->quantity_allocated_mfg;
+
+        return $value;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Methods
+    |--------------------------------------------------------------------------
+    */
 
 
     public function scopeFilter($query, $params)
@@ -131,6 +162,16 @@ class Product extends Model {
         return $this->images()->orderBy('is_featured', 'desc')->orderBy('position', 'asc')->first();
     }
 
+    public static function getTypeList()
+    {
+            $list = [];
+            foreach (self::$types as $type) {
+                $list[$type] = l($type, [], 'appmultilang');;
+            }
+
+            return $list;
+    }
+
     
     /*
     |--------------------------------------------------------------------------
@@ -167,43 +208,23 @@ class Product extends Model {
     {
         return $this->belongsToMany('App\Warehouse')->withPivot('quantity')->withTimestamps();
     }
-    
+/*    
     public function pricelists()
     {
         return $this->belongsToMany('App\PriceList', 'price_list_product', 'product_id', 'price_list_id')->withPivot('price')->withTimestamps();
     }
     
-/*    public function pricelist( $list_id = null )
+    public function pricelist( $list_id = null )
     {
         if ( $list_id > 0 )
             return $this->belongsToMany('App\PriceList')->where('price_list_id', '=', $list_id)->withPivot('price')->withTimestamps();
-    } */
+    } 
     
     public function prices()
     {
         return $this->hasMany('App\Price');
     }
-    
-    public function priceByList( \App\PriceList $list )
-    {
-        // $plist_id = $list->id ;
-
-        // $result = $this->hasMany('App\Price')->where('price_list_id', '=', $plist_id)->first();
-        $line = $list->pricelistlines()->where('product_id', '=', $this->id)->first();
-
-        if ( $line )
-            return $line;
-       
-        // Price not foiund, calculate it
-        $price = $list->calculatePrice( $this );
-
-        $line = \App\PriceListLine::create( [ 'product_id' => $this->id, 'price' => $price ] );
-
-        $list->pricelistlines()->save($line);
-        
-        return $line;
-    }
-    
+*/    
 
     /*
     |--------------------------------------------------------------------------
@@ -216,7 +237,7 @@ class Product extends Model {
      * @param  string $query
      * @return json
      */
-    public static function searchByNameAutocomplete($query, $onhand_only = 0)
+    public static function searchByNameAutocomplete_dist($query, $onhand_only = 0)
     {
         $q = Product::select('*', 'products.id as product_id', 'taxes.id as tax_id', 
                                   'products.name as product_name', 'taxes.name as tax_name')
@@ -230,6 +251,24 @@ class Product extends Model {
 
          return json_encode( array('query' => $query, 'suggestions' => $products) );
     }
+
+    /**
+     * Provides a json encoded array of matching product names
+     * @param  string $query
+     * @return json
+     */
+    public static function searchByNameAutocomplete($query, $onhand_only = 0)
+    {
+        $q = Product::with('tax')
+                    ->orderBy('name')
+                    ->where('name', 'like', '%' . $query . '%');
+
+        if ($onhand_only) $q = $q->where('quantity_onhand', '>', '0');
+
+         $products = $q->get();
+
+         return json_encode( array('query' => $query, 'suggestions' => $products) );
+    }
     
 
     /*
@@ -238,29 +277,62 @@ class Product extends Model {
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Return a json list of records matching the provided query
-     *
-     * @return json
-     */
-    public function price( \App\Customer $customer )
+    public function getPrice()
     {
-        // First: Customer has pricelist?
-        if ($customer->pricelist) {
+        $price_is_tax_inc = \App\Configuration::get('PRICES_ENTERED_WITH_TAX');
 
-            // return \App\PriceList::priceCalculator( $customer->pricelist, $this );
-            return $this->price_list( $customer->pricelist )->price;
-        } 
+        $price = $price_is_tax_inc ? 
+                    $this->price_tax_inc :
+                    $this->price         ;
 
-        // Second: Customer Group has pricelist?
-        if ($customer->customergroup AND $customer->customergroup->pricelist) {
+        $priceObject = new \App\Price( $price, $price_is_tax_inc, \App\Context::getContext()->currency, \App\Context::getContext()->currency->conversion_rate);
 
-            // return \App\PriceList::priceCalculator( $customer->customergroup->pricelist, $this );
-            return $this->price_list( $customer->customergroup->pricelist )->price;
-        }
+        return $priceObject;
+    }
 
-        // Otherwise, use product price (initial or base price)
-        return $this->price;
+    public function getPriceByList( \App\PriceList $list )
+    {
+        // Return \App\Price Object
+        return $list->getPrice( $this );
+    }
+
+    public function getPriceByCustomer( \App\Customer $customer, \App\Currency $currency = null )
+    {
+        // Return \App\Price Object
+        return $customer->getPrice( $this, $currency );
+    }
+    
+
+    public function getTaxRulesByAddress( \App\Address $address = null )
+    {
+        // Taxes depending on location
+        // If no address, use default Company address
+        if ( $address == null ) $address = \App\Context::getContext()->company->address;
+
+        return $address->getTaxRules( $this->tax );
+    }
+
+    public function getTaxRulesByCustomer( \App\Customer $customer = null )
+    {
+        // Taxes depending on Customer, no matter of location
+        if ( $customer == null ) return collect([]);
+
+        return $customer->getTaxRules( $this );
+    }
+
+    public function getTaxRulesByProduct()
+    {
+        // Taxes depending on Product itself, such as recycle tax
+        return collect([]);
+    }
+
+    public function getTaxRules( \App\Address $address = null, \App\Customer $customer = null )
+    {
+        $rules =         $this->getTaxRulesByAddress(  $address )
+                ->merge( $this->getTaxRulesByCustomer( $customer ) )
+                ->merge( $this->getTaxRulesByProduct() );
+
+        return $rules;
     }
 	
 }

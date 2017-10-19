@@ -116,14 +116,23 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		});
 
 		view()->composer(array('customer_invoices.create', 'customer_invoices.edit'), function($view) {
-
+/*
 		    $list = \App\Tax::select(
 //		        \DB::raw("(percent + extra_percent) AS percent, id")
 		        \DB::raw("(percent) AS percent, id")
 		    )->pluck('percent', 'id');
 
 		    $view->with('taxeqpercentList', $list);
-		    
+*/		    
+		    $view->with('taxpercentList', Arr::pluck(\App\Tax::all(), 'percent', 'id'));
+		});
+
+		// Tax Rule types
+		view()->composer(array('tax_rules._form', 'tax_rules.index'), function($view) {
+
+		    $list = \App\TaxRule::getTypeList();
+
+		    $view->with('tax_rule_typeList', $list);
 		});
 
 		// Languages
@@ -158,11 +167,13 @@ class ViewComposerServiceProvider extends ServiceProvider {
 
 		// Product types
 		view()->composer(array('products._form_create'), function($view) {
-		    
+/*		    
 		    $list = [];
 		    foreach (\App\Product::$types as $type) {
 		    	$list[$type] = l($type, [], 'appmultilang');;
 		    }
+*/
+		    $list = \App\Product::getTypeList();
 
 		    $view->with('product_typeList', $list);
 		    // $view->with('warehouseList', \App\Warehouse::pluck('name', 'id')->toArray());

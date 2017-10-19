@@ -1,4 +1,6 @@
-<?php namespace App;
+<?php
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -158,20 +160,121 @@ class Customer extends Model {
      */
     public static function searchByNameAutocomplete($query, $params)
     {
-        $clients = Customer::select('name_fiscal', 'id')->orderBy('name_fiscal')->where('name_fiscal', 'like', '%' . $query . '%');
+        $clients = Customer::select('name_fiscal', 'name_commercial', 'id')->orderBy('name_fiscal')->where('name_fiscal', 'like', '%' . $query . '%');
         if ( isset($params['name_commercial']) AND ($params['name_commercial'] == 1) )
             $clients = $clients->orWhere('name_commercial', 'like', '%' . $query . '%');
+        
         $clients = $clients->get();
 
         $return = array();
 
-        foreach ($clients as $client)
-        {
-            // $return[]['value'] = $client->name_fiscal;
-            $return[] = array ('value' => $client->name_fiscal, 'data' => $client->id);
+        if ( isset($params['name_commercial']) AND ($params['name_commercial'] == 1) ) {
+            foreach ($clients as $client) {
+                $return[] = array ('value' => $client->name_fiscal.' - '.$client->name_commercial, 'data' => $client->id);
+            }
+
+        } else {
+            foreach ($clients as $client) {
+                $return[] = array ('value' => $client->name_fiscal, 'data' => $client->id);
+            }
         }
 
         return json_encode( array('query' => $query, 'suggestions' => $return) );
     }
-	
+    
+
+    /*
+    |--------------------------------------------------------------------------
+    | Price calculations
+    |--------------------------------------------------------------------------
+    */
+
+    public function getPrice( \App\Product $product, \App\Currency $currency = null )
+    {
+        // Best price (if Price for $currency is not set)
+        $best_price = null;
+
+        if (!$currency && $this->currency_id)
+            $currency = $this->currency;
+
+        if (!$currency)
+            $currency = \App\Context::getContext()->currency;
+
+        // ToDo: Set special prices priorities
+        // First: Product has special price for this Customer?
+
+        // Second: Product has special price for this Customer's Customer Group?
+
+        // Third: Customer has pricelist?
+        if ($customer->pricelist) {
+
+            $price = $customer->pricelist->getPrice( $product );
+
+            if ($currency->id == $customer->pricelist->currency_id) {
+                return $price;
+            }
+
+            if ( $best_price == null ) $best_price = $price;
+        } 
+
+        // Fourth: Customer Group has pricelist?
+        if ($customer->customergroup && $customer->customergroup->pricelist) {
+
+            $price = $customer->customergroup->pricelist->getPrice( $product );
+
+            if ($currency->id == $customer->customergroup->pricelist->currency_id) {
+                return $price;
+            }
+
+            if ( $best_price == null ) $best_price = $price;
+        }
+
+        // Otherwise, use product price (initial or base price)
+        $price = $product->getPrice();
+
+        if ($currency->id == $price->currency->id) {
+            return $price;
+        }
+
+        if ( $best_price == null ) $best_price = $price;
+
+        // If you get here, no matching currency found. So, convert best price recorded
+        $price = $best_price->convert( $currency );
+
+        return $price;
+    }
+
+    public function getTaxRules( \App\Product $product )
+    {
+        $rules = collect([]);
+
+        // Sales Equalization
+        if ( $this->sales_equalization ) {
+
+            $tax = $product->tax;
+
+
+            $address = $this->invoicing_address;
+
+            $country_id = $address->country_id;
+            $state_id   = $address->state_id;
+
+            $rules_re = $tax->taxrules()->where(function ($query) use ($country_id) {
+                $query->where(  'country_id', '=', 0)
+                      ->OrWhere('country_id', '=', $country_id);
+            })
+                                     ->where(function ($query) use ($state_id) {
+                $query->where(  'state_id', '=', 0)
+                      ->OrWhere('state_id', '=', $state_id);
+            })
+                                     ->where('rule_type', '=', 'sales_equalization')
+                                     ->get();
+
+            if ( $rules_re->isNotEmpty() ) $rules = $rules->merge( $rules_re );
+
+        }
+
+        return $rules;
+    }
+    
 }

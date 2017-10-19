@@ -4,6 +4,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class CustomerInvoice extends Model {
 
+    public static $statuses = array(
+            'draft', 
+            'pending', 
+            'halfpaid', 
+            'paid', 
+            'doubtful',
+        );
+
     protected $guarded = array('id');
 
     protected $dates = [
@@ -16,15 +24,19 @@ class CustomerInvoice extends Model {
     					'posted_at'
     					];
 
-    protected $fillable =  ['sequence_id', 'customer_id', 'reference', 'document_discount', 'document_date', 'delivery_date', 
-                            'document_prefix', 'document_id', 'document_reference', 'open_balance', 
-                            'shipping_conditions', 'tracking_number', 'currency_conversion_rate', 'down_payment', 
-                            'total_discounts_tax_incl', 'total_discounts_tax_excl', 'total_products_tax_incl', 'total_products_tax_excl', 
-                            'total_shipping_tax_incl', 'total_shipping_tax_excl', 'total_other_tax_incl', 'total_other_tax_excl', 
-                            'total_tax_incl', 'total_tax_excl', 'commission_amount', 
-                            'notes', 'draft', 'einvoice', 'einvoice_sent', 'printed', 'posted', 'paid', 
+    protected $fillable =  ['sequence_id', 'customer_id', 
+                            'reference', 'document_discount', 'document_date', 'delivery_date', 'edocument_sent_at', 
+//                            'document_prefix', 'document_id', 'document_reference', // These are calculated!!!
+//                            'open_balance', 
+                            'number_of_packages', 'shipping_conditions', 'tracking_number', 'currency_conversion_rate', 'down_payment', 
+//                            'total_discounts_tax_incl', 'total_discounts_tax_excl', 'total_products_tax_incl', 'total_products_tax_excl', 
+//                            'total_shipping_tax_incl', 'total_shipping_tax_excl', 'total_other_tax_incl', 'total_other_tax_excl', 
+//                            'total_tax_incl', 'total_tax_excl', 'commission_amount', 
+                            'notes', 'status', 
+//                            'einvoice', 'printed', 'customer_viewed', 'posted', 
                             'invoicing_address_id', 'shipping_address_id', 'warehouse_id', 'carrier_id', 
-                            'sales_rep_id', 'currency_id', 'payment_method_id', 'template_id', 'parent_document_id'
+                            'sales_rep_id', 'currency_id', 'payment_method_id', 'template_id', 
+//                            'parent_document_id'
                             ];
 
 	// Add your validation rules here
@@ -53,6 +65,16 @@ class CustomerInvoice extends Model {
                 $line->delete();
             }
         });
+    }
+
+    public static function getStatusList()
+    {
+            $list = [];
+            foreach (self::$statuses as $status) {
+                $list[$status] = l($status, [], 'appmultilang');;
+            }
+
+            return $list;
     }
 
     public function getEditableAttribute()

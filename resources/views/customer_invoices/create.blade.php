@@ -8,7 +8,7 @@
             @if ( isset($customer->name_fiscal) )
               @include('customer_invoices.create_invoice')
             @else
-              @include('customer_invoices.create_customer')
+              @include('customer_invoices.search_customer')
             @endif
 
 @stop
@@ -17,7 +17,7 @@
 
 @section('styles')
 
-   {!! HTML::style('../../aBillander/public/assets/lib/autocomplete/content/styles.css') !!}
+   {!! HTML::style('assets/plugins/AutoComplete/styles.css') !!}
 
 {{-- Date Picker --}}
 
@@ -33,7 +33,7 @@
             @if ( isset($customer->name_fiscal) )
               @include('customer_invoices.js.create_invoice_js')
             @else
-              @include('customer_invoices.js.create_customer_js')
+              @include('customer_invoices.js.search_customer_js')
             @endif
 
 @stop

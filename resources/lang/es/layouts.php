@@ -129,6 +129,7 @@ return [
 
 	'Add New Item'     => 'Añadir Nuevo',
 	'Add New'     => 'Nuevo',
+	'Add to Document'     => 'Añadir al Documento',
 
 	''     => '',
 	'Document'     => 'Documento',
@@ -200,5 +201,21 @@ return [
 	'Password'     => 'Contraseña',
 	'Remember Me'     => 'Recuérdame',
 	'Forgot Your Password?'     => '¿Olvidó su Contraseña?',
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Series Language Lines :: Not Found
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+	'There is not any Sequence for this type of Document &#58&#58 You must create one first'    
+	 => 'No existe ninguna Serie para este tipo de Documento &#58&#58 Debe crear una primero',
+
+	'There is not any Payment Method &#58&#58 You must create one first'    
+	 => 'No existe ninguna Forma de Pago &#58&#58 Debe crear una primero',
 
 ];

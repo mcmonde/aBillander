@@ -1,15 +1,22 @@
-<?php namespace App;
+<?php 
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Traits\ViewFormatterTrait;
 
 use DB;
 
 class Combination extends Model {
 
+    use ViewFormatterTrait;
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+
+    protected $appends = ['quantity_available'];
     
     protected $fillable = [ 'reference', 'ean13', 'warranty_period', 
                             'reorder_point', 'maximum_stock', 'price', 'cost_price', 'supply_lead_time', 
@@ -18,6 +25,31 @@ class Combination extends Model {
                           ];
 
     public static $rules = array();
+    
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Accessors
+    |--------------------------------------------------------------------------
+    */
+
+    public function getQuantityAvailableAttribute()
+    {
+        $value =      $this->quantity_onhand  
+                    + $this->quantity_onorder 
+                    - $this->quantity_allocated 
+                    + $this->quantity_onorder_mfg 
+                    - $this->quantity_allocated_mfg;
+
+        return $value;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Methods
+    |--------------------------------------------------------------------------
+    */
     
 
     public function name($separator = ' - ')

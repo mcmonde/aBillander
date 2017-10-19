@@ -4,20 +4,23 @@
 		{!! Form::text('name', null, array('placeholder' => '', 'class' => 'form-control')) !!}
 </div>
 
-<div class="form-group">
-		{!! Form::label('type', l('Price List Type')) !!}
-		{!! Form::select('type', array(	
-											0 => l('Fixed price', [], 'appmultilang'),
-											1 => l('Discount percentage', [], 'appmultilang'),
-											2 => l('Margin percentage', [], 'appmultilang')
-									), null, array('class' => 'form-control')) !!}
-</div>
-<div class="form-group" id="div-amount">
-		{!! Form::label('amount', l('Amount')) !!}
-		{!! Form::text('amount', null, array('placeholder' => '0.0', 'class' => 'form-control')) !!}
+<div class="row">
+    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+    		{!! Form::label('type', l('Price List Type')) !!}
+    		{!! Form::select('type', array(	
+    											0 => l('Fixed price', [], 'appmultilang'),
+    											1 => l('Discount percentage', [], 'appmultilang'),
+    											2 => l('Margin percentage', [], 'appmultilang')
+    									), null, array('class' => 'form-control')) !!}
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-sm-6" id="div-amount">
+    		{!! Form::label('amount', l('Amount')) !!}
+    		{!! Form::text('amount', null, array('placeholder' => '0.0', 'class' => 'form-control', 'id' => 'amount')) !!}
+    </div>
 </div>
 
-   <div class="form-group" id="div-price_is_tax_inc">
+<div class="row">
+   <div class="form-group col-lg-6 col-md-6 col-sm-6" id="div-price_is_tax_inc">
      {!! Form::label('price_is_tax_inc', l('Price is Tax Included?'), ['class' => 'control-label']) !!}
      <div class="">
        <div class="radio-inline">
@@ -35,11 +38,13 @@
      </div>
    </div>
 
-   <div class="form-group {{ $errors->has('currency_id') ? 'has-error' : '' }}">
+   <div class="form-group col-lg-6 col-md-6 col-sm-6 {{ $errors->has('currency_id') ? 'has-error' : '' }}">
       {!! Form::label('amount', l('Currency')) !!}
       {!! Form::select('currency_id', array('0' => l('-- Please, select --', [], 'layouts')) + $currencyList, null, array('class' => 'form-control')) !!}
       {!! $errors->first('currency_id', '<span class="help-block">:message</span>') !!}
    </div>
+
+</div>
 
 {!! Form::submit(l('Save', [], 'layouts'), array('class' => 'btn btn-success')) !!}
 {!! link_to_route('pricelists.index', l('Cancel', [], 'layouts'), null, array('class' => 'btn btn-warning')) !!}

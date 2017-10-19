@@ -10,9 +10,14 @@ class TaxRule extends Model {
     use ViewFormatterTrait;
     use SoftDeletes;
 
+    public static $types = array(
+            'sales', 
+            'sales_equalization',
+        );
+
     protected $dates = ['deleted_at'];
     
-    protected $fillable = [ 'country_id', 'state_id', 'sales_equalization', 'name', 'percent', 'amount', 'position' ];
+    protected $fillable = [ 'country_id', 'state_id', 'rule_type', 'name', 'percent', 'amount', 'position' ];
 
     public static $rules = array(
     	'name'     => array('required'),
@@ -20,6 +25,16 @@ class TaxRule extends Model {
         'amount'   => array('nullable', 'numeric'),
         'position' => array('nullable', 'numeric'),      // , 'min:0')   Allow negative in case starts on 0
     	);
+
+    public static function getTypeList()
+    {
+            $list = [];
+            foreach (self::$types as $type) {
+                $list[$type] = l($type, [], 'appmultilang');;
+            }
+
+            return $list;
+    }
 
     
     /*

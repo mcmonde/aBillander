@@ -3,7 +3,7 @@
       <div class="modal-dialog">
          <div class="modal-content">
 
-{!! Form::open(array('url' => 'customerinvoices', 'id' => 'create_customer_invoice', 'name' => 'create_customer_invoice', 'class' => 'form')) !!}
+{!! Form::open(array('url' => 'customerinvoices', 'id' => 'search_customer_invoice', 'name' => 'search_customer_invoice', 'class' => 'form')) !!}
             <div class="modal-header">
                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                <h4 class="modal-title">{{l('Customer Search')}}</h4>
@@ -20,7 +20,7 @@
                   <div class="col-sm-9">
                     {!! Form::text('customer_name', null, array('id' => 'customer_name', 'class' => 'form-control customer-lookup', 'autocomplete' => 'off', 'placeholder' => l('Type a Name...'))) !!}
                   </div>
-                  <input type="hidden" name="customer_id" value=""/>
+                  <input type="hidden" name="customer_id" id="customer_id" value=""/>
                </div>
                <!-- div class="form-group">
                   Fecha Factura:
@@ -72,7 +72,11 @@
                <a target="_top" class="btn btn-link" href="{{ URL::to('customers/create') }}">{{l('New Customer')}}</a>
                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">{{l('Cancel', [], 'layouts')}}</button>
                <input type="hidden" name="submitCustomer_id" value="submitCustomer_id"/>
-               <button id="invoice-create-confirm" class="btn btn-sm btn-info" type="submit" onclick="this.disabled=true;this.form.submit();">
+               <!-- button id="invoice-create-confirm" class="btn btn-sm btn-info" type="submit" onclick="this.disabled=true;this.form.submit();">
+                  <i class="fa fa-play"></i>
+                  &nbsp; {{l('Select', [], 'layouts')}}
+               </button -->
+               <button id="invoice-create-confirm" class="btn btn-sm btn-info" type="submit">
                   <i class="fa fa-play"></i>
                   &nbsp; {{l('Select', [], 'layouts')}}
                </button>

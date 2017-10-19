@@ -2,7 +2,7 @@
    <div class="container-fluid" xstyle="margin-bottom: 20px;">
       <div class="row">
 
-         @if ($invoice->draft)
+         @if ($invoice->status == 'draft')
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('sequence_id') ? 'has-error' : '' }}">
             {{ l('Invoice Sequence') }}
             {!! Form::select('sequence_id', array('0' => l('-- Please, select --', [], 'layouts')) + $sequenceList, null, array('class' => 'form-control', 'id' => 'sequence_id')) !!}
@@ -43,7 +43,7 @@
             {!! $errors->first('template_id', '<span class="help-block">:message</span>') !!}
          </div>
 
-         @if ($invoice->draft)
+         @if ($invoice->status == 'draft')
          <div class="form-group col-lg-2 col-md-2 col-sm-2">
                  {{ l('Save as Draft?') }}<!-- label class="control-label" - - >Guardar como Borrador?< ! - - /label -->
             <div>
@@ -78,10 +78,10 @@
             {!! $errors->first('currency_id', '<span class="help-block">:message</span>') !!}
          </div>
 
-         <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('conversion_rate') ? 'has-error' : '' }}">
+         <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('currency_conversion_rate') ? 'has-error' : '' }}">
             {{ l('Conversion Rate') }}
-            {!! Form::text('conversion_rate', null, array('class' => 'form-control', 'id' => 'conversion_rate')) !!}
-            {!! $errors->first('conversion_rate', '<span class="help-block">:message</span>') !!}
+            {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control', 'id' => 'currency_conversion_rate')) !!}
+            {!! $errors->first('currency_conversion_rate', '<span class="help-block">:message</span>') !!}
          </div>
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('sales_rep_id') ? 'has-error' : '' }}">
@@ -94,6 +94,12 @@
             {{ l('Down Payment') }}
             {!! Form::text('down_payment', null, array('class' => 'form-control', 'id' => 'down_payment')) !!}
             {!! $errors->first('down_payment', '<span class="help-block">:message</span>') !!}
+         </div>
+
+         <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('number_of_packages') ? 'has-error' : '' }}">
+            {{ l('Number of Packages') }}
+            {!! Form::text('number_of_packages', null, array('class' => 'form-control', 'id' => 'number_of_packages')) !!}
+            {!! $errors->first('number_of_packages', '<span class="help-block">:message</span>') !!}
          </div>
 
       </div>

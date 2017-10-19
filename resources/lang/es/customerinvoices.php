@@ -50,12 +50,16 @@ return [
 	'Type a Name...'     => 'Escriba un Nombre...',
 	'Also search the Commercial Name'     => 'Buscar también en el Nombre Comercial',
 	'New Customer'     => 'Nuevo Cliente',
+	'You should choose a Customer'     => 'Debe seleccionar un Cliente',
 
 	'Customer Invoices'     => 'Facturas de Clientes',
 	'Invoice to'     => 'Factura a',
 	'Back to Customer Invoices'     => 'Volver a Facturas de Clientes',
 	'Invoicing Address'     => 'Datos de Facturación',
 	'VAT ID'     => 'NIF',
+	'View Customer'     => 'Ir a la Ficha del Cliente',
+	'View Invoicing Address'     => 'Ver Dirección de Facturación',
+
 
 	'Header'     => 'Cabecera',
 	'Lines'     => 'Líneas',
@@ -65,11 +69,16 @@ return [
 	'Accepts eInvoice'     => 'Acepta Factura Electrónica',
 	'Does NOT accept eInvoice'     => 'NO acepta Factura Electrónica',
 	'Equalization Tax'     => 'Recargo Equivalencia',
-	''     => '',
-	''     => '',
-	''     => '',
-	''     => '',
-	''     => '',
+
+	'Combinations'     => 'Combinaciones',
+//	'Reference'     => 'Referencia',
+	'Name'     => 'Nombre',
+//	'Price'     => 'PVP',
+	'With Tax'     => 'PVP+IVA',
+	'Stock'     => 'Stock',
+	'On Order'     => 'Pendiente',
+	'Allocated'     => 'Reservado',
+	'Available'     => 'Disponible',
 	''     => '',
 
 	// _invoice_header
@@ -85,6 +94,7 @@ return [
 	'Conversion Rate'     => 'Tipo de Cambio',
 	'Sales Representative'     => 'Agente Comercial',
 	'Down Payment'     => 'Anticipo',
+	'Number of Packages'     => 'Número de Bultos',
 	'Shipping Address'     => 'Dirección de Envío',
 	'Warehouse'     => 'Almacén',
 	'Carrier'     => 'Transportista',
@@ -117,7 +127,7 @@ return [
 	'Price'     => 'Precio',
 	'Tax'     => 'Impuesto',
 	'Is Shipping Cost?'     => '¿Es Coste de Envío?',
-	''     => '',
+	'Text Line'     => 'Línea de texto',
 	''     => '',
 	''     => '',
 	

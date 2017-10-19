@@ -134,7 +134,7 @@ class ConfigurationsTableSeeder extends Seeder {
 					'created_at'  => \Carbon\Carbon::createFromDate(2015,03,31)->toDateTimeString(),
 					'updated_at'  => \Carbon\Carbon::now()->toDateTimeString(),
 					),	// Disable for professionals who sell services
-			array(	'name'        => 'ENABLE_WEBSHOP_LINK', 
+			array(	'name'        => 'ENABLE_WEBSHOP_CONNECTOR', 
 					'value'       => '0',
 					'created_at'  => \Carbon\Carbon::createFromDate(2015,03,31)->toDateTimeString(),
 					'updated_at'  => \Carbon\Carbon::now()->toDateTimeString(),

@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php 
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -6,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Product as Product;
-use View, Form, DB;
+use Form, DB;
 
 class ProductsController extends Controller {
 
@@ -43,7 +45,7 @@ class ProductsController extends Controller {
 
         $products->setPath('products');     // Customize the URI used by the paginator
 
-        return View::make('products.index', compact('products'));
+        return view('products.index', compact('products'));
         
     }
     public function indexFiltered()
@@ -57,10 +59,10 @@ class ProductsController extends Controller {
 						 ->paginate(2);
 //						 ->get();
 		
-		$taxList = Tax::pluck('name', 'id');		// http://four.laravel.com/docs/queries#selects    
+		$taxList = \App\Tax::pluck('name', 'id');		// http://four.laravel.com/docs/queries#selects    
 													// $catlist = Category::where('type', $content_type)->pluck('name');
 
-        return View::make('products.listing', compact('products', 'taxList'));
+        return view('products.listing', compact('products', 'taxList'));
 		
 		
 		
@@ -88,7 +90,7 @@ class ProductsController extends Controller {
 
         // $taxName = Tax::query()->where_id(1)->get(array('username'));
 		
-		return View::make('products.index', compact('products', 'taxList'));
+		return view('products.index', compact('products', 'taxList'));
 		*/
         
     }
@@ -118,11 +120,25 @@ class ProductsController extends Controller {
             $request->merge( ['measure_unit' => \App\Configuration::get('DEF_MEASURE_UNIT')] );
 
         $rules = Product::$rules['create'];
-        if ($request->input('quantity_onhand')>0)
+
+        if ( \App\Configuration::get('PRICES_ENTERED_WITH_TAX') )
+            unset($rules['price']);
+        else 
+            unset($rules['price_tax_inc']);
+        
+        if ($request->input('quantity_onhand')>0) 
             $rules['warehouse_id'] .= '|exists:warehouses,id';
 
         $this->validate($request, $rules);
 
+        $tax = \App\Tax::find( $request->input('tax_id') );
+        if ( \App\Configuration::get('PRICES_ENTERED_WITH_TAX') ){
+            $price = $request->input('price_tax_inc')/(1.0+($tax->percent/100.0));
+            $request->merge( ['price' => $price] );
+        } else {
+            $price_tax_inc = $request->input('price')*(1.0+($tax->percent/100.0));
+            $request->merge( ['price_tax_inc' => $price_tax_inc] );
+        }
         // If sequences are used:
         //
         // $product_sequences = \App\Sequence::listFor(\App\Product::class);
@@ -132,26 +148,29 @@ class ProductsController extends Controller {
         $product = $this->product->create($request->all());
 
 
-        // Create stock movement (Initial Stock)
-        $data = [   'date' =>  \Carbon\Carbon::now(), 
-                    'document_reference' => '', 
-                    'price' => $request->input('price'), 
-                    'quantity' => $request->input('quantity_onhand'),  
-                    'notes' => '',
-                    'product_id' => $product->id, 
-                    'currency_id' => \App\Context::getContext()->currency->id, 
-                    'conversion_rate' => \App\Context::getContext()->currency->conversion_rate, 
-                    'warehouse_id' => $request->input('warehouse_id'), 
-                    'movement_type_id' => 10,
-                    'model_name' => '', 'document_id' => 0, 'document_line_id' => 0, 'combination_id' => 0, 'user_id' => \Auth::id()
-        ];
-
-        // Initial Stock
-        $stockmovement = \App\StockMovement::create( $data );
-
-        // Stock movement fulfillment (perform stock movements)
-        $stockmovement->process();
-
+        if ($request->input('quantity_onhand')>0) 
+        {
+            // Create stock movement (Initial Stock)
+            $data = [   'date' =>  \Carbon\Carbon::now(), 
+                        'document_reference' => '', 
+                        'price' => $request->input('price'), 
+    //                    'price_tax_inc' => $request->input('price_tax_inc'), 
+                        'quantity' => $request->input('quantity_onhand'),  
+                        'notes' => '',
+                        'product_id' => $product->id, 
+                        'currency_id' => \App\Context::getContext()->currency->id, 
+                        'conversion_rate' => \App\Context::getContext()->currency->conversion_rate, 
+                        'warehouse_id' => $request->input('warehouse_id'), 
+                        'movement_type_id' => 10,
+                        'model_name' => '', 'document_id' => 0, 'document_line_id' => 0, 'combination_id' => 0, 'user_id' => \Auth::id()
+            ];
+    
+            // Initial Stock
+            $stockmovement = \App\StockMovement::create( $data );
+    
+            // Stock movement fulfillment (perform stock movements)
+            $stockmovement->process();
+        }
 
         // Prices according to Ptice Lists
         $plists = \App\PriceList::get();
@@ -247,6 +266,13 @@ class ProductsController extends Controller {
 
         if ( isset($vrules['reference']) ) $vrules['reference'] .= $product->id;
 
+        if ($request->input('tab_name') == 'sales') {
+            if ( \App\Configuration::get('PRICES_ENTERED_WITH_TAX') )
+                unset($vrules['price']);
+            else 
+                unset($vrules['price_tax_inc']);
+        }
+
         if ($product->product_type == 'combinable') 
         {
             // Remove reference field
@@ -261,7 +287,20 @@ class ProductsController extends Controller {
 
         $this->validate($request, $vrules);
 
+        if ($request->input('tab_name') == 'sales') {
+            $tax = \App\Tax::find( $product->tax_id );
+            if ( \App\Configuration::get('PRICES_ENTERED_WITH_TAX') ){
+                $price = $request->input('price_tax_inc')/(1.0+($tax->percent/100.0));
+                $request->merge( ['price' => $price] );
+            } else {
+                $price_tax_inc = $request->input('price')*(1.0+($tax->percent/100.0));
+                $request->merge( ['price_tax_inc' => $price_tax_inc] );
+            }
+        }
+
         $product->update($request->all());
+
+        // ToDo: update combination fields, such as measure_unit, quantity_decimal_places, etc.
 
         return redirect('products/'.$id.'/edit'.'#'.$request->input('tab_name'))
                 ->with('success', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts') . $product->name);
@@ -328,6 +367,9 @@ class ProductsController extends Controller {
                     'maximum_stock'    => $product->maximum_stock,
                     'supply_lead_time' => $product->supply_lead_time,
 
+                    'measure_unit'            => $product->measure_unit,
+                    'quantity_decimal_places' => $product->quantity_decimal_places,
+
                     'is_default'     => $i == 1 ? 1 : 0,
                     'active'         => $product->active,
                     'blocked'        => $product->blocked,
@@ -354,25 +396,9 @@ class ProductsController extends Controller {
                 ->with('success', l('This record has been successfully combined &#58&#58 (:id) ', ['id' => $id], 'layouts') . $product->name);
     }
 
-    /**
-     * Return a json list of records matching the provided query
-     *
-     * @return json
-     */
-    public function ajaxProductSearch(Request $request)
-    {
-        if ($request->has('query'))
-        {
-            $onhand_only = ( $request->has('onhand_only') ? 1 : 0 );
 
-            return Product::searchByNameAutocomplete($request->input('query'), $onhand_only);
-        }
+/* ********************************************************************************************* */    
 
-
-        $products = Product::select('id', 'name as label', 'reference')->orderBy('products.name')->where('name', 'like', '%' . $request->input('term') . '%')->get();
-        
-        return json_encode( $products );
-    }
 
     /**
      * Return a json list of records matching the provided query
@@ -459,6 +485,28 @@ LIMIT 1
         }
     }
 
+
+/* ********************************************************************************************* */    
+
+
+    /**
+     * Return a json list of records matching the provided query
+     *
+     * @return json
+     */
+    public function ajaxProductSearch(Request $request)
+    {
+        if ($request->has('query'))
+        {
+            $onhand_only = ( $request->has('onhand_only') ? 1 : 0 );
+
+            return Product::searchByNameAutocomplete($request->input('query'), $onhand_only);
+        } else {
+            // die silently
+            return json_encode( [ 'query' => '', 'suggestions' => [] ] );
+        }
+    }
+
     /**
      * Return a json list of records matching the provided query
      *
@@ -466,9 +514,12 @@ LIMIT 1
      */
     public function ajaxProductPriceSearch(Request $request)
     {
-        $product_id = $request->input('product_id');
-        $customer_id = $request->input('customer_id');
-        $product_string = $request->input('product_string');
+        // Request data
+        $product_id      = $request->input('product_id');
+        $customer_id     = $request->input('customer_id');
+        $currency_id     = $request->input('currency_id');
+        $conversion_rate = $request->input('conversion_rate');
+        $product_string  = $request->input('product_string');
 
     //    $product = \App\Product::find();
 
@@ -477,14 +528,22 @@ LIMIT 1
                         ->with('combinations')
                         ->with('combinations.options')
                         ->with('combinations.options.optiongroup')
-                        ->findOrFail(intval($product_id));
+                        ->find(intval($product_id));
+
+        $customer = \App\Customer::find(intval($customer_id));
+
+        $currency = \App\Currency::find(intval($currency_id));
+        if ( !$currency ) $currency = \App\Context::getContext()->currency;
                         
+        if ( !$product || !$customer ) {
+            // Die silently
+            return '';
+        }
+
         $tax = $product->tax;
 
-        $customer = \App\Customer::findOrFail(intval($customer_id));
-
-        // Calculate priece per $customer_id now!
-        $product->price_customer = $product->price( $customer );
+        // Calculate price per $customer_id now!
+        $product->price_customer = $product->price( $customer, $currency );
         $tax_percent = $tax->percent;
         if ($customer->sales_equalization) $tax_percent += $tax->extra_percent;
         $product->price_customer_with_tax = $product->price_customer*(1.0+$tax_percent/100.0);
@@ -495,21 +554,7 @@ LIMIT 1
         $product_string = json_encode($p);
 
         // return Product::searchByNameAutocomplete(Input::get('query'));
-        return View::make('products.ajax.show_price', compact('product', 'tax', 'customer', 'product_string'));
+        return view('products.ajax.show_price', compact('product', 'tax', 'customer', 'currency', 'product_string'));
     }
 
 }
-
-/*    http://stackoverflow.com/questions/16661292/add-new-methods-to-a-resource-controller-in-laravel-4
-
-Verb | Path | Action | Route Name 
- ???-|????????|?????|??????? 
-GET  | /resource           | index | resource.index 
-GET  | /resource/create    | create | resource.create 
-POST | /resource           | store | resource.store 
-GET  | /resource/{id}      | show | resource.show 
-GET  | /resource/{id}/edit | edit | resource.edit 
-PUT/PATCH | /resource/{id} | update | resource.update 
-DELETE | /resource/{id}    | destroy | resource.destroy
-
-*/

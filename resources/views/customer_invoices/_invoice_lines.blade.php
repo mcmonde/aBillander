@@ -88,7 +88,7 @@
                <td colspan="4" class="text-right" style="vertical-align: middle;">{{l('Order Discount (%)')}}: </td>
                <td class="{{ $errors->has('document_discount') ? 'has-error' : '' }}" style="background-color: #fff;">
                      <input class="form-control" type="text" name="document_discount" id="document_discount" 
-                           placeholder="" value="{{{ Input::old('document_discount', isset($invoice) ? $invoice->document_discount : null) }}}" 
+                           placeholder="" value="{{ old('document_discount', isset($invoice) ? $invoice->document_discount : null) }}" 
                            onchange="calculate_order()" onkeyup="calculate_order()" onclick="this.select()" />
                     {{ $errors->first('document_discount',  '<span class="help-block">:message</span>') }}
 

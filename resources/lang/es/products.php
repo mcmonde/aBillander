@@ -36,6 +36,7 @@ return [
 	'Cost Price'     => 'Precio de Coste',
 	'Margin'     => 'Margen',
 	'Margin calculation method'     => 'Método de cálculo del Margen',
+	'Price input method'     => 'Método de entrada de Precios',
 	'Save tax included?'     => '¿Guardar con IVA incluido?',
 	'Average Cost Price'     => 'Precio de Coste Promedio',
 	'Last Purchase Price'     => 'Precio última Compra',
@@ -149,5 +150,31 @@ return [
 	'Product Images'     => 'Imágenes de Productos',
 
 	'Edit Product Image'     => 'Modificar Imagen',
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Products Language Lines :: Customer Invoice Product Search
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+	'Name'     => 'Nombre',
+	'Price'     => 'PVP',
+	'With Tax'     => 'PVP+IVA',
+	'Stock'     => 'Stock',
+	'On Order'     => 'Pendiente',
+	'Allocated'     => 'Reservado',
+	'Available'     => 'Disponible',
+//	'Cost Price'     => 'Precio de Coste',
+	'Customer Margin'     => 'Margen Cliente',
+	'Customer Price'     => 'PVP Cliente',
+	'Customer With Tax'     => 'PVP+IVA Cliente',
+
+	'Customer'     => 'Cliente',
+	'Currency'     => 'Divisa',
+	'Price List'     => 'Tarifa',
 
 ];

@@ -18,7 +18,7 @@ class CreateTaxRulesTable extends Migration {
 			$table->increments('id');
 			$table->integer('country_id')->unsigned()->default(0);
 			$table->integer('state_id')->unsigned()->default(0);
-			$table->tinyInteger('sales_equalization')->default(0);		// Apply "Recargo de Equivalencia" (sales equalization tax in Spain and Belgium only). Vendors must charge these customers a sales equalization tax in addition to output tax. 
+			$table->string('rule_type', 32)->nullable(false);			// 'sales', sales_equalization', etc.
 
 			$table->string('name', 64)->nullable(false);
 			$table->decimal('percent', 8, 3)->default(0.0);

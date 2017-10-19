@@ -31,6 +31,7 @@ return [
 	'-- All --'     => '-- Todos --',
 	'Sales Equalization'     => 'Recargo de Equivalencia',
 	'Tax Rule Name'     => 'Nombre de la Regla de Impuesto',
+	'Tax Rule Type'     => 'Tipo',
 	'Tax Rule Percent'     => 'Porcentaje ',
 	'Tax Rule Amount'     => 'Cantidad del Impuesto',
 	'Position'     => 'Posición',

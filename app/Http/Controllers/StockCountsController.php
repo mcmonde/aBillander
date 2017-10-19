@@ -43,7 +43,7 @@ class StockCountsController extends Controller
 
         if ( !$sequenceList )
             return redirect('stockcounts')
-                ->with('error', l('There is not any Sequence for this type of Document &#58&#58 You must create one first'));
+                ->with('error', l('There is not any Sequence for this type of Document &#58&#58 You must create one first', [], 'layouts'));
 
         return view('stock_counts.create', compact('date', 'sequenceList'));
     }

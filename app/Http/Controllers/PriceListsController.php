@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php 
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -56,12 +58,8 @@ class PriceListsController extends Controller {
 
         foreach ($products as $product) {
 
-            // $price = \App\PriceList::priceCalculator( $pricelist, $product );
-            $price = $pricelist->calculatePrice( $product );
-            // $product->pricelists()->attach($list_id, array('price' => $price));
-            $line = \App\PriceListLine::create( [ 'product_id' => $product->id, 'price' => $price ] );
+            $pricelist->addLine( $product );
 
-            $pricelist->pricelistlines()->save($line);
         }
 
 		return redirect('pricelists')

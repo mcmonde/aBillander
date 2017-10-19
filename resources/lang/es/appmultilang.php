@@ -19,6 +19,19 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
+	| Tax Rule Types
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+    'sales' => 'Ventas',	// Regular sales tax
+    'sales_equalization' => 'Recargo de Equivalencia',	// Apply "Recargo de Equivalencia" (sales equalization tax in Spain and Belgium only). Vendors must charge these customers a sales equalization tax in addition to output tax. 
+
+
+	/*
+	|--------------------------------------------------------------------------
 	| Document Types
 	|--------------------------------------------------------------------------
 	|
@@ -77,7 +90,19 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
-	| Price List CSTPRCTypes
+	|Price input methods
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+	'Prices are entered inclusive of tax' => 'Los Precios se introducen con el Impuesto incluido',	//  I will enter prices inclusive of tax
+	'Prices are entered exclusive of tax' => 'Los Precios se introducen con el Impuesto excluido',	//  I will enter prices exclusive of tax
+
+	/*
+	|--------------------------------------------------------------------------
+	| Price List Types
 	|--------------------------------------------------------------------------
 	|
 	| .
@@ -101,6 +126,7 @@ return array(
 	'pending' => 'Pendiente',
 	'halfpaid'    => 'Parcialmente Pagado',
 	'paid'    => 'Pagado',
+    'doubtful'    => 'Pago Dudoso',
 
 	/*
 	|--------------------------------------------------------------------------

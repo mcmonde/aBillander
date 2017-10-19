@@ -1,9 +1,5 @@
 
-{!! \App\Calculator::marginJSCode( $customer->currency, true ) !!}
-
-<script type="text/javascript">
-    alert( 'Revisar la llamada a Calculator::marginJSCode' );
-</script>
+{!! \App\Calculator::marginJSCode( $invoice->currency, true ) !!}
 
 <script type="text/javascript">
 
@@ -75,8 +71,7 @@
 
 var nbrlines = {{ count($invoice->customerInvoiceLines) }};         // Number of Invoice Lines
 
-var fin_busqueda1 = true;
-var fin_busqueda2 = true;
+var search_ends = true;
 
    function modal_search_tab_hide_all() {
     //     $("#li_product_search").removeClass('active');
@@ -168,18 +163,18 @@ function product_search()
       $("#search_results").html('');
       $("#new_service").hide();
       
-      fin_busqueda1 = true;
-      fin_busqueda2 = true;
+      search_ends = true;
    }
    else
    {
 //      $("#nav_product_search").show();
       
-      fin_busqueda1 = false;
+      search_ends = false;
       $.getJSON( '{{ route('products.ajax.nameLookup') }}', $("form[name=f_product_search]").serialize(), function(json) {
          var items = [];
          var insertar = false;
          // console.log(json.suggestions);
+         console.log(json);
          $.each(json.suggestions, function(key, val) {
             // console.log(key, val);
             // console.log('onclick="add_product_to_order(\''+JSON.stringify(val)+'\')">');
@@ -208,34 +203,37 @@ function product_search()
 
             if(val.product_type == 'combinable') {
                tr_aux += '  <td>  \
-                                    <span class="label label-info">Combinaciones</span>  ';
+                                    <span class="label label-info">{{l('Combinations')}}</span>  ';
             }
             else {
                tr_aux += '  <td>  \
-                                    <a href="javascript:void(0);" onclick="xadd_product_to_order('+val_str+', {})">'+val.reference+'</a></td>  ';
+                                    <a title=" {{l('Add to Document', [], 'layouts')}} " href="javascript:void(0);" onclick="add_product_to_order('+val_str+', \'{}\')">   \
+                                      <button type="button" class="btn btn-xs btn-primary">   \
+                                        <i class="fa fa-shopping-basket"></i>   \
+                                      </button> '+val.reference+'</a></td>  ';
             }
 
-            items.push(tr_aux+'  <td class="text-left" >'+val.product_name+'</td>  \
+            items.push(tr_aux+'  <td class="text-left" >'+val.name+'</td>  \
                                  <td class="text-right">'+jsp_money(val.price)+'</td>  \
-                                 <td class="text-right">'+jsp_money(val.price*(1+val.percent)/100)+'</td>  \
-                                 <td class="text-right">'+val.quantity_onhand+'</td>  \
-                                 <td class="text-right">'+val.quantity_onorder+'</td>  \
-                                 <td class="text-right">'+val.quantity_allocated+'</td>  \
-                                 <td class="text-right">'+(val.quantity_onhand+val.quantity_onorder-val.quantity_allocated)+'</td>  \
+                                 <td class="text-right">'+jsp_money(val.price*(1+val.tax.percent)/100)+'</td>  \
+                                 <td class="text-right">'+jsp_quantity(val.quantity_onhand)+'</td>  \
+                                 <td class="text-right">'+jsp_quantity(val.quantity_onorder)+'</td>  \
+                                 <td class="text-right">'+jsp_quantity(val.quantity_allocated)+'</td>  \
+                                 <td class="text-right">'+jsp_quantity(val.quantity_available)+'</td>  \
                                  <td>  \
-                                    <a href="javascript:void(0);" onclick="get_customer_price(\''+val.product_id+'\', \''+{{$customer->id}}+'\', \''+val_str+'\')" title=" Más detalles ">  \
-                                       <button class="btn btn-xs btn-success" type="button"><i class="fa fa-search-plus"></i></button></a></td>  \
+                                    <a href="javascript:void(0);" onclick="get_customer_price(\''+val.id+'\', \''+{{$customer->id}}+'\', \''+val_str+'\')" title=" Más detalles ">  \
+                                       <button class="btn btn-xs btn-success" type="button"><i class="fa fa-eye"></i></button></a></td>  \
                                </tr>  \
                         ');
             
             if(json.query == document.f_product_search.query.value)
             {
                insertar = true;
-               fin_busqueda1 = true;
+               search_ends = true;
             }
          });
          
-         if(items && items.length == 0 && !fin_busqueda1)
+         if(items && items.length == 0 && !search_ends)
          {
             items.push('<tr><td colspan="5" class="alert alert-warning alert-block"><i class="fa fa-warning"></i> No se han encontrado registros.</td></tr>');
             // document.f_new_service.referencia.value = document.f_product_search.query.value;
@@ -245,8 +243,8 @@ function product_search()
          if(insertar)
          {
             $("#search_results").html("<div class='table-responsive'><table class='table table-hover'><thead><tr> \
-               <th class='text-left'>Referencia</th><th class='text-left'>Nombre</th><th class='text-right'>PVP</th><th class='text-right'>PVP+IVA</th>   \
-               <th class='text-right'>Stock</th><th class='text-right'>Pendiente</th><th class='text-right'>Reservado</th><th class='text-right'>Disponible</th><th></th></tr></thead>"+items.join('')+'</table></div>');
+               <th class='text-left'>{{l('Reference')}}</th><th class='text-left'>{{l('Name')}}</th><th class='text-right'>{{l('Price')}}</th><th class='text-right'>{{l('With Tax')}}</th>   \
+               <th class='text-right'>{{l('Stock')}}</th><th class='text-right'>{{l('On Order')}}</th><th class='text-right'>{{l('Allocated')}}</th><th class='text-right'>{{l('Available')}}</th><th></th></tr></thead>"+items.join('')+'</table></div>');
          }
       });
 
@@ -255,11 +253,18 @@ function product_search()
 
 function get_customer_price(p_id, c_id, j_str)
 {
+    var pload = '';
+
+    pload = pload + "product_id="+p_id+"&customer_id="+c_id;
+    pload = pload + "&currency_id="+$("#currency_id").val()+"&conversion_rate="+$("#currency_conversion_rate").val();
+    pload = pload + "&product_string="+j_str;
+    pload = pload + "&_token="+$('[name="_token"]').val();
+
    $.ajax({
       type: 'POST',
       url: '{{ route('products.ajax.priceLookup') }}',
       dataType: 'html',
-      data: "product_id="+p_id+"&customer_id="+c_id+"&product_string="+j_str+"&_token="+$('[name="_token"]').val(),
+      data: pload,
       success: function(data) {
     //     $("#nav_articulos").hide();
          $("#search_results").html(data);
@@ -300,7 +305,7 @@ function add_service_to_order()
     text = '{ ' +
       ' "id":"'             + ''                     + '" , ' +
       ' "reference":"'      + ''                     + '" , ' +
-      ' "product_name":"'   + $("#name").val()       + '" , ' +
+      ' "name":"'   + $("#name").val()       + '" , ' +
       ' "cost_price":"'     + $("#cost_price").val() + '" , ' +
       ' "price":"'          + $("#price").val()      + '" , ' +
       ' "price_customer":"' + $("#price").val()      + '" , ' +
@@ -331,7 +336,7 @@ function add_discount_to_order()
     text = '{ ' +
       ' "id":"'             + ''                     + '" , ' +
       ' "reference":"'      + ''                     + '" , ' +
-      ' "product_name":"'   + $("#discount_name").val()        + '" , ' +
+      ' "name":"'   + $("#discount_name").val()        + '" , ' +
       ' "cost_price":"'     + 0                                + '" , ' +
       ' "price":"'          + -$("#discount_price").val()      + '" , ' +
       ' "price_customer":"' + -$("#discount_price").val()      + '" , ' +
@@ -345,18 +350,18 @@ function add_product_to_order(p_string, pc_string)
 {
    // alert(JSON.stringify(p_string));
    // var p = JSON.parse(p_string);     // $.parseJSON(p_string);
-   var p  = p_string;
-   var pc = pc_string; // alert(pc.combination_name);
+   var p  = p_string;  // Product String
+   var pc = pc_string; // Product Combination String :: alert(pc.combination_name);
    var p_name;
    var p_reference;
    var pc_id;
 
    if ( pc.id != 'undefined' && pc.id ) {
-      p_name      = p.product_name+' | '+pc.combination_name;
+      p_name      = p.name+' | '+pc.combination_name;
       p_reference = pc.reference;
       pc_id = pc.id;
    } else {
-      p_name      = p.product_name;
+      p_name      = p.name;
       p_reference = p.reference;
       pc_id = 0;
    }
@@ -367,23 +372,23 @@ function add_product_to_order(p_string, pc_string)
       <td><input type="text" id="line_sort_order_'+nbrlines+'" name="line_sort_order_'+nbrlines+'" value="'+((nbrlines+1)*10)+'" class="form-control" /></td>\n\
  \n\
       <td><input type="hidden" id="lineid_'+nbrlines+'"          name="lineid_'+nbrlines+'"          value="'+nbrlines+'"/>\n\
-          <!-- input type="hidden" id="line_sort_order_'+nbrlines+'" name="line_sort_order_'+nbrlines+'" value="'+nbrlines+'"/ -->\n\
-          <input type="hidden" id="line_type_'+nbrlines+'"       name="line_type_'+nbrlines+'"       value="'+( p.product_id > 0 ? 'product' : p.line_type )+'"/>\n\
-          <input type="hidden" id="product_id_'+nbrlines+'"      name="product_id_'+nbrlines+'"      value="'+p.product_id+'"/>\n\
+ \n\
+          <input type="hidden" id="line_type_'+nbrlines+'"       name="line_type_'+nbrlines+'"       value="'+( p.id > 0 ? 'product' : p.line_type )+'"/>\n\
+          <input type="hidden" id="product_id_'+nbrlines+'"      name="product_id_'+nbrlines+'"      value="'+p.id+'"/>\n\
           <input type="hidden" id="combination_id_'+nbrlines+'"  name="combination_id_'+nbrlines+'"  value="'+pc_id+'"/>\n\
           <input type="hidden" id="reference_'+nbrlines+'"       name="reference_'+nbrlines+'"       value="'+p_reference+'"/>\n\
  \n\
           <input type="hidden" id="cost_price_'+nbrlines+'"          name="cost_price_'+nbrlines+'"          value="'+p.cost_price+'"/>\n\
           <input type="hidden" id="unit_price_'+nbrlines+'"          name="unit_price_'+nbrlines+'"          value="'+p.price+'"/>\n\
           <input type="hidden" id="unit_customer_price_'+nbrlines+'" name="unit_customer_price_'+nbrlines+'" value="'+p.price_customer+'"/>\n\
-          <!-- input type="hidden" id="unit_final_price_'+nbrlines+'"    name="unit_final_price_'+nbrlines+'"    value="'+p.price_customer+'"/ -->\n\
+ \n\
           <input type="hidden" id="tax_percent_'+nbrlines+'"         name="tax_percent_'+nbrlines+'"         value=""/>\n\
           <input type="hidden" id="total_tax_'+nbrlines+'"           name="total_tax_'+nbrlines+'"           value=""/>\n\
  \n\
           <input type="hidden" id="discount_amount_tax_incl_'+nbrlines+'" name="discount_amount_tax_incl_'+nbrlines+'" value=""/>\n\
           <input type="hidden" id="discount_amount_tax_excl_'+nbrlines+'" name="discount_amount_tax_excl_'+nbrlines+'" value=""/>\n\
  \n\
-         <div class="form-control"><a target="_blank" href="{{ URL::to('products') }}'+'/'+p.product_id+'/edit">'+p_reference+'</a></div></td>\n\
+         <div class="form-control"><a target="_blank" href="{{ URL::to('products') }}'+'/'+p.id+'/edit">'+p_reference+'</a></div></td>\n\
  \n\
       <td><input type="text" class="form-control" name="name_'+nbrlines+'" value="'+p_name+'" onclick="this.select()"/></td>\n\
  \n\
@@ -391,9 +396,9 @@ function add_product_to_order(p_string, pc_string)
          '" onkeyup="calculate_line('+nbrlines+')" onchange="calculate_line('+nbrlines+')" autocomplete="off" value="1"/></td>\n\
  \n\
       <td><button class="btn btn-md btn-danger" type="button" onclick="$(\'#line_'+nbrlines+'\').remove();calculate_order();">\n\
-         <i class="fa fa-trash"></i></button><!-- div class="form-control">'+nbrlines+'</div --></td>\n\
+         <i class="fa fa-trash"></i></button></td>\n\
  \n\
-      <!-- td><div class="form-control">'+jsp_money(p.price_customer)+'</div></td -->\n\
+ \n\
  \n\
       <td><input type="text" id="unit_final_price_'+nbrlines+'" name="unit_final_price_'+nbrlines+'" value="'+p.price_customer+
          '" class="form-control text-right" onkeyup="calculate_line('+nbrlines+')" onclick="this.select()" autocomplete="off"/></td>\n\
@@ -404,12 +409,13 @@ function add_product_to_order(p_string, pc_string)
       <td><input type="text" class="form-control text-right" id="total_tax_excl_'+nbrlines+'" name="total_tax_excl_'+nbrlines+
          '" onkeyup="calculate_line('+nbrlines+', \'net\')" onclick="this.select()" autocomplete="off"/></td>\n\
  \n\
-      <td>  '+taxes_dropdown( nbrlines )+'  </td>'+'\n\
+      <td>  '+p.tax.name+'  <input type="hidden" id="tax_id_'+nbrlines+'" name="tax_id_'+nbrlines+'" value="'+p.tax_id+'"/></td>'+'\n\
  \n\
       <td><input type="text" class="form-control text-right" id="total_tax_incl_'+nbrlines+'" name="total_tax_incl_'+nbrlines+
          '" onkeyup="calculate_line('+nbrlines+', \'total\')" onclick="this.select()" autocomplete="off"/></td></tr>');
    
-   $("#tax_id_"+nbrlines).val(p.tax_id);
+//   $("#tax_id_"+nbrlines).val(p.tax_id);
+
 //   $("#tax_id_"+nbrlines).onchange = function() { alert('Hola '+nbrlines); calculate_line( nbrlines ); };    // http://stackoverflow.com/questions/1628826/how-to-add-an-onchange-event-to-a-select-box-via-javascript
 //   $("#tax_id_"+nbrlines).on("change", function() { calculate_line( ($(this).attr("id")).replace("tax_id_", "") ); });    // http://stackoverflow.com/questions/12496838/how-to-add-onchange-attribute-for-select-box-from-javascript-jquery
 //   $("#tax_percent_"+nbrlines).val( get_tax_percent_by_id( p.tax_id ) );   <--  Not needed any more. See: calculate_line()
@@ -433,7 +439,7 @@ function jsp_money(price, decimal)        // JavaScript presenter
   {
     // Just remuve right trailing zeros
     // http://stackoverflow.com/questions/3612744/javascript-remove-insignificant-trailing-zeros-from-a-number
-   return parseFloat(price).toString();
+   return parseFloat(price).toFixed(2);
 
   } else if (decimal<0) {
     // Use decimal places according to currency (PHP Model)
@@ -441,6 +447,23 @@ function jsp_money(price, decimal)        // JavaScript presenter
   } else {
     // Use decimal as decimal places
     return parseFloat(price).toFixed(decimal);
+  }
+}
+
+function jsp_quantity(amount, decimal)        // JavaScript presenter
+{
+  if (typeof decimal === 'undefined')
+  {
+    // Just remuve right trailing zeros
+    // http://stackoverflow.com/questions/3612744/javascript-remove-insignificant-trailing-zeros-from-a-number
+   return parseFloat(amount).toFixed(2);
+
+  } else if (decimal<0) {
+    // Use decimal places according to currency (PHP Model)
+    // ....
+  } else {
+    // Use decimal as decimal places
+    return parseFloat(amount).toFixed(decimal);
   }
 }
 
@@ -470,6 +493,19 @@ function taxes_dropdown(id)
 
     html = '<select name="tax_id_'+id+'" class="form-control" id="tax_id_'+id+'" onchange="calculate_line('+id+')">' + html + '</select>';
     return html;
+}
+
+function get_tax_name_by_id(tax_id) 
+{
+    var tax_names = new Array();
+
+    @foreach ( $taxList as $k => $v)
+        tax_names['{{$k}}'] = '{{$v}}';
+    @endforeach
+
+//    alert(tax_names[tax_id]);
+
+    return tax_names[tax_id];
 }
 
 function get_tax_percent_by_id(tax_id) 
@@ -684,7 +720,7 @@ function calculate_profit()
 {{-- Date Picker --}}
 
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-{!! HTML::script('assets/jquery-ui/datepicker/datepicker-'.\App\Context::getContext()->language->iso_code.'.js'); !!}
+{!! HTML::script('assets/plugins/jQuery-UI/datepicker/datepicker-'.\App\Context::getContext()->language->iso_code.'.js'); !!}
 
 <script>
 

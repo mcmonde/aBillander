@@ -13,11 +13,13 @@ class CreateCustomerInvoiceLinesTable extends Migration {
 	 */
 	public function up()
 	{
+		Schema::dropIfExists('customer_invoice_lines');
+		
 		Schema::create('customer_invoice_lines', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('line_sort_order')->nullable();						// To sort lines 
-			$table->integer('line_type')->nullable();							// Producto, Comentario, Servicio, Suplido, Transporte???
+			$table->integer('line_sort_order')->nullable();			// To sort lines 
+			$table->string('line_type', 32)->nullable(false);		// product, service, shipping, discount, comment
 
 			$table->integer('product_id')->unsigned()->nullable();
 			$table->integer('combination_id')->unsigned()->nullable();

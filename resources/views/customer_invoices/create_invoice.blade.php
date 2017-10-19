@@ -6,21 +6,25 @@
                 <a href="{{ URL::to('customerinvoices') }}" class="btn btn-default"><i class="fa fa-mail-reply"></i> {{l('Back to Customer Invoices')}}</a>
             </div>
             
-              <h2><a title=" Ir a la Ficha del Cliente " href="{{ URL::to('customerinvoices') }}">{{l('Customer Invoices')}}</a> <span style="color: #cccccc;">/</span> 
-                  {{l('Invoice to')}} <span class="lead well well-sm"><a href="{{ URL::to('customers/' . $customer->id . '/edit') }}" xtarget="_blank">{{ $customer->name_fiscal }}</a>
-               <a title=" Ver dirección de Facturación! " href="javascript:void(0);">
-                  <button type="button" class="btn btn-xs btn-success" data-toggle="popover" data-placement="right" 
-                          title="{{l('Invoicing Address')}}" data-content="
-                                {{$customer->name_fiscal}}<br />
-                                {{l('VAT ID')}}: {{$customer->identification}}<br />
-                                {{ $invoicing_address->address1 }} {{ $invoicing_address->address2 }}<br />
-                                {{ $invoicing_address->postcode }} {{ $invoicing_address->city }}, {{ $invoicing_address->state }}<br />
-                                {{ $invoicing_address->country }}
-                                <br />
-                          ">
-                      <i class="fa fa-info-circle"></i>
-                  </button>
-               </a></span>
+              <h2><a href="{{ URL::to('customerinvoices') }}">{{l('Customer Invoices')}}</a> <span style="color: #cccccc;">/</span> 
+                  {{l('Invoice to')}} <span class="lead well well-sm">
+
+                  <a href="{{ URL::to('customers/' . $customer->id . '/edit') }}" title=" {{l('View Customer')}} " target="_blank">{{ $customer->name_fiscal }}</a>
+
+                 <a title=" {{l('View Invoicing Address')}} " href="javascript:void(0);">
+                    <button type="button" class="btn btn-xs btn-success" data-toggle="popover" data-placement="right" 
+                            title="{{l('Invoicing Address')}}" data-content="
+                                  {{$customer->name_fiscal}}<br />
+                                  {{l('VAT ID')}}: {{$customer->identification}}<br />
+                                  {{ $invoicing_address->address1 }} {{ $invoicing_address->address2 }}<br />
+                                  {{ $invoicing_address->postcode }} {{ $invoicing_address->city }}, {{ $invoicing_address->state->name }}<br />
+                                  {{ $invoicing_address->country->name }}
+                                  <br />
+                            ">
+                        <i class="fa fa-info-circle"></i>
+                    </button>
+                 </a></span>
+               {{ $invoice->document_reference }}
              </h2>
 
         </div>
@@ -35,12 +39,15 @@
       <li class="lead" id="tab_lines"    ><a href="javascript:void(0);" id="b_lines"    >{{l('Lines')}}</a></li>
       <li class="lead" id="tab_profit"   ><a href="javascript:void(0);" id="b_profit"   >{{l('Profitability')}}</a></li>
       <li class="lead" id="tab_payments" ><a href="javascript:void(0);" id="b_payments" >{{l('Payments')}}</a></li>
+      
       @if ( $customer->einvoice )
         <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-success">{{l('Accepts eInvoice')}}</span></a></li>
       @else
         <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-warning">{{l('Does NOT accept eInvoice')}}</span></a></li>
       @endif
+      @if ( !$invoice->id )
       <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-danger">{{l('NOT Saved', [], 'layouts')}}</span></a></li>
+      @endif
       <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-info"> {{l('DRAFT', [], 'layouts')}} </span></a></li>
       @if ( $customer->sales_equalization )
         <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-primary"> {{l('Equalization Tax')}} </span></a></li>
@@ -60,7 +67,6 @@
    <div class="container-fluid">
       <div class="row" id="div_header" style="padding-top: 20px;">
 
-      {{-- @include('customer_invoices.create_header') --}}
       @include('customer_invoices._invoice_header')
 
       </div>
@@ -71,7 +77,6 @@
 <!-- id="div_lines" -->
    <div class="table-responsive" id="div_lines" style="padding-top: 20px;">
 
-   {{-- @include('customer_invoices.create_lines') --}}
    @include('customer_invoices._invoice_lines')
 
    </div>

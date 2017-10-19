@@ -51,10 +51,12 @@ class Sequence extends Model {
     {
         $list = array();
 
-        $types = (self::$types);
+        $types = self::$types;
 
         foreach($types as $type)
             $list[$type]    = Lang::get('appmultilang.'.$type);
+
+        ksort($list);
 
         return $list;
     }

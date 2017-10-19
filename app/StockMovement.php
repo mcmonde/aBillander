@@ -238,7 +238,8 @@ class StockMovement extends Model {
             $currency = \App\Currency::find($this->currency_id);
             $conversion_rate = $currency->conversion_rate;
             $price = $this->price*$conversion_rate;
-        }
+        } else
+            $price = $this->price;
 
         // Update Product
         $product = \App\Product::find($this->product_id);
@@ -375,7 +376,8 @@ class StockMovement extends Model {
             $currency = \App\Currency::find($this->currency_id);
             $conversion_rate = $currency->conversion_rate;
             $price = $this->price*$conversion_rate;
-        }
+        } else
+            $price = $this->price;
 
         // Update Product
         $product = \App\Product::find($this->product_id);
@@ -455,7 +457,8 @@ class StockMovement extends Model {
             $currency = \App\Currency::find($this->currency_id);
             $conversion_rate = $currency->conversion_rate;
             $price = $this->price*$conversion_rate;
-        }
+        } else
+            $price = $this->price;
 
         // Update Product
         $product = \App\Product::find($this->product_id);
@@ -599,7 +602,8 @@ class StockMovement extends Model {
             $currency = \App\Currency::find($this->currency_id);
             $conversion_rate = $currency->conversion_rate;
             $price = $this->price*$conversion_rate;
-        }
+        } else
+            $price = $this->price;
 
         // Update Product
         $product = \App\Product::find($this->product_id);
@@ -870,7 +874,8 @@ class StockMovement extends Model {
             $currency = \App\Currency::find($this->currency_id);
             $conversion_rate = $currency->conversion_rate;
             $price = $this->price*$conversion_rate;
-        }
+        } else
+            $price = $this->price;
 
         // Update Product
         $product = \App\Product::find($this->product_id);

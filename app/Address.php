@@ -61,4 +61,31 @@ class Address extends Model {
         return $this->belongsTo('App\State');
     }
     
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tax calculations
+    |--------------------------------------------------------------------------
+    */
+
+    public function getTaxRules( \App\Tax $tax )
+    {
+        $country_id = $this->country_id;
+        $state_id   = $this->state_id;
+
+        $rules = $tax->taxrules()->where(function ($query) use ($country_id) {
+            $query->where(  'country_id', '=', 0)
+                  ->OrWhere('country_id', '=', $country_id);
+        })
+                                 ->where(function ($query) use ($state_id) {
+            $query->where(  'state_id', '=', 0)
+                  ->OrWhere('state_id', '=', $state_id);
+        })
+                                 ->where('rule_type', '=', 'sales')
+ //                                ->orderBy('position', 'asc')     // $tax->taxrules() is already sorted by position asc
+                                 ->get();
+
+        return $rules;
+    }
+    
 }

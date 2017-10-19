@@ -2,12 +2,12 @@
 <div class="row">
 
       <div class="form-group col-lg-6 col-md-6 col-sm-6 {{ $errors->has('country_id') ? 'has-error' : '' }}">
-        {!! Form::label('country', l('Country')) !!}
+        {!! Form::label('country_id', l('Country')) !!}
         {!! Form::select('country_id', array('0' => l('-- All --')) + $countryList, null, array('class' => 'form-control', 'id' => 'country_id')) !!}
         {!! $errors->first('country_id', '<span class="help-block">:message</span>') !!}
       </div>
       <div class="form-group col-lg-6 col-md-6 col-sm-6 {{ $errors->has('state_id') ? 'has-error' : '' }}">
-        {!! Form::label('state', l('State')) !!}
+        {!! Form::label('state_id', l('State')) !!}
         {!! Form::select('state_id', array('0' => l('-- All --')) + ( isset($stateList) ? $stateList : [] ), null, array('class' => 'form-control', 'id' => 'state_id')) !!}
         {!! $errors->first('state_id', '<span class="help-block">:message</span>') !!}
       </div>
@@ -20,23 +20,11 @@
         {!! Form::text('name', null, array('class' => 'form-control')) !!}
         {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
     </div>
-    <div class="form-group col-lg-6 col-md-6 col-sm-6" id="div-sales_equalization">
-     {!! Form::label('sales_equalization', l('Sales Equalization'), ['class' => 'control-label']) !!}
-     <div>
-       <div class="radio-inline">
-         <label>
-           {!! Form::radio('sales_equalization', '1', false, ['id' => 'sales_equalization_on']) !!}
-           {!! l('Yes', [], 'layouts') !!}
-         </label>
-       </div>
-       <div class="radio-inline">
-         <label>
-           {!! Form::radio('sales_equalization', '0', true, ['id' => 'sales_equalization_off']) !!}
-           {!! l('No', [], 'layouts') !!}
-         </label>
-       </div>
-     </div>
-    </div>
+    <div class="form-group col-lg-6 col-md-6 col-sm-6 {{ $errors->has('rule_type') ? 'has-error' : '' }}">
+        {!! Form::label('rule_type', l('Tax Rule Type')) !!}
+        {!! Form::select('rule_type', $tax_rule_typeList, null, array('class' => 'form-control', 'id' => 'rule_type')) !!}
+        {!! $errors->first('rule_type', '<span class="help-block">:message</span>') !!}
+      </div>
 </div>
 
 <div class="row">

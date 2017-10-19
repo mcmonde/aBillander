@@ -1,8 +1,19 @@
-<?php namespace App;
+<?php 
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
 class CustomerInvoiceLine extends Model {
+
+
+    public static $types = array(
+            'product',
+            'service', 
+            'shipping', 
+            'discount', 
+            'comment',
+        );
 
 	// Add your validation rules here
 	public static $rules = [
@@ -11,6 +22,16 @@ class CustomerInvoiceLine extends Model {
 
 	// Don't forget to fill this array
 	// protected $fillable = [];
+
+    public static function getTypeList()
+    {
+            $list = [];
+            foreach (self::$types as $type) {
+                $list[$type] = l($type, [], 'appmultilang');;
+            }
+
+            return $list;
+    }
 
 
     /*

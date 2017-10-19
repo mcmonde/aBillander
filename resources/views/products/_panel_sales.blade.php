@@ -16,7 +16,7 @@
                   <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('cost_price') ? 'has-error' : '' }}">
                      {{ l('Cost Price') }}
                      {!! Form::text('cost_price', null, array('class' => 'form-control', 'id' => 'cost_price', 'autocomplete' => 'off', 
-                                      'onfocus' => 'this.blur()', 'onclick' => 'this.select()', 'onkeyup' => 'new_margin()', 'onchange' => 'new_margin()')) !!}
+                                      'onfocus' => 'this.blur()', 'onclick' => 'this.select()', 'onkeyup' => 'new_cost_price()', 'onchange' => 'new_cost_price()')) !!}
                      {!! $errors->first('cost_price', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('margin') ? 'has-error' : '' }}">
@@ -28,30 +28,35 @@
                                 <i class="fa fa-question-circle abi-help"></i>
                          </a>
                      {!! Form::text('margin', null, array('class' => 'form-control', 'id' => 'margin', 'autocomplete' => 'off', 
-                                      'onclick' => 'this.select()', 'onkeyup' => 'new_price()', 'onchange' => 'new_price()')) !!}
+                                      'onclick' => 'this.select()', 'onkeyup' => 'new_margin()', 'onchange' => 'new_margin()')) !!}
                      {!! $errors->first('margin', '<span class="help-block">:message</span>') !!}
                   </div>
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('price') ? 'has-error' : '' }}">
                      {{ l('Customer Price') }}
                      {!! Form::text('price', null, array('class' => 'form-control', 'id' => 'price', 'autocomplete' => 'off', 
-                                      'onclick' => 'this.select()', 'onkeyup' => 'new_margin()', 'onchange' => 'new_margin()')) !!}
+                                      'onclick' => 'this.select()', 'onkeyup' => 'new_price()', 'onchange' => 'new_price()')) !!}
                      {!! $errors->first('price', '<span class="help-block">:message</span>') !!}
                   </div>
                  <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('tax_id') ? 'has-error' : '' }}">
                     {{ l('Tax') }}
                     {!! Form::select('tax_id', array('0' => l('-- Please, select --', [], 'layouts')) + $taxList, null, array('class' => 'form-control', 'id' => 'tax_id',
-                                      'onchange' => 'new_margin()')) !!}
+                                      'onchange' => 'new_tax()')) !!}
                     {!! $errors->first('tax_id', '<span class="help-block">:message</span>') !!}
                  </div>
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('price_tax_inc') ? 'has-error' : '' }}">
                      {{ l('Customer Price (with Tax)') }}
                      {!! Form::text('price_tax_inc', null, array('class' => 'form-control', 'id' => 'price_tax_inc', 'autocomplete' => 'off', 
-                                      'onclick' => 'this.select()', 'onkeyup' => 'new_margin_price()', 'onchange' => 'new_margin_price()')) !!}
+                                      'onclick' => 'this.select()', 'onkeyup' => 'new_price_tax_inc()', 'onchange' => 'new_price_tax_inc()')) !!}
                      {!! $errors->first('price_tax_inc', '<span class="help-block">:message</span>') !!}
                   </div>
         </div>
 
         <div class="row">
+                  <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                      {{ l('Price input method') }} : {{ \App\Configuration::get('PRICES_ENTERED_WITH_TAX') ?
+                                                        l('Prices are entered inclusive of tax', [], 'appmultilang') :
+                                                        l('Prices are entered exclusive of tax', [], 'appmultilang') }}
+                  </div>
         </div>
 
         <div class="row">
@@ -159,12 +164,12 @@
 
 @section('scripts')     @parent
  
-@include('products._calculator_js')
+@include('products.js._calculator_js')
 
 <script type="text/javascript">
 
 $(document).ready(function() {
-   new_margin();
+   new_cost_price();
 });
 
 </script>

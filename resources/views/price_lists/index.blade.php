@@ -26,7 +26,7 @@
             <th class="text-left">{{l('Price List Name')}}</th>
             <th class="text-left">{{l('Currency')}}</th>
             <th class="text-left">{{l('Price List Type')}}</th>
-            <th class="text-left">{{l('Amount')}}</th>
+            <th class="text-left">{{l('Amount')}} (%)</th>
             <th class="text-left">{{l('Price is Tax Included?')}}</th>
             <th class="text-right"> </th>
         </tr>
@@ -52,11 +52,7 @@
                 @else
                     -
                 @endif</td>
-            <td>@if ( $pricelist->type > 0 )
-            		--
-            	@else
-            		@if ($pricelist->price_is_tax_inc) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
-            	@endif
+            <td>@if ($pricelist->price_is_tax_inc) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
             <td class="text-right">
                 @if (  is_null($pricelist->deleted_at))
                 <a class="btn btn-sm btn-warning" href="{{ URL::to('pricelists/' . $pricelist->id . '/edit') }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>

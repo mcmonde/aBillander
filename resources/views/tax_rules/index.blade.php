@@ -26,8 +26,8 @@
 			<th class="text-left">{{l('ID', [], 'layouts')}}</th>
             <th>{{l('Country')}}</th>
             <th>{{l('State')}}</th>
-            <th>{{l('Sales Equalization')}}</th>
             <th>{{l('Tax Rule Name')}}</th>
+            <th>{{l('Tax Rule Type')}}</th>
             <th>{{l('Tax Rule Percent')}}</th>
             <th>{{l('Tax Rule Amount')}}</th>
             <th>{{l('Position')}}</th>
@@ -40,10 +40,8 @@
 			<td>{{ $taxrule->id }}</td>
             <td>{{ $taxrule->country->name }}</td>
             <td>{{ $taxrule->state->name }}</td>
-
-            <td class="text-center">@if ($taxrule->sales_equalization) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
-
-			<td>{{ $taxrule->name }}</td>
+            <td>{{ $taxrule->name }}</td>
+            <td><span class="label label-primary">{{ $tax_rule_typeList[$taxrule->rule_type] }}</span></td>
 			<td>{{ $taxrule->as_percent('percent') }}%</td>
             <td>{{ $taxrule->as_money_amount('amount') }}</td>
             <td>{{ $taxrule->position }}</td>

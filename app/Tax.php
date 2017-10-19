@@ -10,6 +10,8 @@ class Tax extends Model {
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+
+    protected $appends = ['percent'];
     
     protected $fillable = [ 'name', 'active' ];
 

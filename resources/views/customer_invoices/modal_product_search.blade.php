@@ -12,13 +12,13 @@
                <li id="li_product_search"><a href="javascript:void(0);" id="b_product_search">{{ l('Coded Product') }}</a></li>
                <li id="li_new_service"   ><a href="javascript:void(0);" id="b_new_service"   >{{ l('Service (not coded)') }}</a></li>
                <li id="li_new_discount"  ><a href="javascript:void(0);" id="b_new_discount"  >{{ l('Discount') }}</a></li>
-               <!-- li id="li_new_text_line" ><a href="javascript:void(0);" id="b_new_text_line" >Línea de texto</a></li -->
+               <li id="li_new_text_line" ><a href="javascript:void(0);" id="b_new_text_line" >{{ l('Text Line') }}</a></li>
             </ul>
          </div>
 
          <div id="product_search" class="modal-body">
             <form id="f_product_search" name="f_product_search" action="" method="post" class="form">
-               <input type="hidden" name="codcliente" value="{$fsc->cliente_s->codcliente}"/>
+               
                <div class="container-fluid" style="xpadding-top: 20px;">
                   <div class="row">
                      <div class="col-lg-6 col-md-6 col-sm-6">
@@ -97,24 +97,43 @@
          <div id="new_discount" class="modal-body" style="display: none;">
             <form id="f_new_discount" name="f_new_discount" action="" method="post" class="form">
                <div class="row">
-               <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                  {{ l('Description') }}
-                  {!! Form::text('discount_name', null, array('class' => 'form-control', 'id' => 'discount_name', 'autocomplete' => 'off')) !!}
-                  {!! $errors->first('discount_name', '<span class="help-block">:message</span>') !!}
-               </div>
-               <div class="form-group col-lg-3 col-md-3 col-sm-3">
-                  {{ l('Price') }}
-                  {!! Form::text('discount_price', null, array('class' => 'form-control', 'id' => 'discount_price', 'autocomplete' => 'off')) !!}
-                  {!! $errors->first('price', '<span class="help-block">:message</span>') !!}
-               </div>
-               <div class="form-group col-lg-3 col-md-3 col-sm-3">
-                  {{ l('Tax') }}
-                  {!! Form::select('discount_tax_id', array('0' => l('-- Please, select --', [], 'layouts')) + $taxList, null, array('class' => 'form-control', 'id' => 'discount_tax_id')) !!}
-               </div>
+                  <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                     {{ l('Description') }}
+                     {!! Form::text('discount_name', null, array('class' => 'form-control', 'id' => 'discount_name', 'autocomplete' => 'off')) !!}
+                     {!! $errors->first('discount_name', '<span class="help-block">:message</span>') !!}
+                  </div>
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                     {{ l('Price') }}
+                     {!! Form::text('discount_price', null, array('class' => 'form-control', 'id' => 'discount_price', 'autocomplete' => 'off')) !!}
+                     {!! $errors->first('price', '<span class="help-block">:message</span>') !!}
+                  </div>
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3">
+                     {{ l('Tax') }}
+                     {!! Form::select('discount_tax_id', array('0' => l('-- Please, select --', [], 'layouts')) + $taxList, null, array('class' => 'form-control', 'id' => 'discount_tax_id')) !!}
+                  </div>
                </div>
 
                <div class="text-right">
                   <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="add_discount_to_order();return false;">
+                     <i class="fa fa-shopping-cart"></i>
+                     &nbsp; {{ l('Save', [], 'layouts') }}</a>
+               </div>
+            </form>
+         </div>
+
+
+         <div id="new_text_line" class="modal-body" style="display: none;">
+            <form id="f_new_text_line" name="f_new_text_line" action="" method="post" class="form">
+               <div class="row">
+                  <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                     {{ l('Description') }}
+                     {!! Form::text('text_line_name', null, array('class' => 'form-control', 'id' => 'text_line_name', 'autocomplete' => 'off')) !!}
+                     {!! $errors->first('text_line_name', '<span class="help-block">:message</span>') !!}
+                  </div>
+               </div>
+
+               <div class="text-right">
+                  <a href="javascript:void(0);" class="btn btn-sm btn-primary" onclick="add_text_line_to_order();return false;">
                      <i class="fa fa-shopping-cart"></i>
                      &nbsp; {{ l('Save', [], 'layouts') }}</a>
                </div>

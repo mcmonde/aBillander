@@ -48,7 +48,20 @@ class CustomerInvoicesController extends Controller {
 	public function create(Request $request)
 	{
 		if ( $request->has('customer_id') ) { 
-			$customer = \App\Customer::findOrFail( $request->input('customer_id') );
+
+        	$sequenceList = \App\Sequence::listFor('CustomerInvoice');
+
+	        if ( !$sequenceList )
+	            return redirect('customerinvoices')
+	                ->with('error', l('There is not any Sequence for this type of Document &#58&#58 You must create one first', [], 'layouts'));
+
+        	$payments = \App\PaymentMethod::count();
+
+	        if ( !$payments )
+	            return redirect('customerinvoices')
+	                ->with('error', l('There is not any Payment Method &#58&#58 You must create one first', [], 'layouts'));
+
+			$customer = \App\Customer::with('addresses')->findOrFail( $request->input('customer_id') );
 		//	Session::flash('error', 'El Cliente <b>'.$customer->name_fiscal.' ('.$customer->id.')</b>no existe.');
 		//	return View::make('customer_invoices.index')->with('success', 'El Cliente <b>'.$customer->name_fiscal.' ('.$customer->id.')</b>no existe.');
 			
@@ -66,14 +79,14 @@ class CustomerInvoicesController extends Controller {
 				$addressbookList[$address->id] = $address->alias;
 			}
 
-			$currency_id = $customer->currency_id > 0 ? $customer->currency_id : Configuration::get('DEF_CURRENCY');
+			$currency_id = $customer->currency_id > 0 ? $customer->currency_id : \App\Context::getContext()->currency->id;
 	        try {
 
 	            $currency = \App\Currency::findOrFail($currency_id);
 
 	        } catch(ModelNotFoundException $e) {
 
-	            $currency = Currency::find(Configuration::get('DEF_CURRENCY'));
+	            $currency = \App\Context::getContext()->currency;
 	        }
 
 			// Prepare Customer Invoice default data
@@ -86,15 +99,16 @@ class CustomerInvoicesController extends Controller {
 			$invoice->document_discount    = 0.0;
 
 			$invoice->document_date        = \Carbon\Carbon::now();
-			$invoice->document_date_form   = \App\FP::date_short( $invoice->document_date, \App\Context::getContext()->language->date_format_lite );
+			$invoice->document_date_form   = abi_date_short( \Carbon\Carbon::now() );
 			
 			$invoice->delivery_date        = $invoice->document_date;
 			$invoice->delivery_date_form   = $invoice->document_date_form;
 
+			$invoice->number_of_packages   = 1;
 			$invoice->shipping_conditions  = '';
 			$invoice->tracking_number      = '';
 
-			$invoice->currency_conversion_rate = $currency->currency_conversion_rate;
+			$invoice->currency_conversion_rate = $currency->conversion_rate;
 			$invoice->down_payment         = 0.0;
 			$invoice->open_balance         = 0.0;
 
@@ -103,7 +117,7 @@ class CustomerInvoicesController extends Controller {
 			$invoice->commission_amount  = 0.0;
 
 			$invoice->notes         = '';
-			$invoice->draft         = 1;
+			$invoice->status        = 'draft';
 			$invoice->einvoice      = $customer->accept_einvoice;
 
 			$invoice->printed       = 0;
@@ -111,18 +125,18 @@ class CustomerInvoicesController extends Controller {
 			$invoice->paid          = 0;
 
 			$invoice->invoicing_address_id = $customer->invoicing_address_id;
-			$invoice->shipping_address_id  = $customer->shipping_address_id > 0 ? $customer->shipping_address_id : 0;
+			$invoice->shipping_address_id  = $customer->shipping_address_id > 0 ? $customer->shipping_address_id : $customer->invoicing_address_id;
 			$invoice->warehouse_id         = Configuration::get('DEF_WAREHOUSE');
 			$invoice->carrier_id           = $customer->carrier_id  > 0 ? $customer->carrier_id  : Configuration::get('DEF_CARRIER');
 			$invoice->sales_rep_id         = $customer->sales_rep_id > 0 ? $customer->sales_rep_id : 0;
 			$invoice->currency_id          = $currency->id;
 			$invoice->payment_method_id    = $customer->payment_method_id > 0 ? $customer->payment_method_id : Configuration::get('DEF_CUSTOMER_PAYMENT_METHOD');
 			$invoice->template_id          = $customer->template_id > 0 ? $customer->template_id : Configuration::get('DEF_CUSTOMER_INVOICE_TEMPLATE');
-			$invoice->parent_document_id   = 0;
+			$invoice->parent_document_id   = null;
 
 			$invoice->customerInvoiceLines = array();
 
-			return View::make('customer_invoices.create', compact('customer', 'invoicing_address', 'aBook', 'addressbookList', 'invoice'));
+			return View::make('customer_invoices.create', compact('customer', 'invoicing_address', 'aBook', 'addressbookList', 'invoice', 'sequenceList'));
 
 		} else {
 			// No Customer available, ask for one
@@ -149,16 +163,10 @@ class CustomerInvoicesController extends Controller {
 		/* *********************************************************************** */
 
 		// STEP 1 : validate data
-		// Sanitize. See: https://laracasts.com/discuss/channels/general-discussion/laravel-5-modify-input-before-validation
-		// $request->replace( array('document_date' =>  \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $request->input('document_date'))) );
-		// $request->replace( array('delivery_date' =>  \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $request->input('delivery_date'))) );
 
 		// Check Shipping Address
 		if ( $request->input('shipping_address_id') < 1 ) 
 			$request->replace( array('shipping_address_id' => $request->input('invoicing_address_id')) );
-
-		// Open Balance
-		$request->merge( array('open_balance' => floatval($request->input('total_tax_incl')) - floatval($request->input('down_payment')) ) );
 
 		$this->validate($request, CustomerInvoice::$rules);
 
@@ -181,10 +189,10 @@ class CustomerInvoicesController extends Controller {
 		$request->merge( $dates );
 
 		$statusdata = [ //  'einvoice' => $request->input('einvoice'),
-							'einvoice_sent' => ( $request->input('einvoice') ? 0 : 1 ),
+						//	'einvoice_sent' => ( $request->input('einvoice') ? 0 : 1 ),	// Document sent. See also: field "edocument_sent_at"
 							'printed' => 0,
+							'customer_viewed' => 0,
 							'posted' => 0,
-							'paid' => 0,
 					  ];
 		$request->merge( $statusdata );
 
@@ -197,6 +205,9 @@ class CustomerInvoicesController extends Controller {
 						'total_tax_excl' => $request->input('order_total_tax_excl'),
 				  ];
 		$request->merge( $totals );
+
+		// Open Balance
+		$request->merge( array('open_balance' => floatval($request->input('total_tax_incl')) - floatval($request->input('down_payment')) ) );
 
 		// ToDo: Calculate 'commission_amount' (maybe after line saving!)
 
@@ -318,8 +329,8 @@ class CustomerInvoicesController extends Controller {
 			$addressbookList[$address->id] = $address->alias;
 		}
 
-		$invoice->document_date_form   = \App\FP::date_short( $invoice->document_date );
-		$invoice->delivery_date_form   = \App\FP::date_short( $invoice->delivery_date );
+		$invoice->document_date_form   = abi_date_short( $invoice->document_date );
+		$invoice->delivery_date_form   = abi_date_short( $invoice->delivery_date );
 
 		return View::make('customer_invoices.edit', compact('customer', 'invoicing_address', 'aBook', 'addressbookList', 'invoice'));
 	}
@@ -511,7 +522,8 @@ class CustomerInvoicesController extends Controller {
         		// Create Voucher
         		$data = [	'reference' => null, 
         					'name' => ($i+1) . ' / ' . count($pmethod->deadlines), 
-        					'due_date' => \App\FP::date_short( \Carbon\Carbon::parse( $due_date ), \App\Context::getContext()->language->date_format_lite ), 
+//        					'due_date' => \App\FP::date_short( \Carbon\Carbon::parse( $due_date ), \App\Context::getContext()->language->date_format_lite ), 
+        					'due_date' => abi_date_short( \Carbon\Carbon::parse( $due_date ) ), 
         					'payment_date' => null, 
                             'amount' => $installment, 
                             'currency_conversion_rate' => $customerInvoice->currency_conversion_rate, 

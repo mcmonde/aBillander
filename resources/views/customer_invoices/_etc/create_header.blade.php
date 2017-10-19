@@ -2,10 +2,10 @@
    <div class="container-fluid" xstyle="margin-bottom: 20px;">
       <div class="row">
 
-         @if ($invoice->draft)
+         @if ($invoice->status == 'draft')
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('sequence_id') ? 'has-error' : '' }}">
             Serie de Facturas:
-            {!! Form::select('sequence_id', array('0' => '-- Seleccione--') + $sequenceList, Input::old('sequence_id', isset($invoice) ? $invoice->sequence_id : 0), array('class' => 'form-control')) !!}
+            {!! Form::select('sequence_id', array('0' => '-- Seleccione--') + $sequenceList, old('sequence_id', isset($invoice) ? $invoice->sequence_id : 0), array('class' => 'form-control')) !!}
             {!! $errors->first('sequence_id', '<span class="help-block">:message</span>') !!}
          </div>
          @else

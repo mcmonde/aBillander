@@ -13,6 +13,8 @@ class CreateCombinationsTable extends Migration {
 	 */
 	public function up()
 	{
+		Schema::dropIfExists('combinations');
+
 		Schema::create('combinations', function(Blueprint $table)
 		{
 			$table->increments('id');
@@ -21,6 +23,8 @@ class CreateCombinationsTable extends Migration {
 			$table->string('ean13', 13)->nullable();
 //			$table->text('description')->nullable();
 //			$table->text('description_short')->nullable();
+			$table->string('measure_unit', 32)->nullable();
+			$table->tinyInteger('quantity_decimal_places')->unsigned()->default(0);
 
 			$table->decimal('quantity_onhand', 20, 6)->default(0);			// In Stock; on hand
 			$table->decimal('quantity_onorder', 20, 6)->default(0);			// On order; Quantity on Purchase Orders (pendiente de recibir)
@@ -72,7 +76,7 @@ class CreateCombinationsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('combinations');
+		Schema::dropIfExists('combinations');
 	}
 
 }

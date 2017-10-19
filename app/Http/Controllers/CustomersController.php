@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -35,45 +37,6 @@ class CustomersController extends Controller {
         
         return view('customers.index', compact('customers'));
         
-    }
-	
-    public function indexAjaxFiltered()
-    {
-        // return Input::get('filter_query');
-		
-// dump the next executed query and die (dd)
-Event::listen('illuminate.query', function($sql)
-{
-    // dd($sql);
-}); 
-
-		$customers = $this->customer
-						 ->where('name_commercial', 'like', '%'.Input::get('filter_query').'%')
-//						 ->orWhere('reference', 'like', '%'.Input::get('filter_query').'%')
-						 ->orderBy('name_commercial', 'asc')
-						 ->lists('name_commercial', 'id');
-//						 ->get();
-		
-//		$taxList = Tax::lists('name', 'id');		// http://four.laravel.com/docs/queries#selects
-// echo '<pre>';
-// print_r($customers);
-// echo '</pre>';
-
-        $response = array();
-
-        foreach ($customers as $customer)
-        {
-            // list($response[]) = $customer;
-			// list($key, $val) = each($customer);
-			$response[] = $customer;
-        }
-// echo '<pre>';
-// print_r($response);
-// echo '</pre>';die();
-
-        echo json_encode($response);
-		
-		// return View::make('admin.products.listing', compact('products', 'taxList'));
     }
 	
 

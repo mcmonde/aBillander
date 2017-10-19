@@ -1,4 +1,6 @@
-<?php namespace App;
+<?php 
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 // use Illuminate\Database\Eloquent\SoftDeletes;
@@ -62,17 +64,23 @@ class PriceList extends Model {
         switch ($this->type) {
             // Discount percentage
             case 1:
-                $price = $product->price*(1.0-($this->amount/100.0));
+                $price = $this->price_is_tax_inc
+                         ? $product->price_tax_inc
+                         : $product->price;
+                $price = $price*(1.0-($this->amount/100.0));
                 break;
             // Margin percentage
             case 2:
-                $price = \App\Calculator::price($product->cost_price, $this->amount);
+                $bprice = \App\Calculator::price($product->cost_price, $this->amount);
+                $price = $this->price_is_tax_inc
+                         ? $bprice*(1.0+($product->tax->percent/100.0))
+                         : $bprice;
                 break;
             // Fixed price
             case 0:
             default:
                 $price = $this->price_is_tax_inc
-                         ? $product->price*(1.0+($product->tax->percent/100.0))
+                         ? $product->price_tax_inc
                          : $product->price;
                 break;
         }
@@ -80,37 +88,62 @@ class PriceList extends Model {
         // Convert to Price List Currency
         $currency = \App\Currency::find( $this->currency_id );
 
-        if ( !$currency ) 
+        if ( !$currency ) // Convention: No currency is defaut currency
             $currency = \App\Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
-
-        $price *= $currency->conversion_rate;
+        else
+            $price *= $currency->conversion_rate;
 
         return $price;
     }
 
-    // Deprecated 
-    public static function priceCalculator( \App\PriceList $plist = null, \App\Product $product )
+    public function getPrice( \App\Product $product )
     {
-        if (!$plist) return false;
+        $line = $this->pricelistlines()->where('product_id', '=', $product->id)->first();
 
-        // $plist = \App\PriceList::findOrFail($list_id);
+        if ( !$line ) $line = $this->addLine( $product );
 
-        switch ($plist->type) {
-            case 1:
-                $price = $product->price*(1.0-($plist->amount/100.0));
-                break;
-            case 2:
-                $price = \App\Calculator::price($product->cost_price, $plist->amount);
-                break;
-            case 0:
-            default:
-                $price = $plist->price_is_tax_inc
-                         ? $product->price*(1.0+($product->tax->percent/100.0))
-                         : $product->price;
-                break;
-        }
+        $price = new \App\Price( $line->price, $this->price_is_tax_inc, $this->currency);
 
-        return (-1.0)*$price;
+        return $price;
+    }
+
+    public function addLine( \App\Product $product, $price = null )
+    {
+        if ($price === null) $price = $this->calculatePrice( $product );
+
+        $line = \App\PriceListLine::create( [ 'product_id' => $product->id, 'price' => $price ] );
+
+        $this->pricelistlines()->save($line);
+
+        return $line;
+    }
+
+    public function getLine( \App\Product $product )
+    {
+        $line = $this->pricelistlines()->where('product_id', '=', $product->id)->first();
+
+        if ( !$line ) $line = $this->addLine( $product );
+
+        return $line;
+    }
+
+    public function updateLine( \App\Product $product, $price = null )
+    {
+        if ($price === null) $price = $this->calculatePrice( $product );
+
+        $line = $this->pricelistlines()->where('product_id', '=', $product->id)->first();
+
+        if ( !$line ) $line = $this->addLine( $product, $price );
+        else          $line->update( ['price' => $price] );
+
+        return $line;
+    }
+
+    public function removeLine( \App\Product $product )
+    {
+        $line = $this->pricelistlines()->where('product_id', '=', $product->id)->first();
+
+        $line->delete();
     }
 
 
