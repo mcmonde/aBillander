@@ -109,6 +109,7 @@ return [
 	'Filter'     => 'Filtrar',
 	'Reset'     => 'Reiniciar',
 	'View'     => 'Ver',
+	'View more'     => 'Ver más',
 	'Edit'     => 'Modificar',
 	'Show'     => 'Mostrar',
 	'Save'     => 'Guardar',

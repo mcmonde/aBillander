@@ -8,10 +8,12 @@
                <th class="text-right" width="90">{{l('Quantity')}}</th>
                <th></th>
                <th class="text-right">{{l('Price')}}</th>
+               <th class="text-right">{{l('With Tax')}}</th>
                <th class="text-right" width="90">{{l('Disc. %')}}</th>
-               <th class="text-right">{{l('Net')}}</th>
+               <th class="text-center">{{l('Net')}}</th>
                <th class="text-right" width="115">{{l('Tax')}}</th>
                <th class="text-right">{{l('Total')}}</th>
+               <th class="text-right">{{l('R.E.')}}</th>
             </tr>
          </thead>
          <tbody id="order_lines">
@@ -85,11 +87,11 @@
                      </button>
 
                </td>
-               <td colspan="4" class="text-right" style="vertical-align: middle;">{{l('Order Discount (%)')}}: </td>
+               <td colspan="5" class="text-right" style="vertical-align: middle;">{{l('Order Discount (%)')}}: </td>
                <td class="{{ $errors->has('document_discount') ? 'has-error' : '' }}" style="background-color: #fff;">
                      <input class="form-control" type="text" name="document_discount" id="document_discount" 
                            placeholder="" value="{{ old('document_discount', isset($invoice) ? $invoice->document_discount : null) }}" 
-                           onchange="calculate_order()" onkeyup="calculate_order()" onclick="this.select()" />
+                           onchange="calculate_document()" onkeyup="calculate_document()" onclick="this.select()" />
                     {{ $errors->first('document_discount',  '<span class="help-block">:message</span>') }}
 
                     <input type="hidden" id="order_gross_tax_excl" name="order_gross_tax_excl" value=""/>
@@ -109,6 +111,8 @@
                <td>
                   <input type="text" name="order_total_tax_incl" id="order_total_tax_incl" class="form-control text-right" style="font-weight: bold;"
                          value="0" xonchange="recalcular()" onfocus="this.blur();" autocomplete="off"/>
+               </td>
+               <td>
                </td>
             </tr>
          </tbody>

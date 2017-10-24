@@ -3,10 +3,6 @@
 
 <script type="text/javascript">
 
-var moneyDecimalPlaces    = 3;
-var quantityDecimalPlaces = 3;
-var percentDecimalPlaces  = 3;
-
    function tab_hide_all() {
          $("#tab_header").removeClass('active');
          $("#tab_lines").removeClass('active');
@@ -100,11 +96,7 @@ $(document).ready(function() {
       document.f_new_service.name.value = "";
       document.f_new_service.cost_price.value = "";
       document.f_new_service.price.value = "";
-      document.f_new_service.price_tax_inc.value = "";
-//      document.f_new_service.tax_id.value = "0";
-      document.f_new_discount.discount_name.value = "";
-      document.f_new_discount.discount_price.value = "";
-      document.f_new_discount.discount_price_tax_inc.value = "";
+      document.f_new_service.tax_id.value = "0";
       $("#nav_product_search li").each(function() {
          $(this).removeClass("active");
       });
@@ -115,9 +107,6 @@ $(document).ready(function() {
       $("#new_service").hide();
       $("#modal_product_search").modal('show');
       document.f_product_search.query.focus();
-
-      // To get focus properly:
-      $("#b_product_search").trigger("click");
    });
    
 //      document.f_product_search.query.value = $("#i_new_line").val();
@@ -165,28 +154,6 @@ $(document).ready(function() {
  //     document.f_new_text_line.referencia.select();
    });
 });
-
-function get_currency_rate(currency_id)
-{
-    var pload = '';
-
-    pload = pload + "currency_id="+$("#currency_id").val();
-    pload = pload + "&_token="+$('[name="_token"]').val();
-
-   $.ajax({
-      type: 'POST',
-      url: '{{ route('currencies.ajax.rateLookup') }}',
-      dataType: 'html',
-      data: pload,
-      success: function(data) {
-         var theHTML = data;
-         if ( theHTML == '' ) {
-              theHTML = '<div class="alert alert-warning alert-block"><i class="fa fa-warning"></i> {{l('No records found', [], 'layouts')}}</div>';
-         }
-         $("#currency_conversion_rate").val(theHTML);
-      }
-   });
-}
 
 function product_search()
 {
@@ -237,11 +204,18 @@ function product_search()
                qa_alert = "danger";
             }
 
-
-tr_aux += '  <td>';
-
-if (val.blocked || !val.active)
-{
+            if(val.product_type == 'combinable') {
+               tr_aux += '  <td>  \
+                                    <span class="label xlabel-info" style="border: 1px solid #cccccc"><a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products') }}'+'/'+val.id+'/edit">{{l('Combinations')}}</a></span>  ';
+                  
+                  tr_aux1 = '  \
+                                    <a href="javascript:void(0);" onclick="get_customer_price(\''+val.id+'\', \''+{{$customer->id}}+'\', \''+val_str+'\')" title=" {{l('View more', [], 'layouts')}} ">  \
+                                       <button class="btn btn-xs btn-success" type="button"><i class="fa fa-eye"></i></button></a>';
+            }
+            else {
+               tr_aux += '  <td>';
+               if (val.blocked || !val.active)
+               {
                   // See: https://stackoverflow.com/questions/14598445/bootstrap-popover-doesnt-trigger-on-elements-just-added-to-the-dom
                   tr_aux += '  \
                                       \
@@ -250,33 +224,24 @@ if (val.blocked || !val.active)
                                      </button>      \
                                     ';
 
-                  tr_aux += '   \
-                                      <a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products') }}'+'/'+val.id+'/edit">'+val.reference+'</a></td>  ';
-
                   tr_aux1 = '';
-} else {
-          if(val.product_type == 'combinable') 
-          {
-               tr_aux += '   \
-                                    <span class="label xlabel-info" style="border: 1px solid #cccccc"><a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products') }}'+'/'+val.id+'/edit">{{l('Combinations')}}</a></span>  ';
-
-          } else {
-                tr_aux += '  \
-                                  <a title=" {{l('Add to Document', [], 'layouts')}} " href="javascript:void(0);" onclick="add_product_to_document( '+val.id+', 0 )">   \
-                                    <button type="button" class="btn btn-xs btn-primary">   \
-                                      <i class="fa fa-shopping-basket"></i>   \
-                                    </button></a>';
-
-                tr_aux += '   \
-                                    <a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products') }}'+'/'+val.id+'/edit">'+val.reference+'</a></td>  ';
-
-          }
+              }
+              else
+              {
+                  tr_aux += '  \
+                                    <a title=" {{l('Add to Document', [], 'layouts')}} " href="javascript:void(0);" onclick="add_product_to_order('+val_str+', \'{}\')">   \
+                                      <button type="button" class="btn btn-xs btn-primary">   \
+                                        <i class="fa fa-shopping-basket"></i>   \
+                                      </button></a>';
                   
-          tr_aux1 = '  \
-                            <a href="javascript:void(0);" onclick="get_customer_price(\''+val.id+'\', \''+$("#customer_id").val()+'\')" title=" {{l('View more', [], 'layouts')}} ">  \
-                               <button class="btn btn-xs btn-success" type="button"><i class="fa fa-eye"></i></button></a>';
-}
+                  tr_aux1 = '  \
+                                    <a href="javascript:void(0);" onclick="get_customer_price(\''+val.id+'\', \''+{{$customer->id}}+'\', \''+val_str+'\')" title=" {{l('View more', [], 'layouts')}} ">  \
+                                       <button class="btn btn-xs btn-success" type="button"><i class="fa fa-eye"></i></button></a>';
+              }
 
+               tr_aux += '   \
+                                    <a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products') }}'+'/'+val.id+'/edit">'+val.reference+'</a></td>  ';
+            }
 
             items.push(tr_aux+'  <td class="text-left" >'+val.name+'</td>  \
                                  <td class="text-right">'+jsp_money(val.price)+'</td>  \
@@ -314,13 +279,13 @@ if (val.blocked || !val.active)
    }
 }
 
-function get_customer_price(p_id, c_id)
+function get_customer_price(p_id, c_id, j_str)
 {
     var pload = '';
 
     pload = pload + "product_id="+p_id+"&customer_id="+c_id;
     pload = pload + "&currency_id="+$("#currency_id").val()+"&conversion_rate="+$("#currency_conversion_rate").val();
-//    pload = pload + "&product_string="+j_str;
+    pload = pload + "&product_string="+j_str;
     pload = pload + "&_token="+$('[name="_token"]').val();
 
    $.ajax({
@@ -330,55 +295,12 @@ function get_customer_price(p_id, c_id)
       data: pload,
       success: function(data) {
     //     $("#nav_articulos").hide();
-         var theHTML = data;
-         if ( theHTML == '' ) {
-              theHTML = '<div class="alert alert-warning alert-block"><i class="fa fa-warning"></i> {{l('No records found', [], 'layouts')}}</div>';
-         }
-         $("#search_results").html(theHTML);
+         $("#search_results").html(data);
       }
    });
 }
 
-
-function calculate_service_price( with_tax )
-{
-   var tax_percent;
-
-   if ($("#tax_id").val()>0) { tax_percent = parseFloat( get_tax_percent_by_id( $("#tax_id").val() ) ); }
-   else { return ; }
-
-   if (with_tax=='with_tax')
-   {
-      p = $("#price").val();
-      p_t = p*(1.0 + tax_percent/100.0)
-      $("#price_tax_inc").val(p_t);
-   } else {
-      p_t = $("#price_tax_inc").val();
-      p = p_t/(1.0 + tax_percent/100.0)
-      $("#price").val(p);
-   }
-}
-
-function calculate_discount_price( with_tax )
-{
-   var tax_percent;
-
-   if ($("#discount_tax_id").val()>0) { tax_percent = parseFloat( get_tax_percent_by_id( $("#discount_tax_id").val() ) ); }
-   else { return ; }
-
-   if (with_tax=='with_tax')
-   {
-      p = $("#discount_price").val();
-      p_t = p*(1.0 + tax_percent/100.0)
-      $("#discount_price_tax_inc").val(p_t);
-   } else {
-      p_t = $("#discount_price_tax_inc").val();
-      p = p_t/(1.0 + tax_percent/100.0)
-      $("#discount_price").val(p);
-   }
-}
-
-function add_service_to_document()
+function add_service_to_order()
 {
     var text;
     var type = 'service';
@@ -409,25 +331,19 @@ function add_service_to_document()
     }
 
     text = '{ ' +
-      ' "id":"'             + ''                        + '" , ' +
-      ' "reference":"'      + ''                        + '" , ' +
-      ' "name":"'           + $("#name").val()          + '" , ' +
-      ' "cost_price":"'     + $("#cost_price").val()    + '" , ' +
-      ' "price":"'          + $("#price").val()         + '" , ' +
-      ' "price_tax_inc":"'  + $("#price_tax_inc").val() + '" , ' +
-      ' "tax_id":"'         + $("#tax_id").val()        + '" , ' +
-      ' "line_type":"'      + type                      + '"   ' + '}';
+      ' "id":"'             + ''                     + '" , ' +
+      ' "reference":"'      + ''                     + '" , ' +
+      ' "name":"'   + $("#name").val()       + '" , ' +
+      ' "cost_price":"'     + $("#cost_price").val() + '" , ' +
+      ' "price":"'          + $("#price").val()      + '" , ' +
+      ' "price_customer":"' + $("#price").val()      + '" , ' +
+      ' "tax_id":"'         + $("#tax_id").val()     + '" , ' +
+      ' "line_type":"'      + type                   + '"   ' + '}';
 
-//    add_other_to_document( JSON.parse(text) );
-//    add_other_to_document( JSON.stringify(text).replace(new RegExp('"', 'g'), '&quot;') );
-    add_other_to_document( text );
-
-//    JSON.stringify(val).replace(new RegExp('"', 'g'), '&quot;');
-
-    // Reset form?
+    add_product_to_order( JSON.parse(text), {} );
 }
 
-function add_discount_to_document()
+function add_discount_to_order()
 {
     var text;
     var type = 'discount';
@@ -446,136 +362,27 @@ function add_discount_to_document()
     // ToDo: more error checking...
 
     text = '{ ' +
-      ' "id":"'             + ''                                  + '" , ' +
-      ' "reference":"'      + ''                                  + '" , ' +
-      ' "name":"'           + $("#discount_name").val()           + '" , ' +
-      ' "cost_price":"'     + 0                                   + '" , ' +
-      ' "price":"'          + -$("#discount_price").val()         + '" , ' +
-      ' "price_tax_inc":"'  + -$("#discount_price_tax_inc").val() + '" , ' +
-      ' "tax_id":"'         + $("#discount_tax_id").val()         + '" , ' +
-      ' "line_type":"'      + type                                + '"   ' + '}';
+      ' "id":"'             + ''                     + '" , ' +
+      ' "reference":"'      + ''                     + '" , ' +
+      ' "name":"'   + $("#discount_name").val()        + '" , ' +
+      ' "cost_price":"'     + 0                                + '" , ' +
+      ' "price":"'          + -$("#discount_price").val()      + '" , ' +
+      ' "price_customer":"' + -$("#discount_price").val()      + '" , ' +
+      ' "tax_id":"'         + $("#discount_tax_id").val()      + '" , ' +
+      ' "line_type":"'      + type                   + '"   ' + '}';
 
-    add_other_to_document( text );
-
-    // Reset form?
+    add_product_to_order( JSON.parse(text), {} );
 }
 
 // **********************************************************************************************
 
-function add_other_to_document(other_json)
+function add_product_to_document(product_id, customer_id, currency_id, currency_conversion_rate)
 {
-    var pload = '';
-
-    pload = pload + "other_json="+other_json;
-    pload = pload + "&customer_id="+$("#customer_id").val();
-    pload = pload + "&sales_rep_id="+$("#sales_rep_id").val();
-    pload = pload + "&currency_id="+$("#currency_id").val()+"&conversion_rate="+$("#currency_conversion_rate").val();
-    pload = pload + "&line_id="+nbrlines;
-    pload = pload + "&_token="+$('[name="_token"]').val();
-
-   $.ajax({
-      type: 'POST',
-      url: '{{ route('customerinvoices.ajax.lineOtherLookup') }}',
-      dataType: 'html',
-      data: pload,
-      success: function(data) {
-         var theHTML = data;
-
-         if ( theHTML == '' ) {
-              alert( '{{l('No records found', [], 'layouts')}}' );
-              return false;
-         }
-
-         $("#order_lines").append(theHTML);
-
-         nbrlines += 1;
-         $("#nbrlines").val(nbrlines);
-         calculate_line(nbrlines-1);
-         
-         $("#search_results").html('');
-         $("#new_service").hide();
-         $("#modal_product_search").modal('hide');
-
-         $(id( (nbrlines-1), 'quantity' )).focus();
-
-      }
-   });
-}
-
-function add_product_to_document(product_id, combination_id)    // , customer_id, currency_id, currency_conversion_rate)
-{
-    var pload = '';
-
-    pload = pload + "product_id="+product_id+"&combination_id="+combination_id;
-    pload = pload + "&customer_id="+$("#customer_id").val();
-    pload = pload + "&sales_rep_id="+$("#sales_rep_id").val();
-    pload = pload + "&currency_id="+$("#currency_id").val()+"&conversion_rate="+$("#currency_conversion_rate").val();
-    pload = pload + "&line_id="+nbrlines;
-    pload = pload + "&_token="+$('[name="_token"]').val();
-
-   $.ajax({
-      type: 'POST',
-      url: '{{ route('customerinvoices.ajax.lineLookup') }}',
-      dataType: 'html',
-      data: pload,
-      success: function(data) {
-         var theHTML = data;
-
-         if ( theHTML == '' ) {
-              alert( '{{l('No records found', [], 'layouts')}}' );
-              return false;
-         }
-
-         $("#order_lines").append(theHTML);
-
-         nbrlines += 1;
-         $("#nbrlines").val(nbrlines);
-         calculate_line(nbrlines-1);
-         
-         $("#search_results").html('');
-         $("#new_service").hide();
-         $("#modal_product_search").modal('hide');
-
-         // $('input[name="field_name[]"]').val('Some value');
-         // alert($('input[name="lines[' + (nbrlines-1) +'][quantity]"]').val());
-         // $("#lines[" + (nbrlines-1) +"][quantity]").focus();
-         // $('input[name="lines[' + (nbrlines-1) +'][quantity]"]').focus();
-         $(id( (nbrlines-1), 'quantity' )).focus();
-
-         // alert( i( (nbrlines-1), 'line_type' ) );
-/*
-          var t0 = performance.now();
-          var result1 = $( n( (nbrlines-1), 'line_type' ) ).val();
-          var t1 = performance.now();
-          var result2 = $( i( (nbrlines-1), 'line_type' ) ).val();
-          var t2 = performance.now();
-          console.log('Took', (t1 - t0).toFixed(4), 'milliseconds to generate:', result1, ' - by index');
-          console.log('Took', (t2 - t1).toFixed(4), 'milliseconds to generate:', result2, ' - by name');
-*/
-
-      }
-   });
-}
-
-// Helper
-function id( i, name )
-{
-    // By id
-    // See http://api.jquery.com/category/selectors/ (second paragraph)
-    // return "#info\\[text1\\]";
-    return "#lines\\[" + i +"\\]\\[" + name +"\\]";
-}
-
-function name( i, name )
-{
-    // By name
-    // kind of slower than by id
-    return 'input[name="lines[' + i +'][' + name +']"]';
+    ;
 }
 
 // **********************************************************************************************
 
-// Deprecated
 function add_product_to_order(p_string, pc_string)
 {
    // alert(JSON.stringify(p_string));
@@ -669,7 +476,7 @@ function jsp_money(price, decimal)        // JavaScript presenter
   {
     // Just remuve right trailing zeros
     // http://stackoverflow.com/questions/3612744/javascript-remove-insignificant-trailing-zeros-from-a-number
-   return parseFloat(price).toFixed( moneyDecimalPlaces );
+   return parseFloat(price).toFixed(2);
 
   } else if (decimal<0) {
     // Use decimal places according to currency (PHP Model)
@@ -686,7 +493,7 @@ function jsp_quantity(amount, decimal)        // JavaScript presenter
   {
     // Just remuve right trailing zeros
     // http://stackoverflow.com/questions/3612744/javascript-remove-insignificant-trailing-zeros-from-a-number
-   return parseFloat(amount).toFixed( quantityDecimalPlaces );
+   return parseFloat(amount).toFixed(2);
 
   } else if (decimal<0) {
     // Use decimal places according to currency (PHP Model)
@@ -702,7 +509,7 @@ function jsp_percent(percent, decimal)        // JavaScript presenter
   if (typeof decimal === 'undefined')
   {
     // Default
-   return parseFloat(percent).toFixed( percentDecimalPlaces );
+   return parseFloat(percent).toFixed(2);
 
   } else if (decimal<0) {
     // Use decimal places according to currency (PHP Model)
@@ -742,13 +549,10 @@ function get_tax_percent_by_id(tax_id)
 {
    // http://stackoverflow.com/questions/18910939/how-to-get-json-key-and-value-in-javascript
    // var taxes = $.parseJSON( '{{ json_encode( $taxpercentList ) }}' );
-
-/*   var taxes = { ! ! json_encode( $customer->sales_equalization
+   var taxes = {!! json_encode( $customer->sales_equalization
                                   ? $taxeqpercentList 
                                   : $taxpercentList 
-                              ) ! ! } ;
-*/
-   var taxes = {!! json_encode( $taxpercentList ) !!} ;
+                              ) !!} ;
 
    if (typeof taxes[tax_id] == "undefined")   // or if (taxes[tax_id] === undefined) {
    {
@@ -757,6 +561,9 @@ function get_tax_percent_by_id(tax_id)
    } else
         return taxes[tax_id];
 }
+
+function show_price_iva(pvp,iva) {
+   return show_precio(pvp + pvp*iva/100);}
 
 
 function foo(a, b)
@@ -777,8 +584,7 @@ function initialize_order()
    }
 }
 
-// function calculate_order() 
-function calculate_document() 
+function calculate_order() 
 {
    var gross_net = 0;
    var gross_tax = 0;
@@ -792,14 +598,15 @@ function calculate_document()
    
    for(var i=0; i<nbrlines; i++)
    {
-      if($("#line_"+i).length > 0)    // Skip deleted lines
+      if($("#line_"+i).length > 0)
       {         
-         gross_net += parseFloat( $( id(i, "total_tax_excl") ).val() );
-         gross_tax += parseFloat( $( id(i, "total_tax"     ) ).val() );
-         gross     += parseFloat( $( id(i, "total_tax_incl") ).val() );
+         gross_net += parseFloat( $("#total_tax_excl_"+i).val() );
+         gross_tax += parseFloat( $("#total_tax_"+i).val() );
+         gross     += parseFloat( $("#total_tax_incl_"+i).val() );
       }
    }
 
+//   $("#document_discount").val( parseFloat( $("#document_discount").val() ) );
    doc_dis = parseFloat( $("#document_discount").val() )
 
    total_net = gross_net*(1.0-doc_dis/100.0);
@@ -815,84 +622,10 @@ function calculate_document()
    $("#order_total_taxes").val( jsp_money(total_tax) );
 }
 
-// 
-// unit_final_price_tax_inc   MODIFIED
-//
-function calculate_line_price_tax_inc(line_id) 
+function calculate_line(line_id, val) 
 {
   i = line_id;
-  if( !($("#line_"+i).length > 0) ) return ;    // Invalid line number (does not exist!!)
-
-    // 
-         l_pri   = parseFloat( $( id(i, "unit_final_price")         ).val() );
-         l_pri_t = parseFloat( $( id(i, "unit_final_price_tax_inc") ).val() );
-         l_tax   = parseFloat( $( id(i, "tax_percent")              ).val() );
-
-         l_pri   = l_pri_t/(1.0+l_tax/100.0);
-
-         $( id(i, "unit_final_price") ).val( l_pri );
-
-  calculate_line(i);
-}
-
-// 
-// unit_final_price   MODIFIED
-//
-function calculate_line_price(line_id) 
-{
-  i = line_id;
-  if( !($("#line_"+i).length > 0) ) return ;    // Invalid line number (does not exist!!)
-
-    // 
-         l_pri   = parseFloat( $( id(i, "unit_final_price")         ).val() );
-         l_pri_t = parseFloat( $( id(i, "unit_final_price_tax_inc") ).val() );
-         l_tax   = parseFloat( $( id(i, "tax_percent")              ).val() );
-
-         l_pri_t = l_pri*(1.0+l_tax/100.0);
-
-         $( id(i, "unit_final_price_tax_inc") ).val( l_pri_t );
-
-  calculate_line(i);
-}
-
-function calculate_line(line_id) 
-{
-  i = line_id;
-  if( !($("#line_"+i).length > 0) ) return ;    // Invalid line number (does not exist!!)
-
-    // 
-         l_qty   = parseFloat( $( id(i, "quantity"                ) ).val() );
-         l_pri   = parseFloat( $( id(i, "unit_final_price"        ) ).val() );
-         l_pri_t = parseFloat( $( id(i, "unit_final_price_tax_inc") ).val() );
-         l_disp  = parseFloat( $( id(i, "discount_percent"        ) ).val() );
-         l_tax   = parseFloat( $( id(i, "tax_percent"             ) ).val() );
-
-         l_dis  = l_qty*l_pri  *(l_disp/100.0);
-         l_dist = l_qty*l_pri_t*(l_disp/100.0);
-
-         l_net = l_qty*l_pri  *(100.0-l_disp)/100.0;
-         l_tot = l_qty*l_pri_t*(100.0-l_disp)/100.0;
-         
-         $( id(i, "discount_amount_tax_excl") ).val( l_dis  );
-         $( id(i, "discount_amount_tax_incl") ).val( l_dist );
-
-         $( id(i, "total_tax_excl") ).val( jsp_money(l_net) );
-         $( id(i, "total_tax"     ) ).val( jsp_money( l_tot - l_net ) );
-         $( id(i, "total_tax_incl") ).val( jsp_money(l_tot) );
-
-         l_pri_n   = l_pri  *(100.0-l_disp)/100.0;
-         l_pri_n_t = l_pri_t*(100.0-l_disp)/100.0;
-         l_up =  jsp_money(l_pri_n)  + '<br />(' +  jsp_money(l_pri_n_t)  + ')';
-         $( "#unit_net_price_" + i ).html(l_up);
-
-  calculate_document();
-}
-
-// Deprecated
-function calculate_line_dist(line_id, val) 
-{
-  i = line_id;
-  if( !($("#line_"+i).length > 0) ) return ;    // Invalid line number (does not exist!!)
+  if( !($("#line_"+i).length > 0) ) return ;
 
   // Calculate hidden values
   $("#tax_percent_"+i).val( get_tax_percent_by_id( $("#tax_id_"+i).val() ) );
@@ -1023,7 +756,7 @@ function calculate_profit()
 
 {{-- Date Picker --}}
 
-<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 {!! HTML::script('assets/plugins/jQuery-UI/datepicker/datepicker-'.\App\Context::getContext()->language->iso_code.'.js'); !!}
 
 <script>

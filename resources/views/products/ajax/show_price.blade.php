@@ -15,10 +15,14 @@
 		<tbody>
 			<tr>  
         <td class="text-left">
-            <a onclick="add_product_to_order( {{ $product_string }}, {} )" href="javascript:void(0);">{{$product->reference}}</a>
+            @if ($product->combinations->count())
+              <span class="label xlabel-info" style="border: 1px solid #cccccc"><a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products').'/'.$product->id.'/edit' }}">{{l('Combinations')}}</a></span>
+            @else
+              <a title=" {{l('Add to Document', [], 'layouts')}} " onclick="add_product_to_document( {{ $product->id }}, 0 )" href="javascript:void(0);">{{$product->reference}}</a>
+            @endif
         </td>
         <td class="text-left">
-            {{$product->name}}
+            <a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products').'/'.$product->id.'/edit' }}">{{$product->name}}</a>
         </td>
 				<td class="text-left">
                      {{$product->notes}}
@@ -32,7 +36,7 @@
                 </script>
                 <td>
                   @if (!$product->combinations->count())
-                  <a title=" {{l('Add to Document', [], 'layouts')}} " onclick="add_product_to_order( {{ $product_string }}, '{}' )" href="javascript:void(0);">
+                  <a title=" {{l('Add to Document', [], 'layouts')}} " onclick="add_product_to_document( {{ $product->id }}, 0 )" href="javascript:void(0);">
                 		<button type="button" class="btn btn-xs btn-primary">
                 			<i class="fa fa-shopping-basket"></i>
                 		</button>
@@ -93,7 +97,7 @@
           <td class="text-center">@if ($combination->active) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
                <td class="text-right">
                     
-                  <a title=" Añadir al Pedido " onclick="add_product_to_order( {{ $product_string }}, {{ json_encode( array_add( $combination, 'combination_name', $combination->name() ) ) }} )" href="javascript:void(0);">
+                  <a title=" {{l('Add to Document', [], 'layouts')}} " onclick="add_product_to_document( {{ $product->id }}, {{ $combination->id }} )" href="javascript:void(0);">
                     <button type="button" class="btn btn-xs btn-primary">
                       <i class="fa fa-shopping-basket"></i>
                     </button>
@@ -137,22 +141,31 @@
             <th class="text-left">{{ l('Price') }}</th>
             <th class="text-left">{{ l('Cost Price') }}</th>
             <th class="text-left">{{ l('Margin') }} %</th>
+
             <th class="text-right">{{ l('Customer Price') }}</th>
+
             <th class="text-right">{{ l('Discount (%)') }}</th>
-            <th class="text-right">{{ l('Margen Cliente') }}</th>
+
+            <th class="text-right">{{ l('Margen Cliente') }} %</th>
+
             <th class="text-right">{{ l('Customer With Tax') }}</th>
           </tr>
         </thead>
         <tbody id="lineas_detalle">
           
           <tr>
-            <td>{{$product->as_price('price', $currency)}}</td>
-            <td>{{$product->as_price('cost_price', $currency)}}</td>
+            <td>{{$product->as_money('price')}}</td>
+            <td>{{$product->as_price('cost_price')}}</td>
             <td>{{$product->as_percentable(\App\Calculator::margin($product->cost_price, $product->price))}}</td>
-            <td class="text-right">{{$product->as_price('price_customer', $currency)}}</td>
-            <td class="text-right">{{$product->as_priceable($product->price-$product->price_customer, $currency)}} ({{ $product->as_percentable(100.0*($product->price-$product->price_customer)/$product->price) }}%)</td>
-            <td class="text-right">{{$product->as_percentable(\App\Calculator::margin($product->cost_price, $product->price_customer))}}</td>
-            <td class="text-right">{{$product->as_price('price_customer_with_tax', $currency)}}</td>
+
+            <td class="text-right">{{$product->as_moneyable($product->customer_price->getPrice(), $currency)}}<br />
+            {{$product->as_moneyable($product->customer_price->convertToBaseCurrency()->getPrice())}}</td>
+
+            <td class="text-right">{{$product->as_priceable($product->price-$product->customer_price->convertToBaseCurrency()->getPrice())}} ({{ $product->as_percentable(100.0*($product->price-$product->customer_price->convertToBaseCurrency()->getPrice())/$product->price) }}%)</td>
+
+            <td class="text-right">{{$product->as_percentable( \App\Calculator::margin($product->cost_price, $product->customer_price->convertToBaseCurrency()->getPrice() ))}}</td>
+
+            <td class="text-right">{{$product->as_moneyable($product->customer_price->getPriceWithTax(), $currency)}}</td>
           </tr>
           
         </tbody>

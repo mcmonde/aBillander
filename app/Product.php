@@ -259,9 +259,19 @@ class Product extends Model {
      */
     public static function searchByNameAutocomplete($query, $onhand_only = 0)
     {
-        $q = Product::with('tax')
-                    ->orderBy('name')
-                    ->where('name', 'like', '%' . $query . '%');
+        $columns = [ 'id', 'product_type', 'name', 'reference',
+ //                   'measure_unit', 'quantity_decimal_places', 
+                    'reorder_point', 'price', 'price_tax_inc',
+                    'quantity_onhand', 'quantity_onorder', 'quantity_allocated', 
+                    'blocked', 'active', 
+ //                   'tax_id',
+        ];
+
+//       $q = Product::with('tax')
+        $q = Product::select( $columns )
+                    ->where('name', 'like', '%' . $query . '%')
+                    ->take( intval( \App\Configuration::get('DEF_ITEMS_PERAJAX') ) )
+                    ->orderBy('name');
 
         if ($onhand_only) $q = $q->where('quantity_onhand', '>', '0');
 

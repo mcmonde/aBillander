@@ -206,11 +206,11 @@ class Customer extends Model {
         // Second: Product has special price for this Customer's Customer Group?
 
         // Third: Customer has pricelist?
-        if ($customer->pricelist) {
+        if ($this->pricelist) {
 
-            $price = $customer->pricelist->getPrice( $product );
+            $price = $this->pricelist->getPrice( $product );
 
-            if ($currency->id == $customer->pricelist->currency_id) {
+            if ($currency->id == $this->pricelist->currency_id) {
                 return $price;
             }
 
@@ -218,11 +218,11 @@ class Customer extends Model {
         } 
 
         // Fourth: Customer Group has pricelist?
-        if ($customer->customergroup && $customer->customergroup->pricelist) {
+        if ($this->customergroup && $this->customergroup->pricelist) {
 
-            $price = $customer->customergroup->pricelist->getPrice( $product );
+            $price = $this->customergroup->pricelist->getPrice( $product );
 
-            if ($currency->id == $customer->customergroup->pricelist->currency_id) {
+            if ($currency->id == $this->customergroup->pricelist->currency_id) {
                 return $price;
             }
 

@@ -66,7 +66,8 @@
         }
 
         $(this).disabled=true;
-        $(this).form.submit();
+//        $(this).form.submit();
+        $(this).closest('form').submit();
     });
 
 </script>

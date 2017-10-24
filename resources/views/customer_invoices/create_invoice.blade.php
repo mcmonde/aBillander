@@ -59,9 +59,9 @@
 {!! Form::model($invoice, array('method' => 'POST', 'route' => array('customerinvoices.store'), 'id' => 'f_new_order', 'name' => 'f_new_order', 'class' => 'form')) !!}
 
    <input type="hidden" id="nbrlines" name="nbrlines" value="{{ count($invoice->customerInvoiceLines) }}"/>
-   <input type="hidden" name="customer_id" value="{{$customer->id}}"/>
+   <input type="hidden" id="customer_id" name="customer_id" value="{{$customer->id}}"/>
    <input type="hidden" name="einvoice" value="{{$customer->accept_einvoice}}"/>
-   <input type="hidden" name="invoicing_address_id" value="{{$customer->invoicing_address_id}}"/>
+   <input type="hidden" id="invoicing_address_id" name="invoicing_address_id" value="{{$customer->invoicing_address_id}}"/>
 
 <!-- id="div_header" -->  
    <div class="container-fluid">
@@ -77,7 +77,7 @@
 <!-- id="div_lines" -->
    <div class="table-responsive" id="div_lines" style="padding-top: 20px;">
 
-   @include('customer_invoices._invoice_lines')
+   @include('customer_invoices._invoice_body')
 
    </div>
 

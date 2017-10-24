@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php 
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -716,5 +718,182 @@ class CustomerInvoicesController extends Controller {
 
 		return redirect()->back()->with('success', 'La Factura '.$cinvoice->document_prefix . ' ' . $cinvoice->document_id.' se envió correctamente al Cliente');
 	}
+
+
+/* ********************************************************************************************* */    
+
+
+    /**
+     * Return a json list of records matching the provided query
+     *
+     * @return json
+     */
+    public function ajaxLineSearch(Request $request)
+    {
+        // Request data
+        $line_id         = $request->input('line_id');
+        $product_id      = $request->input('product_id');
+        $combination_id  = $request->input('combination_id', 0);
+        $customer_id     = $request->input('customer_id');
+        $sales_rep_id    = $request->input('sales_rep_id', 0);
+        $currency_id     = $request->input('currency_id', \App\Context::getContext()->currency->id);
+
+//        return "$product_id, $combination_id, $customer_id, $currency_id";
+
+        if ($combination_id>0) {
+        	$combination = \App\Combination::with('product')->with('product.tax')->find(intval($combination_id));
+        	$product = $combination->product;
+        	$product->reference = $combination->reference;
+        	$product->name = $product->name.' | '.$combination->name;
+        } else {
+        	$product = \App\Product::with('tax')->find(intval($product_id));
+        }
+
+        $customer = \App\Customer::find(intval($customer_id));
+
+        $sales_rep = null;
+        if ($sales_rep_id>0)
+        	$sales_rep = \App\SalesRep::find(intval($sales_rep_id));
+        if (!$sales_rep)
+        	$sales_rep = (object) ['id' => 0, 'commission_percent' => 0.0]; 
+        
+        $currency = ($currency_id == \App\Context::getContext()->currency->id) ?
+                    \App\Context::getContext()->currency :
+                    \App\Currency::find(intval($currency_id));
+
+        $currency->conversion_rate = $request->input('conversion_rate', $currency->conversion_rate);
+
+        if ( !$product || !$customer || !$currency ) {
+            // Die silently
+            return '';
+        }
+
+        $tax = $product->tax;
+
+        // Calculate price per $customer_id now!
+        $price = $product->getPriceByCustomer( $customer, $currency );
+        $tax_percent = $tax->percent;
+        $price->applyTaxPercent( $tax_percent );
+
+        $data = [
+//			'id' => '',
+			'line_sort_order' => '',
+			'line_type' => 'product',
+			'product_id' => $product->id,
+			'combination_id' => $combination_id,
+			'reference' => $product->reference,
+			'name' => $product->name,
+			'quantity' => 1,
+			'cost_price' => $product->cost_price,
+			'unit_price' => $product->price,
+			'unit_customer_price' => $price->getPrice(),
+			'unit_final_price' => $price->getPrice(),
+			'unit_final_price_tax_inc' => $price->getPriceWithTax(),
+			'unit_net_price' => $price->getPrice(),
+			'sales_equalization' => $customer->sales_equalization,
+			'discount_percent' => 0.0,
+			'discount_amount_tax_incl' => 0.0,
+			'discount_amount_tax_excl' => 0.0,
+			'total_tax_incl' => 0.0,
+			'total_tax_excl' => 0.0,
+			'tax_percent' => $product->as_percentable($tax_percent),
+			'commission_percent' => $sales_rep->commission_percent,
+			'notes' => '',
+			'locked' => 0,
+//			'customer_invoice_id' => '',
+			'tax_id' => $product->tax_id,
+			'sales_rep_id' => $sales_rep->id,
+        ];
+
+        $line = new CustomerInvoiceLine( $data );
+
+        return view('customer_invoices._invoice_line', [ 'i' => $line_id, 'line' => $line ] );
+    }
+
+
+    /**
+     * Return a json list of records matching the provided query
+     *
+     * @return json
+     */
+    public function ajaxLineOtherSearch(Request $request)
+    {
+        // Request data
+        $line_id         = $request->input('line_id');
+        $other_json      = $request->input('other_json');
+        $customer_id     = $request->input('customer_id');
+        $sales_rep_id    = $request->input('sales_rep_id', 0);
+        $currency_id     = $request->input('currency_id', \App\Context::getContext()->currency->id);
+
+//        return "$product_id, $combination_id, $customer_id, $currency_id";
+
+        if ($other_json) {
+        	$product = (object) json_decode( $other_json, true);
+        } else {
+        	$product = $other_json;
+        }
+
+        $customer = \App\Customer::find(intval($customer_id));
+
+        $sales_rep = null;
+        if ($sales_rep_id>0)
+        	$sales_rep = \App\SalesRep::find(intval($sales_rep_id));
+        if (!$sales_rep)
+        	$sales_rep = (object) ['id' => 0, 'commission_percent' => 0.0]; 
+        
+        $currency = ($currency_id == \App\Context::getContext()->currency->id) ?
+                    \App\Context::getContext()->currency :
+                    \App\Currency::find(intval($currency_id));
+
+        $currency->conversion_rate = $request->input('conversion_rate', $currency->conversion_rate);
+
+        if ( !$product || !$customer || !$currency ) {
+            // Die silently
+            return '';
+        }
+
+        $tax = \App\Tax::find($product->tax_id);
+
+        // Calculate price per $customer_id now!
+        $amount_is_tax_inc = \App\Configuration::get('PRICES_ENTERED_WITH_TAX');
+        $amount = $amount_is_tax_inc ? $product->price_tax_inc : $product->price;
+        $price = new \App\Price( $amount, $amount_is_tax_inc, $currency );
+        $tax_percent = $tax->percent;
+        $price->applyTaxPercent( $tax_percent );
+
+        $data = [
+//			'id' => '',
+			'line_sort_order' => '',
+			'line_type' => $product->line_type,
+			'product_id' => 0,
+			'combination_id' => 0,
+			'reference' => CustomerInvoiceLine::getTypeList()[$product->line_type],
+			'name' => $product->name,
+			'quantity' => 1,
+			'cost_price' => $product->cost_price,
+			'unit_price' => $product->price,
+			'unit_customer_price' => $price->getPrice(),
+			'unit_final_price' => $price->getPrice(),
+			'unit_final_price_tax_inc' => $price->getPriceWithTax(),
+			'unit_net_price' => $price->getPrice(),
+			'sales_equalization' => $customer->sales_equalization,
+			'discount_percent' => 0.0,
+			'discount_amount_tax_incl' => 0.0,
+			'discount_amount_tax_excl' => 0.0,
+			'total_tax_incl' => 0.0,
+			'total_tax_excl' => 0.0,
+			'tax_percent' => $price->as_percentable($tax_percent),
+			'commission_percent' => $sales_rep->commission_percent,
+			'notes' => '',
+			'locked' => 0,
+//			'customer_invoice_id' => '',
+			'tax_id' => $product->tax_id,
+			'sales_rep_id' => $sales_rep->id,
+        ];
+
+        $line = new CustomerInvoiceLine( $data );
+
+        return view('customer_invoices._invoice_line', [ 'i' => $line_id, 'line' => $line ] );
+    }
 
 }

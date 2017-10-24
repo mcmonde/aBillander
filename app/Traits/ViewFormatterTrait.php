@@ -86,6 +86,13 @@ trait ViewFormatterTrait
         return $number;
     }
 
+    public function as_moneyable( $val = 0.0, \App\Currency $currency = null )
+    {
+        $amount = floatval( $val );
+
+        return \App\Currency::viewPriceWithSign($amount, $currency);
+    }
+
     public function as_priceable( $val = 0.0, \App\Currency $currency = null )
     {
         $data = floatval( $val );

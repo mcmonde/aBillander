@@ -517,9 +517,9 @@ LIMIT 1
         // Request data
         $product_id      = $request->input('product_id');
         $customer_id     = $request->input('customer_id');
-        $currency_id     = $request->input('currency_id');
-        $conversion_rate = $request->input('conversion_rate');
-        $product_string  = $request->input('product_string');
+        $currency_id     = $request->input('currency_id', \App\Context::getContext()->currency->id);
+//        $conversion_rate = $request->input('conversion_rate');
+//        $product_string  = $request->input('product_string');   // <- Esto es la salida de ajaxProductSearch
 
     //    $product = \App\Product::find();
 
@@ -531,11 +531,14 @@ LIMIT 1
                         ->find(intval($product_id));
 
         $customer = \App\Customer::find(intval($customer_id));
+        
+        $currency = ($currency_id == \App\Context::getContext()->currency->id) ?
+                    \App\Context::getContext()->currency :
+                    \App\Currency::find(intval($currency_id));
 
-        $currency = \App\Currency::find(intval($currency_id));
-        if ( !$currency ) $currency = \App\Context::getContext()->currency;
-                        
-        if ( !$product || !$customer ) {
+        $currency->conversion_rate = $request->input('conversion_rate', $currency->conversion_rate);
+
+        if ( !$product || !$customer || !$currency ) {
             // Die silently
             return '';
         }
@@ -543,18 +546,22 @@ LIMIT 1
         $tax = $product->tax;
 
         // Calculate price per $customer_id now!
-        $product->price_customer = $product->price( $customer, $currency );
+        $product->customer_price = $product->getPriceByCustomer( $customer, $currency );
         $tax_percent = $tax->percent;
-        if ($customer->sales_equalization) $tax_percent += $tax->extra_percent;
-        $product->price_customer_with_tax = $product->price_customer*(1.0+$tax_percent/100.0);
+        $product->customer_price->applyTaxPercent( $tax_percent );
+//        if ($customer->sales_equalization) $tax_percent += $tax->extra_percent;
+//        $product->price_customer_with_tax = $product->price_customer*(1.0+$tax_percent/100.0);
 
         // Add customer_price
+/*
         $p = json_decode( $product_string, true);
         $p = array_merge($p, ['price_customer' => $product->price_customer]);
         $product_string = json_encode($p);
+*/
+//        $product_string = json_encode($product);
 
-        // return Product::searchByNameAutocomplete(Input::get('query'));
-        return view('products.ajax.show_price', compact('product', 'tax', 'customer', 'currency', 'product_string'));
+//        return view('products.ajax.show_price', compact('product', 'tax', 'customer', 'currency', 'product_string'));
+        return view('products.ajax.show_price', compact( 'product', 'customer', 'currency' ) );
     }
 
 }

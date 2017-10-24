@@ -37,6 +37,9 @@ class CreateCustomerInvoicesTable extends Migration {
 			$table->text('shipping_conditions')->nullable();					// For Shipping Slip!
 			$table->string('tracking_number')->nullable();						// For Shipping Slip!
 
+			$table->tinyInteger('prices_entered_with_tax')->default(0);			// See: PRICES_ENTERED_WITH_TAX
+			$table->tinyInteger('round_prices_with_tax')->default(0);			// See: ROUND_PRICES_WITH_TAX
+
 			$table->decimal('currency_conversion_rate', 20, 6)->default(1.0);
 			$table->decimal('down_payment', 20, 6)->default(0.0);	        	// Payment before issue invoice
 			$table->decimal('open_balance', 20, 6)->default(0.0);

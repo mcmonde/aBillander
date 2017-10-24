@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php 
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -150,5 +152,29 @@ class CurrenciesController extends Controller {
 
         return view('currencies.exchange', compact('currency', 'ccrs'));
 	}
+
+
+/* ********************************************************************************************* */    
+
+
+    /**
+     * Return a json list of records matching the provided query
+     *
+     * @return json
+     */
+    public function ajaxCurrencyRateSearch(Request $request)
+    {
+        // Request data
+        $currency_id     = $request->input('currency_id');
+        
+        $currency = Currency::find(intval($currency_id));
+
+        if ( !$currency ) {
+            // Die silently
+            return '';
+        }
+
+        return $currency->conversion_rate;
+    }
 
 }

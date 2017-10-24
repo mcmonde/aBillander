@@ -16,7 +16,7 @@ class Combination extends Model {
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['quantity_available'];
+    protected $appends = ['name', 'quantity_available'];
     
     protected $fillable = [ 'reference', 'ean13', 'warranty_period', 
                             'reorder_point', 'maximum_stock', 'price', 'cost_price', 'supply_lead_time', 
@@ -32,6 +32,11 @@ class Combination extends Model {
     | Accessors
     |--------------------------------------------------------------------------
     */
+
+    public function getNameAttribute()
+    {
+        return $this->name();
+    }
 
     public function getQuantityAvailableAttribute()
     {

@@ -51,9 +51,10 @@ class PriceList extends Model {
         $features = '';
 
         if ($this->type == 0){
-            $features .=  $this->price_is_tax_inc ? l('Tax Included', [], 'pricelists') : '';
+//            $features .=  $this->price_is_tax_inc ? l('Tax Included', [], 'pricelists') : '';
+            ;
         } else {
-            $features .=  ' ('.$this->as_percent( 'amount' ).'%) ';
+            $features .=  $this->as_percent( 'amount' ).'%';
         }
 
         return $features;
@@ -103,6 +104,9 @@ class PriceList extends Model {
         if ( !$line ) $line = $this->addLine( $product );
 
         $price = new \App\Price( $line->price, $this->price_is_tax_inc, $this->currency);
+
+        $price->price_list_id = $this->id;
+        $price->price_list_line_id = $line->id;
 
         return $price;
     }

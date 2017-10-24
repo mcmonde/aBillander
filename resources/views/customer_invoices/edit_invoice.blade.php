@@ -72,7 +72,7 @@
    <div class="table-responsive" id="div_lines" style="padding-top: 20px;">
 
    {{-- @include('customer_invoices.create_lines') --}}
-   @include('customer_invoices._invoice_lines')
+   @include('customer_invoices._invoice_body')
 
    </div>
 

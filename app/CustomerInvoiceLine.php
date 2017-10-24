@@ -14,14 +14,16 @@ class CustomerInvoiceLine extends Model {
             'discount', 
             'comment',
         );
-
-	// Add your validation rules here
-	public static $rules = [
-		// 'title' => 'required'
-	];
+    
+    protected $guarded = array('id');
 
 	// Don't forget to fill this array
 	// protected $fillable = [];
+
+    // Add your validation rules here
+    public static $rules = [
+        // 'title' => 'required'
+    ];
 
     public static function getTypeList()
     {
@@ -48,6 +50,11 @@ class CustomerInvoiceLine extends Model {
     public function customerinvoicelinetaxes()
     {
         return $this->hasMany('App\CustomerInvoiceLineTax', 'customer_invoice_line_id');
+    }
+
+    public function tax()
+    {
+        return $this->belongsTo('App\Tax');
     }
 
 }

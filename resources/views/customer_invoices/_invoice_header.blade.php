@@ -74,14 +74,22 @@
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('currency_id') ? 'has-error' : '' }}">
             {{ l('Currency') }}
-            {!! Form::select('currency_id', array('0' => l('-- Please, select --', [], 'layouts')) + $currencyList, null, array('class' => 'form-control', 'id' => 'currency_id')) !!}
+            {!! Form::select('currency_id', array('0' => l('-- Please, select --', [], 'layouts')) + $currencyList, null, array('class' => 'form-control', 'id' => 'currency_id', 'onchange' => 'get_currency_rate($("#currency_id").val())')) !!}
             {!! $errors->first('currency_id', '<span class="help-block">:message</span>') !!}
          </div>
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('currency_conversion_rate') ? 'has-error' : '' }}">
             {{ l('Conversion Rate') }}
-            {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control', 'id' => 'currency_conversion_rate')) !!}
-            {!! $errors->first('currency_conversion_rate', '<span class="help-block">:message</span>') !!}
+            <div  class="input-group">
+              {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control', 'id' => 'currency_conversion_rate')) !!}
+              {!! $errors->first('currency_conversion_rate', '<span class="help-block">:message</span>') !!}
+
+              <span class="input-group-btn" title="{{ l('Update Conversion Rate') }}">
+              <button class="btn btn-md btn-blue" type="button" onclick="get_currency_rate($('#currency_id').val());">
+                  <span class="fa fa-money"></span>
+              </button>
+              </span>
+            </div>
          </div>
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('sales_rep_id') ? 'has-error' : '' }}">

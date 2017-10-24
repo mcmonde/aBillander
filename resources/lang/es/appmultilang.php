@@ -76,6 +76,22 @@ return array(
 
 	55 => 'Producto de fabricación',
 
+
+	/*
+	|--------------------------------------------------------------------------
+	| Customer Invoice Line Types
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+    'product' => 'Producto', 
+    'service' => 'Servicio', 
+	'shipping' => 'Envío',
+    'discount' => 'Descuento',
+    'comment' => 'Comentario', 
+
 	/*
 	|--------------------------------------------------------------------------
 	| Margin calculation methods

@@ -176,5 +176,7 @@ return [
 	'Customer'     => 'Cliente',
 	'Currency'     => 'Divisa',
 	'Price List'     => 'Tarifa',
+	
+	'Go to Product'     => 'Ir al Producto',
 
 ];

@@ -92,7 +92,9 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
 
         Route::resource('currencies', 'CurrenciesController');
         Route::get('currencies/{id}/exchange',   array('uses'=>'CurrenciesController@exchange', 
-                                                                'as' => 'currencies.exchange' ) );     
+                                                                'as' => 'currencies.exchange' ) );  
+        Route::post('currencies/ajax/rate_lookup', array('uses' => 'CurrenciesController@ajaxCurrencyRateSearch', 
+                                                        'as' => 'currencies.ajax.rateLookup'));   
 // }
 
         Route::resource('taxes',          'TaxesController');
@@ -113,7 +115,8 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
                                                         'as'   => 'products.ajax.optionsLookup' ));
         Route::post('products/ajax/combination_lookup'  , array('uses' => 'ProductsController@ajaxProductCombinationSearch', 
                                                         'as'   => 'products.ajax.combinationLookup' ));
-        Route::post('products/ajax/price_lookup', array('uses' => 'ProductsController@ajaxProductPriceSearch', 'as' => 'products.ajax.priceLookup'));
+        Route::post('products/ajax/price_lookup', array('uses' => 'ProductsController@ajaxProductPriceSearch', 
+                                                        'as' => 'products.ajax.priceLookup'));
 
         Route::resource('pricelists',     'PriceListsController');
         Route::resource('pricelistlines', 'PriceListLinesController');
@@ -159,6 +162,10 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
         Route::resource('customerinvoices'      , 'CustomerInvoicesController');
         Route::get('customerinvoices/pdf/{id}'  , 'CustomerInvoicesController@ShowPDF');
         Route::post('customerinvoices/sendemail', 'CustomerInvoicesController@SendEmail');
+        Route::post('customerinvoices/ajax/price_lookup', array('uses' => 'CustomerInvoicesController@ajaxLineSearch', 
+                                                        'as' => 'customerinvoices.ajax.lineLookup'));
+        Route::post('customerinvoices/ajax/other_lookup', array('uses' => 'CustomerInvoicesController@ajaxLineOtherSearch', 
+                                                        'as' => 'customerinvoices.ajax.lineOtherLookup'));
 
 
         Route::resource('customervouchers'      , 'CustomerVouchersController');

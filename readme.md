@@ -2,7 +2,7 @@
 
 The **aBillander Project** is an Invoicing and Inventory System for SME's powered by  <º)♡><  and  Laravel 5.5.
 
-This project is currently in pre-alpha state. After SDG3 will be ready for testing (by the end of October, 2017).
+This project is currently in pre-alpha state. After SDG3 will be ready for testing (by the end of November, 2017).
 
 
 ## ab://ander/milestones
@@ -13,7 +13,7 @@ This project is currently in pre-alpha state. After SDG3 will be ready for testi
 
 > SDG2: Stock Movements without a document (90% done)
 
-> SDG3: Customers, Customer Invoices and Payments (15% done)
+> SDG3: Customers, Customer Invoices and Payments (35% done)
 
 > SDG4: WooCommerce connect, **MVP ready**
 

@@ -13,7 +13,7 @@
 		          <h3 class="panel-title" style="margin-top:10px;">{{ l('Price List') }}: ({{$price->pricelist->id}}) {{ $price->pricelist->name }}
 		          	<span class="label label-success">{{ $price->pricelist->getType() }}</span>
                     <span class="label label-warning">{{ $price->pricelist->getExtra() }}</span>
-                    &nbsp;<span class="label label-default">{{ $price->pricelist->currency->name }}</span></h3>
+                    <span class="label label-default">{{ $price->pricelist->currency->name }}</span></h3>
 		    </div>
 			<div class="panel-body">
 
