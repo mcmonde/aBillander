@@ -58,10 +58,20 @@
            </div>
 
             <div class="col-md-4">
-                <div class="form-group {{ $errors->has('company_logo') ? 'has-error' : '' }}">
+                <div class="form-group {{ $errors->has('company_logo_file') ? 'has-error' : '' }}">
                     {{ l('Company logo') }}
-                    {!! Form::text('company_logo', null, array('class' => 'form-control', 'id' => 'company_logo')) !!}
-                    {!! $errors->first('company_logo', '<span class="help-block">:message</span>') !!}
+                    {{-- !! Form::text('company_logo', null, array('class' => 'form-control', 'id' => 'company_logo')) !! --}}
+
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-lightblue">
+                                {{ l('Browse', [], 'layouts') }}&hellip; <input type="file" name="company_logo_file" id="company_logo_file" style="display: none;" multiple>
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly>
+                    </div>
+
+                    {!! $errors->first('company_logo_file', '<span class="help-block">:message</span>') !!}
                 </div>
             </div>
         </div>

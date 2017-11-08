@@ -1,15 +1,23 @@
-<?php namespace App;
+<?php 
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\ViewFormatterTrait;
+
 class CustomerInvoice extends Model {
 
+    use ViewFormatterTrait;
+
     public static $statuses = array(
-            'draft', 
-            'pending', 
-            'halfpaid', 
-            'paid', 
+            'draft',
+            'pending',
+            'halfpaid',
+            'paid',
+            'overdue',
             'doubtful',
+            'archived',
         );
 
     protected $guarded = array('id');
@@ -25,10 +33,11 @@ class CustomerInvoice extends Model {
     					];
 
     protected $fillable =  ['sequence_id', 'customer_id', 
-                            'reference', 'document_discount', 'document_date', 'delivery_date', 'edocument_sent_at', 
-//                            'document_prefix', 'document_id', 'document_reference', // These are calculated!!!
+                            'reference', 'document_discount', 'document_date', 'delivery_date',  
+                            'document_prefix', 'document_id', 'document_reference', // These are calculated!!!
 //                            'open_balance', 
                             'number_of_packages', 'shipping_conditions', 'tracking_number', 'currency_conversion_rate', 'down_payment', 
+                            'prices_entered_with_tax', 'round_prices_with_tax',
 //                            'total_discounts_tax_incl', 'total_discounts_tax_excl', 'total_products_tax_incl', 'total_products_tax_excl', 
 //                            'total_shipping_tax_incl', 'total_shipping_tax_excl', 'total_other_tax_incl', 'total_other_tax_excl', 
 //                            'total_tax_incl', 'total_tax_excl', 'commission_amount', 
@@ -43,6 +52,8 @@ class CustomerInvoice extends Model {
 	public static $rules = [
                             'document_date' => 'date',
                             'delivery_date' => 'date',
+                            'customer_id' => 'exists:customers,id',
+                            'shipping_address_id' => 'exists:addresses,id,addressable_id,{customer_id},addressable_type,App\Customer',
                             'sequence_id' => 'exists:sequences,id',
                             'warehouse_id' => 'exists:warehouses,id',
                             'currency_id' => 'exists:currencies,id',
@@ -124,10 +135,45 @@ class CustomerInvoice extends Model {
     {
         return $this->hasMany('App\CustomerInvoiceLine', 'customer_invoice_id');
     }
+    
+    public function customerinvoicelinetaxes()      // http://advancedlaravel.com/eloquent-relationships-examples
+    {
+        return $this->hasManyThrough('App\CustomerInvoiceLineTax', 'App\CustomerInvoiceLine');
+    }
+
+    public function customerinvoicetaxes()
+    {
+        $taxes = [];
+        $tax_lines = $this->customerinvoicelinetaxes;
+
+
+ //           abi_r($tax_lines, true);
+
+        foreach ($tax_lines as $line) {
+//            abi_r($line);
+            if ( isset($taxes[$line->tax_rule_id]) ) {
+                $taxes[$line->tax_rule_id]->taxable_base   += $line->taxable_base;
+                $taxes[$line->tax_rule_id]->total_line_tax += $line->total_line_tax;
+            } else {
+                $tax = new \App\CustomerInvoiceLineTax();
+                $tax->percent        = $line->percent;
+                $tax->taxable_base   = $line->taxable_base; 
+                $tax->total_line_tax = $line->total_line_tax;
+
+                $taxes[$line->tax_rule_id] = $tax;
+            }
+        }
+
+//        $taxes = $tax_lines;
+
+        return collect($taxes)->sortByDesc('percent')->values()->all();
+    }
 
     public function payments()
     {
-        return $this->hasMany('App\Payment', 'invoice_id')->where('model_name', '=', 'CustomerInvoice');
+        // return $this->hasMany('App\Payment', 'invoice_id')->where('model_name', '=', 'CustomerInvoice');
+
+        return $this->morphMany('App\Payment', 'paymentable');
     }
 /*    
     public function addresses()

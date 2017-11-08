@@ -54,7 +54,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Invoice Template
 		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
-		    $view->with('customerinvoicetemplateList', \App\Template::where('model_name', '=', 'CustomerInvoice')->pluck('name', 'id')->toArray());
+		    $view->with('customerinvoicetemplateList', \App\Template::where('model_name', '=', '\App\CustomerInvoice')->pluck('name', 'id')->toArray());
 		    
 		});
 

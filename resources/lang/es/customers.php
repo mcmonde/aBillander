@@ -82,7 +82,8 @@ return [
 	'Carrier'     => 'Transportista',
 	'Webshop ID'     => 'Código en la Tienda Web',
 	'Payment Day(s)'     => 'Día(s) de Pago',
-	'Comma separated list of days, like: 3,17' => 'Lista separada por comas, como: 3,17',
+	'Comma separated list of days, as in: 3,17' => 'Lista separada por comas, como: 3,17',
+	'No Payment Month'     => 'Mes de No Pago',
 
 	'Special Addresses'     => 'Direcciones especiales',
 	'Fiscal (main) Address'     => 'Dirección Fiscal (principal)',
@@ -102,6 +103,7 @@ return [
 	'Main Address has been updated for Customer (:id) :name'     => 'Se ha actualizado la Dirección Principal del Cliente (:id) :name',
 	'Default Shipping Address has been updated for Customer (:id) :name'     => 'Se ha actualizado la Dirección de Envío por defecto para el Cliente (:id) :name',
 	'You should set the Main Address for Customer (:id) :name'     => 'Debe indicar la Dirección Principal para el Cliente (:id) :name',
+	'No Payment Month'     => 'Mes de No Pago',
 	''     => '',
 	''     => '',
 

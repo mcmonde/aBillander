@@ -8,7 +8,13 @@
                 <span class="icon-bar"></span>
             </button>
             @auth
-                <a href="{{ URL::to( (Auth::user()->home_page ? Auth::user()->home_page : '/home') ) }}" class="navbar-brand">{!! \App\Configuration::get('HEADER_TITLE') !!}</a>
+                <a href="{{ URL::to( (Auth::user()->home_page ? Auth::user()->home_page : '/home') ) }}" class="navbar-brand" style="position: relative;">
+                @if ($img = \App\Context::getContext()->company->company_logo)
+                    <img class="navbar-brand img-rounded" height="{{ '40' }}" src="{{ URL::to( \App\Company::$company_path . $img ) }}" style="position: absolute; margin-top: -15px; padding: 7px; border-radius: 12px;">
+                @else
+                {!! \App\Configuration::get('HEADER_TITLE') !!}
+                @endif
+                </a>
             @else
                 <a href="{{ URL::to('/') }}" class="navbar-brand"><span style="color:#dddddd"><i class="fa fa-bolt"></i> a<span style="color:#fff">Billander</span></span></a>
             @endauth

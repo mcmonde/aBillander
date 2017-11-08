@@ -5,7 +5,7 @@
 
 @section('content')
  
-            @include('customer_invoices.edit_invoice')
+            @include('customer_invoices._form')
 
 @stop
 
@@ -13,7 +13,7 @@
 
 @section('styles')
 
-   {!! HTML::style('../../aBillander/public/assets/lib/autocomplete/content/styles.css') !!}
+   {!! HTML::style('assets/plugins/AutoComplete/styles.css') !!}
 
 {{-- Date Picker --}}
 
@@ -26,6 +26,6 @@
 
 @section('scripts')
 
-            @include('customer_invoices.js.create_invoice_js')
+            @include('customer_invoices.js.manage_invoice_js')
 
 @stop

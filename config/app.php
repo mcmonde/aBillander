@@ -169,6 +169,7 @@ return [
          */
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -238,6 +239,7 @@ return [
         'Form'   => Collective\Html\FormFacade::class,
         'HTML'   => Collective\Html\HtmlFacade::class,
         'iImage' => Intervention\Image\Facades\Image::class,
+        'PDF'    => Barryvdh\DomPDF\Facade::class,
 
     ],
 

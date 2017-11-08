@@ -219,4 +219,32 @@ return [
 	'There is not any Payment Method &#58&#58 You must create one first'    
 	 => 'No existe ninguna Forma de Pago &#58&#58 Debe crear una primero',
 
+
+	/*
+	|--------------------------------------------------------------------------
+	| Calendar :: Months & Days
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+	'January' => 'Enero',
+	'February' => 'Febrero',
+	'March' => 'Marzo',
+	'April' => 'Abril',
+	'May' => 'Mayo',
+	'June' => 'Junio',
+	'July' => 'Julio',
+	'August' => 'Agosto',
+	'September' => 'Septiembre',
+	'October' => 'Octubre',
+	'November' => 'Noviembre',
+	'December' => 'Diciembre',
+
+	'monthNames' => ['Enero','Febrero','Marzo','Abril','Mayo','Junio', 'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+
+	'dayNames' => ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],			// firstDay: 1,
+              
+
 ];

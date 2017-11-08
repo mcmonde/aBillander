@@ -142,7 +142,21 @@ return array(
 	'pending' => 'Pendiente',
 	'halfpaid'    => 'Parcialmente Pagado',
 	'paid'    => 'Pagado',
+    'overdue' => 'Vencido',
     'doubtful'    => 'Pago Dudoso',
+    'archived' => 'Archivado',
+
+	/*
+	|--------------------------------------------------------------------------
+	| Payment Types
+	|--------------------------------------------------------------------------
+	|
+	| .
+	|
+	*/
+
+	'receivable' => 'Cobro',
+	'payable'    => 'Pago',
 
 	/*
 	|--------------------------------------------------------------------------

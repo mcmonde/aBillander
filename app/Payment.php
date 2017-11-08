@@ -1,8 +1,25 @@
-<?php namespace App;
+<?php 
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\ViewFormatterTrait;
+
 class Payment extends Model {
+
+    use ViewFormatterTrait;
+
+    public static $types = array(
+            'receivable', 
+            'payable',
+        );
+
+    public static $statuses = array(
+            'pending', 
+            'bounced', 
+            'paid',
+        );
 
  //   protected $guarded = array('id');
 
@@ -12,7 +29,7 @@ class Payment extends Model {
     					];
 
     protected $fillable =  ['reference', 'name', 'due_date', 'payment_date', 
-                            'amount', 'currency_conversion_rate', 'status', 
+                            'amount', 'currency_id', 'currency_conversion_rate', 'status', 
                             'notes'];
 
 	// Add your validation rules here
@@ -21,12 +38,32 @@ class Payment extends Model {
 //            'payment_date' => 'date',
 	];
 
+
+    public static function getTypeList()
+    {
+            $list = [];
+            foreach (self::$types as $type) {
+                $list[$type] = l($type, [], 'appmultilang');;
+            }
+
+            return $list;
+    }
+
+    public static function getStatusList()
+    {
+            $list = [];
+            foreach (self::$statuses as $status) {
+                $list[$status] = l($status, [], 'appmultilang');;
+            }
+
+            return $list;
+    }
     
     public function getDueDateAttribute($value)
     {
         // See: https://laracasts.com/discuss/channels/general-discussion/how-to-carbonparse-in-ddmmyyyy-format
 
-        return \App\FP::date_short( \Carbon\Carbon::parse($value), \App\Context::getContext()->language->date_format_lite );
+        return abi_date_short( \Carbon\Carbon::parse($value), \App\Context::getContext()->language->date_format_lite );
     }
 
     public function setDueDateAttribute($value)
@@ -37,7 +74,7 @@ class Payment extends Model {
     public function getPaymentDateAttribute($value)
     {
         if ($value)
-            return \App\FP::date_short( \Carbon\Carbon::parse($value), \App\Context::getContext()->language->date_format_lite );
+            return abi_date_short( \Carbon\Carbon::parse($value), \App\Context::getContext()->language->date_format_lite );
         else
             return NULL;
     }
@@ -52,7 +89,8 @@ class Payment extends Model {
 
     public function getAmountAttribute($value)
     {
-        return \App\FP::money_amount( $value, $currency = null);
+        // return abi_money_amount( $value, $currency = null);
+        return $value;
     }
 
 //    public function setAmountAttribute($value)
@@ -67,6 +105,16 @@ class Payment extends Model {
     | Relationships
     |--------------------------------------------------------------------------
     */
+    
+    public function paymentable()
+    {
+        return $this->morphTo();
+    }
+    
+    public function paymentorable()
+    {
+        return $this->morphTo();
+    }
 
     public function customerInvoice()
     {

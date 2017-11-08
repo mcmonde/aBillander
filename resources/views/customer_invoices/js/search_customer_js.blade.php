@@ -62,6 +62,7 @@
         
         if ( !($("#customer_id").val() > 0) ) {
             alert( "{{ l('You should choose a Customer') }}" );
+            $("#customer_name").focus();
             return false;
         }
 

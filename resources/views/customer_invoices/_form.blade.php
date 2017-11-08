@@ -24,12 +24,18 @@
                         <i class="fa fa-info-circle"></i>
                     </button>
                  </a></span>
-               {{ $invoice->document_reference }}
+               @if ( $invoice->document_reference )
+                 {{ $invoice->document_reference }}
+               @else
+                 <a href="javascript:void(0);" class="btn btn-primary btn-sm"><strong>{{ \App\CustomerInvoice::getStatusList()[ $invoice->status ] }}</strong></a>
+               @endif
              </h2>
 
         </div>
     </div>
 </div> 
+
+   @include('errors.list')
 
    @include('customer_invoices.modal_product_search')
 
@@ -48,20 +54,26 @@
       @if ( !$invoice->id )
       <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-danger">{{l('NOT Saved', [], 'layouts')}}</span></a></li>
       @endif
-      <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-info"> {{l('DRAFT', [], 'layouts')}} </span></a></li>
+      <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-info"> {{ \App\CustomerInvoice::getStatusList()[ $invoice->status ] }} </span></a></li>
       @if ( $customer->sales_equalization )
         <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-primary"> {{l('Equalization Tax')}} </span></a></li>
       @endif
    </ul>
  
 
-{{-- Form::open(array('url' => 'customerinvoices', 'id' => 'f_new_order', 'name' => 'f_new_order', 'class' => 'form')) --}}
-{!! Form::model($invoice, array('method' => 'POST', 'route' => array('customerinvoices.store'), 'id' => 'f_new_order', 'name' => 'f_new_order', 'class' => 'form')) !!}
+@if ( isset($invoice->id) && ($invoice->id>0) )
+  {!! Form::model($invoice, array('method' => 'PATCH', 'route' => array('customerinvoices.update', $invoice->id), 'id' => 'f_new_order', 'name' => 'f_new_order', 'class' => 'form')) !!}
+@else
+  {!! Form::model($invoice, array('method' => 'POST', 'route' => array('customerinvoices.store'), 'id' => 'f_new_order', 'name' => 'f_new_order', 'class' => 'form')) !!}
+@endif
 
    <input type="hidden" id="nbrlines" name="nbrlines" value="{{ count($invoice->customerInvoiceLines) }}"/>
    <input type="hidden" id="customer_id" name="customer_id" value="{{$customer->id}}"/>
-   <input type="hidden" name="einvoice" value="{{$customer->accept_einvoice}}"/>
+   <input type="hidden" id="status" name="status" value="{{$invoice->status}}"/>
    <input type="hidden" id="invoicing_address_id" name="invoicing_address_id" value="{{$customer->invoicing_address_id}}"/>
+
+   <input type="hidden" name="prices_entered_with_tax" value="{{$invoice->prices_entered_with_tax}}"/>
+   <input type="hidden" name="round_prices_with_tax"   value="{{$invoice->round_prices_with_tax}}"/>
 
 <!-- id="div_header" -->  
    <div class="container-fluid">
@@ -95,7 +107,7 @@
 <!-- id="div_profit" -->
    <div class="table-responsive" id="div_profit" style="padding-top: 20px;">
 
-      @include('customer_invoices.create_profit')
+      @include('customer_invoices._tab_profit')
 
    </div>
 
@@ -103,7 +115,8 @@
 <!-- id="div_payments" -->
    <div class="table-responsive" id="div_payments" style="padding-top: 20px;">
 
-      @include('customer_invoices.create_payments')
+      @include('customer_invoices._tab_payments')
 
    </div>
-   
+
+@include('customer_invoices.modal_save_invoice')

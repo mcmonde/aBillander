@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php 
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,6 +11,7 @@ use App\Company as Company;
 use App\Address as Address;
 use App\Country as Country;
 use App\Configuration as Configuration; 
+use \iImage as iImage;
 use View;
 
 class CompaniesController extends Controller {
@@ -126,7 +129,23 @@ class CompaniesController extends Controller {
 		$company = $this->company->findOrFail($id);
 		$address = $company->address;
 
-		$request->merge(['notes' => $request->input('address.notes'), 'name_commercial' => $request->input('address.name_commercial')]);
+		// Handle the user upload of company logo
+		if ( $request->has('company_logo_file') ) {
+			$file = $request->file('company_logo_file');
+//			$filename = 'company_logo'.'.'.$file->getClientOriginalExtension();
+			$filename = time().'.'.$file->getClientOriginalExtension();
+//			iImage::make($file)->resize(300,300)->save( public_path('/uploads/company/'.$filename) );
+			iImage::make($file)->save( public_path( \App\Company::$company_path . $filename ) );
+
+			// Delete old image
+			$old_file = public_path() . \App\Company::$company_path . \App\Context::getContext()->company->company_logo;
+	        if ( file_exists( $old_file ) ) {
+	            unlink( $old_file );
+      		}
+
+		}
+
+		$request->merge(['company_logo' => $filename, 'notes' => $request->input('address.notes'), 'name_commercial' => $request->input('address.name_commercial')]);
 		
 		$company->update(  $request->all()  );
 

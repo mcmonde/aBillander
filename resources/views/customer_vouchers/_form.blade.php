@@ -6,11 +6,7 @@
 </div>
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
     {!! Form::label('status', l('Status', [], 'layouts')) !!}
-    {!! Form::select('status', array( 
-                      'pending' => l('pending', [], 'appmultilang'),
-                      'bounced' => l('bounced', [], 'appmultilang'),
-                      'paid'    => l('paid',    [], 'appmultilang')
-                  ), null, array('class' => 'form-control')) !!}
+    {!! Form::select('status', \App\Payment::getStatusList(), null, array('class' => 'form-control')) !!}
 </div>
 </div>
 

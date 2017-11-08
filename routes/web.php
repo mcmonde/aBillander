@@ -16,8 +16,6 @@
 Route::get('/', 'WelcomeController@index');
 Route::get('language/{id}', 'WelcomeController@setLanguage');
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::get('404', function()
 {
     return view('errors.404');
@@ -66,6 +64,9 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
     // See: https://gist.github.com/drawmyattention/8cb599ee5dc0af5f4246
     Route::group(['middleware' => 'authAdmin'], function()
     {
+        // Admin Home Page
+        Route::get('/home', 'HomeController@index')->name('home');
+
         Route::resource('companies', 'CompaniesController');
         
         Route::resource('configurations',    'ConfigurationsController');
@@ -160,7 +161,7 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
 
 
         Route::resource('customerinvoices'      , 'CustomerInvoicesController');
-        Route::get('customerinvoices/pdf/{id}'  , 'CustomerInvoicesController@ShowPDF');
+        Route::get('customerinvoices/{id}/pdf'  , 'CustomerInvoicesController@ShowPDF');
         Route::post('customerinvoices/sendemail', 'CustomerInvoicesController@SendEmail');
         Route::post('customerinvoices/ajax/price_lookup', array('uses' => 'CustomerInvoicesController@ajaxLineSearch', 
                                                         'as' => 'customerinvoices.ajax.lineLookup'));

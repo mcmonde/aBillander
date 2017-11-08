@@ -104,6 +104,24 @@ trait ViewFormatterTrait
 
         return $number;
     }
+
+    public function as_money_numberable( $val = 0.0, \App\Currency $currency = null)      // , $round_sup = false )
+    {
+        $data = floatval( $val );
+
+        if (!$currency)
+            $currency = \App\Context::getContext()->currency;
+
+//        if ( $round_sup ) {
+//            $p = pow(10, $currency->decimalPlaces);
+//            $data = ceil(round($data * $p, 1)) / $p;
+//        }
+
+        $number = number_format($data, $currency->decimalPlaces);
+
+        return $number;
+    }
+
     public function as_quantityable( $val = 0.0, $decimalPlaces = null )
     {
         $data = floatval( $val );

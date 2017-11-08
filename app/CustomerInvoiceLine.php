@@ -15,10 +15,18 @@ class CustomerInvoiceLine extends Model {
             'comment',
         );
     
-    protected $guarded = array('id');
+//    protected $guarded = array('id');
 
 	// Don't forget to fill this array
-	// protected $fillable = [];
+	protected $fillable = ['line_sort_order', 'line_type', 
+                    'product_id', 'combination_id', 'reference', 'name', 'quantity', 
+                    'cost_price', 'unit_price', 'unit_customer_price', 'unit_final_price', 'unit_final_price_tax_inc', 
+                    'sales_equalization', 'discount_percent', 'discount_amount_tax_incl', 'discount_amount_tax_excl', 
+//                  'total_tax_incl', 'total_tax_excl', 
+                    'tax_percent', 'commission_percent', 'notes', 'locked',
+ //                 'customer_invoice_id',
+                    'tax_id', 'sales_rep_id',
+    ];
 
     // Add your validation rules here
     public static $rules = [

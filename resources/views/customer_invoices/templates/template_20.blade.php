@@ -1,168 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<meta name="dompdf.view" content="XYZ,0,0,1" />
-	<!-- http://stackoverflow.com/questions/10844990/pdf-generation-using-dompdf -->
-	
-	<link href='http://fonts.googleapis.com/css?family=Dosis' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" href="{{ url('invoices/css/invoice.css') }}">
-</head>
-<body>
-	<div id="invoice">
-		<table>
-			<tr>
-				<td class="col-md-8">
-					<span class="h1">
-					@if (isset($logo->name) OR 1)
-					<img src="{{ URL::to('upload/' . '1425983247.png' ) }}">
-					@endif
-					</span>
-				</td>
-				<td class="col-md-4">
-					<span class="h1">Factura</span>
-					
-					<table class="border">
-						<tr>
-							<th class="col-md-6">Núm.:</th>
-							<th class="col-md-6">Fecha:</th>
-						</tr>
+<html lang="{{ \App\Context::getContext()->language->iso_code }}">
+    <head>
+        <meta charset="utf-8">
+        <title>{{ 'Invoice' }}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <style>
+            h1,h2,h3,h4,p,span,div { font-family: DejaVu Sans; }
+        </style>
+    </head>
+    <body>
+        <div style="clear:both; position:relative;">
+            <div style="position:absolute; left:0pt; width:250pt;">
+                @if ($img = \App\Context::getContext()->company->company_logo)
+                    <img class="img-rounded" height="{{ '60' }}" src="{{ URL::to( \App\Company::$company_path . $img ) }}">
+                @endif
+            </div>
+            <div style="margin-left:300pt;">
+                <!-- h2>{{ 'Invoice' }} {{-- $cinvoice->document_id > 0 ? '#' . $cinvoice->document_reference : 'BORRADOR' --}}</h2 -->
+                <span style="font-size: 24px; margin-bottom: 10px;"><b>Invoice #: </b>  
+                                    @if( $cinvoice->document_id > 0 )
+                                        {{ $cinvoice->document_prefix }} {{ $cinvoice->document_id }}
+                                    @else
+                                        <span class="small">BORRADOR</span>
+                                    @endif
+                </span><br />
+                <b>Date: </b> {{ $cinvoice->document_date }}<br />
+                <b>Agent: </b> {{ $cinvoice->sales_rep_id }}<br />
+            </div>
+        </div>
+        <br />
+        <div style="clear:both; position:relative;">
+            <div style="position:absolute; left:0pt; width:250pt;">
+                <h4>Business Details:</h4>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        
+                        {{ $company->name_fiscal }}<br />
+                        VAT ID: {{ $company->identification }}<br />
+                        {{ $company->address->address1 }} {{ $company->address->address2 }}<br />
+                        {{ $company->address->postcode }} {{ $company->address->city }}<br />
+                        {{ $company->address->state->name }}, {{ $company->address->country->name }}<br />
+                        {{ $company->address->phone }} / {{ $company->address->email }}<br />
 
-						<tr>						
-							<td class="text-center">@if( $cinvoice->document_id > 0 )
-														{{ $cinvoice->document_prefix }} {{ $cinvoice->document_id }}
-													@else
-														<span class="small">BORRADOR</span>
-													@endif</td>
-							<td class="text-center">{{ $cinvoice->document_date }}</td>
-						</tr>
-					</table>					
-				</td>
-			</tr>
-		</table>
-		
-		<table>
-			<tr>
-				<td class="col-md-6">
-					<p class="text-left"><span class="h2">{{ $company->name_fiscal }}</span></p>
-					<p class="details">NIF/CIF: {{ $company->identification }}</p>
-					<p class="details">{{ $company->address->address1 }} {{ $company->address->address2 }}</p>
-					<p class="details">{{ $company->address->city }}, {{ $company->address->postcode }} {{ $company->address->state }}, {{ $company->address->country }}</p>
-					<p class="details"></p>
-					<p class="details">{{ $company->address->phone }} / {{ $company->address->email }}</p>
-				</td>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-left: 300pt;">
+                <h4>Customer Details:</h4>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        
+                        {{ $cinvoice->customer->name_fiscal }}<br />
+                        VAT ID: {{ $cinvoice->customer->identification }}<br />
+                        {{ $cinvoice->invoicingAddress->address1 }} {{ $cinvoice->invoicingAddress->address2 }}<br />
+                        {{ $cinvoice->invoicingAddress->postcode}} {{ $cinvoice->invoicingAddress->city }}<br />
+                        {{ $cinvoice->invoicingAddress->state->name }}, {{ $cinvoice->invoicingAddress->country->name }}<br />
+                        {{ $cinvoice->invoicingAddress->phone }} / {{ $cinvoice->invoicingAddress->mail }}<br />
 
-				<td class="col-md-6">			
-					<p class="text-left background-th"><span class="h2">Cliente: </span> <span class="h4">{{ $cinvoice->customer->name_fiscal }}</span></p>
-					<p class="details">NIF/CIF: {{ $cinvoice->customer->identification }}</p>
-					<p class="details">{{ $cinvoice->invoicingAddress->address1 }} {{ $cinvoice->invoicingAddress->address2 }}</p>
-					<p class="details">{{ $cinvoice->invoicingAddress->city }}, {{ $cinvoice->invoicingAddress->postcode}} {{ $cinvoice->invoicingAddress->state }}, {{ $cinvoice->invoicingAddress->country }}</p>
-					<p class="details">{{-- $cinvoice->invoicingAddress->firstname } } { { $cinvoice->invoicingAddress->lastname --}}</p>
-					<p class="details">{{ $cinvoice->invoicingAddress->phone }} &nbsp; {{ $cinvoice->invoicingAddress->mail }}</p>
-				</td>
-			</tr>
-		</table>
-			
-		@if ($cinvoice->customerInvoiceLines->count()>0)  
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+@if ($cinvoice->customerInvoiceLines->count()>0)  
 
-		<table class="border table-striped top20">
-			<tr>
-				<th class="crt">Ref.</th>
-				<th class="product">Item</th>
-				<th class="qty">Cantidad</th>
-				<th class="small">Precio</th>
-				<th class="qty">Descuento</th>
-				<th class="qty">Impuesto</th>
-				<th class="small">Total</th>
-			</tr>
-			
-			@foreach ($cinvoice->customerInvoiceLines as $line)
+        <!-- h4>Items:</h4 -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>SKU</th>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($cinvoice->customerInvoiceLines as $line)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $line->reference }}</td>
+                        <td>{{ $line->name }}</td>
+                        <td>{{ $line->unit_final_price }}</td>
+                        <td>{{ $line->discount_percent/100.0 }} {{ $line->discount_amount_tax_excl }}</td>
+                        <td>{{ $line->quantity }}</td>
+                        <td>{{ $line->total_tax_excl }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <div style="clear:both; position:relative;">
 
-				<tr>
-					<td>
-						{{ $line->reference }}
-					</td>
-					
-					<td>
-						{{ $line->name }}
-					</td>
-					
-					<td class="text-center">
-						{{ $line->quantity }}
-					</td>
-					
-					<td class="text-right">
-						{{ $line->unit_final_price }}
-					</td>
-					
-					<td class="text-center">
-						{{ $line->discount_percent }} %
-					</td>
-					
-					<td class="text-right">
-						{{ \App\Tax::find($line->tax_id)->percent }} %
-					</td>
-					
-					<td class="text-right">
-						{{ $line->total_tax_incl }}
-					</td>							
-				</tr>
-				
-				@if ($line->notes)
-				<tr>
-					<td colspan="7">
-						{{ $line->notes }}
-					</td>
-				</tr>
-				@endif
-									
-			@endforeach	
+            <div style="position:absolute; left:0pt; width:250pt;">
+                <h4>Taxes:</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tax</th>
+                            <th>Base</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($cinvoice->customerinvoicetaxes() as $tax)
+                        <tr>
+                            <td>{{ $tax->percent }} %</td>
+                            <td>{{ $tax->taxable_base }}</td>
+                            <td>{{ $tax->total_line_tax }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
-			
-			<tr class="bg-white">
-				<td colspan="4" class="text-center">
-					<div class="top20">Gracias por su compra!</div>
-				</td>
-				
-				<td colspan="3" class="total">
-					<div class="top10">Sub-Total: 
-						{{ $cinvoice->total_products_tax_excl }}
-					</div>
-					
-					<div>Impuestos: 
-						{{ $cinvoice->total_products_tax_incl - $cinvoice->total_products_tax_excl }}
-					</div>
-			{{--
-					@if ( $discountItems != 0 )
-						<div>{{ trans('invoice.discount') }}: 
-							- {{ $invoice->position == 1 ? $invoice->currency : '' }} {{ number_format($discountItems, 2, '.', '') }} {{ $invoice->position == 2 ? $invoice->currency : '' }}
-						</div>
-					@endif
-			--}}		
-					@if ( $cinvoice->total_discounts_tax_incl != 0 )
-						<div>Descuento ({{ $cinvoice->document_discount }}%): 
-							{{ $cinvoice->total_discounts_tax_incl }}
-						</div>
-					@endif
-					
-					<div class="h4 top10">
-						<strong>TOTAL: 
-							{{ $cinvoice->total_tax_incl }}
-						</strong>
-					</div>
-				</td>
-			</tr>			
-		</table>
+            <div style="margin-left: 300pt;">
+                <h4>Total:</h4>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td><b>Subtotal</b></td>
+                            <td>{{ $cinvoice->total_tax_excl }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>
+                                    Taxes 
+                                </b>
+                            </td>
+                            <td>{{ $cinvoice->total_tax_incl - $cinvoice->total_tax_excl }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>TOTAL</b></td>
+                            <td><b>{{ $cinvoice->total_tax_incl }}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table">
+                    <tbody>
+                        {{-- Gorrino style programming here :-( (but works!) --}}
+                        @for ($i = 0; $i < (count( $cinvoice->customerinvoicetaxes() )-2); $i++)
+                        <tr style="visibility:hidden">
+                            <td> &nbsp; </td>
+                            <td> &nbsp; </td>
+                        </tr>
+                        @endfor
+                    </tbody>
+                </table>
+            </div>
 
-		@endif
+        </div>
 
-	</div>
-	
-	@if (isset($cinvoice->text))
-		<div class="footer">
-			{{ $cinvoice->text }}
-		</div>	
-	@endif
-	
-</body>
+@endif
+
+        <div style="clear:both; position:relative;">
+            
+                <div style="position:absolute; left:0pt; width:100%;">
+                    <h4>Notes:</h4>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <b>Payment: </b> {{ $cinvoice->paymentmethod->name }}<br />
+                            {{ $cinvoice->notes }}
+                        </div>
+                    </div>
+                </div>
+            
+            <div style="margin-left: 300pt;">
+            </div>
+        </div>
+
+        @if (isset($cinvoice->text))
+            <br /><br />
+            <div class="well">
+                {{ $cinvoice->text }}
+            </div>
+        @endif
+    </body>
 </html>

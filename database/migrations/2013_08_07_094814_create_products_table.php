@@ -16,7 +16,8 @@ class CreateProductsTable extends Migration {
 		Schema::create('products', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->enum('product_type', \App\Product::$types)->default('simple');
+//			$table->enum('product_type', \App\Product::$types)->default('simple');
+			$table->string('product_type', 32)->nullable(false)->default('simple');
 			// 'simple'     => a collection of related products that can be purchased individually and only 
 							// consist of simple products. Simple products are shipped and have no combitions.
 			// 'virtual'    => one that doesn’t require shipping or stock management (Services, downloads...).

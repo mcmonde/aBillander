@@ -131,14 +131,39 @@
         </div>
 
         <div class="row">
-                  <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('payment_day') ? 'has-error' : '' }}">
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('payment_days') ? 'has-error' : '' }}">
                      {{ l('Payment Day(s)') }}
                          <a href="javascript:void(0);" data-toggle="popover" data-placement="top" 
-                                            data-content="{{ l('Comma separated list of days, like: 3,17') }}">
+                                            data-content="{{ l('Comma separated list of days, as in: 3,17') }}">
                                 <i class="fa fa-question-circle abi-help"></i>
                          </a>
-                     {!! Form::text('payment_day', null, array('class' => 'form-control', 'id' => 'payment_day')) !!}
-                     {!! $errors->first('payment_day', '<span class="help-block">:message</span>') !!}
+                     {!! Form::text('payment_days', null, array('class' => 'form-control', 'id' => 'payment_days')) !!}
+                     {!! $errors->first('payment_days', '<span class="help-block">:message</span>') !!}
+                  </div>
+@php
+// \Carbon\Carbon::setLocale('es');
+// $date = \Carbon\Carbon::now();
+
+$a=l('monthNames', [], 'layouts');
+
+$monthList = [];
+for($m=1; $m<=12; ++$m){
+//    $date->month = $m;
+    // $monthList[$m] = l(date('F', mktime(0, 0, 0, $m, 1)), [], 'layouts');;
+//    $monthList[$m] = l($date->formatLocalized('%B'), [], 'layouts');
+// $a .= "'".$monthList[$m]."' => '',\n";
+
+$monthList[$m] = $a[$m-1];
+}
+// echo $a;
+
+@endphp
+                  <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('no_payment_month') ? 'has-error' : '' }}">
+                     {{ l('No Payment Month') }}
+                     {{-- !! Form::text('no_payment_month', null, array('class' => 'form-control', 'id' => 'no_payment_month')) !! --}}
+
+                     {!! Form::select('no_payment_month', array('0' => l('-- Please, select --', [], 'layouts')) + $monthList, null, array('class' => 'form-control', 'id' => 'no_payment_month')) !!}
+                     {!! $errors->first('no_payment_month', '<span class="help-block">:message</span>') !!}
                   </div>
         </div>
 

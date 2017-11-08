@@ -15,6 +15,7 @@ class Customer extends Model {
     protected $dates = ['deleted_at'];
 	
     protected $fillable = ['name_fiscal', 'name_commercial', 'website', 'identification', 'webshop_id', 
+                            'payment_days', 'no_payment_month', 
                            'outstanding_amount_allowed', 'unresolved_amount', 
                            'notes', 'sales_equalization', 'accept_einvoice', 'blocked', 'active', 
                            'sales_rep_id', 'currency_id', 'customer_group_id', 'payment_method_id', 'sequence_id', 
@@ -24,6 +25,7 @@ class Customer extends Model {
     
     public static $rules = array(
         'name_fiscal' => 'required',
+        'no_payment_month' => 'numeric|min:0|max:12',
     	);
 
     public static function boot()
@@ -77,6 +79,66 @@ class Customer extends Model {
             return $this->customergroup->pricelist;
         }
     }
+    
+    public function paymentDays() 
+    {
+        if ( !trim($this->payment_day) ) return [];
+
+        $dstr = str_replace( ';', ',', $this->payment_day );
+        $days = array_map( 'intval', explode(',', $dstr) );
+
+        sort( $days, SORT_NUMERIC );
+
+        return $days;
+    }
+
+    /**
+     * Adjust date to Customer Payment Days
+     */
+    public function paymentDate( \Carbon\Carbon $date ) 
+    {
+        $pdays = $this->paymentDays();
+        $n = count($pdays);
+        if ( !$n ) return $date;
+
+        $day   = $date->day;
+        $month = $date->month;
+        $year  = $date->year;
+
+        if ( $day > $pdays[$n-1] ) {
+
+            $day = $pdays[0];
+
+            if ($month == 12) {
+
+                $month = 1;
+                $year += 1;
+
+            } else {
+
+                $month += 1;
+
+            }
+
+        } else {
+
+            foreach ($pdays as $pday) {
+                if ($day <= $pday) {
+                    $day = $pday;
+                    break;
+                }
+            }
+
+        }
+
+        $payday = \Carbon\Carbon::createFromDate($year, $month, $day);
+
+        // Check Saturday & Sunday
+        if ( $payday->dayOfWeek == 6 ) $payday->addDays(2); // Saturday
+        if ( $payday->dayOfWeek == 0 ) $payday->addDays(1); // Sunday
+
+        return $payday;
+    }
 
 
     /*
@@ -97,6 +159,13 @@ class Customer extends Model {
     {
         return $this->morphMany('App\Address', 'addressable');
     }
+
+
+    public function getAddressList()
+    {
+        return $this->morphMany('App\Address', 'addressable')->pluck( 'alias', 'id' )->toArray();
+    }
+
 
     public function address()
     {
@@ -143,7 +212,9 @@ class Customer extends Model {
     
     public function payments()
     {
-        return $this->hasMany('App\Payment', 'owner_id')->where('payment.owner_model_name', '=', 'Customer');
+        // return $this->hasMany('App\Payment', 'owner_id')->where('payment.owner_model_name', '=', 'Customer');
+
+        return $this->morphMany('App\Payment', 'paymentorable');
     }
 
     

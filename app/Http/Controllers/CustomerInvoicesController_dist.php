@@ -170,6 +170,12 @@ class CustomerInvoicesController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+		return $this->storeOrUpdate($request);
+
+	}
+
+	public function storeOrUpdate( Request $request, $id = null )
+	{
 		$customer_id = intval($request->input('customer_id', 0));
 
 		if ( $request->has('submitCustomer_id')) 
@@ -189,35 +195,9 @@ class CustomerInvoicesController extends Controller {
 
 		/* *********************************************************************** */
 
-		$customerInvoice = $this->storeOrUpdate( $request );
-
-		/* *********************************************************************** */
-
-		$nextAction = $request->input('nextAction', '');
-
-		if ( $nextAction == 'showInvoice' ) 
-			return $this->show($customerInvoice->id);
-		
-		if ( $nextAction == 'completeInvoice' ) 
-			return redirect('customerinvoices/' . $customerInvoice->id . '/edit')
-				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $customerInvoice->id], 'layouts'));
-
-		return redirect('customerinvoices')
-				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $customerInvoice->id], 'layouts'));
-
-	}
-
-	public function storeOrUpdate( Request $request, $id = null )
-	{
-		$customer_id = intval($request->input('customer_id', 0));
-
-		/* *********************************************************************** */
-
 
 		// Do the Mambo!
-		$customerInvoice = ( $id == null ) 
-							? new CustomerInvoice() 
-							: $this->customerInvoice->findOrFail($id);
+		$customerInvoice = new CustomerInvoice();
 
 		// STEP 1 : validate data
 
@@ -371,7 +351,10 @@ class CustomerInvoicesController extends Controller {
 
 		$customerInvoice->save();
 
-		return $customerInvoice;
+		// ToDo: Calculate due dates & vouchers
+
+		return redirect('customerinvoices')
+				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $customerInvoice->id], 'layouts'));
 	}
 
 	/**
@@ -446,71 +429,198 @@ class CustomerInvoicesController extends Controller {
 	 */
 	public function update($id, Request $request)
 	{
+		abi_r($request->all(), true);
 
-		/* *********************************************************************** */
+		$customerInvoice = $this->customerInvoice->findOrFail($id);
+		
+		// STEP 1 : validate data
 
-		$customerInvoice = $this->storeOrUpdate( $request, $id );
+		// (Gorrino) Check Shipping Address
+		if ( $request->input('shipping_address_id') < 1 ) 
+			$request->merge( array('shipping_address_id' => $request->input('invoicing_address_id')) );
 
-		/* *********************************************************************** */
+		$dates = [
+						'document_date' => \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $request->input('document_date_form') ),
+						'delivery_date' => \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $request->input('delivery_date_form') ),
+				 ];
+		$request->merge( $dates );
+
+
+
+		$this->validate($request, CustomerInvoice::$rules);
+
+
+
+		// STEP 2 : build objects
+		
+		if ( !$customerInvoice->document_reference )
+		if ( $request->input('save_as', 'draft') == 'invoice' ) {
+			$seq = \App\Sequence::find( $request->input('sequence_id') );
+			$doc_id = $seq->getNextDocumentId();
+			$extradata = [	'document_prefix'      => $seq->prefix,
+							'document_id'          => $doc_id,
+							'document_reference'   => $seq->getDocumentReference($doc_id),
+							'status'               => 'pending',
+						 ];
+			$request->merge( $extradata );
+		}
+
+		$customerInvoice->update($request->all());
+
+
+		// 
+		// Lines stuff
+		// 
+
+		// STEP 1 : Delete current lines
+
+		// $customerInvoice->customerInvoiceLines()->delete();
+		foreach( $customerInvoice->customerInvoiceLines as $line)
+		{
+			$line->delete();		// Trigger ondelete events
+		}
+
+		// STEP 2 : Create new lines
+
+		$line = $this->customerInvoiceLine;
+
+		// Loop...
+		$n = intval($request->input('nbrlines'));
+
+        for($i = 0; $i < $n; $i++)
+        {
+			if ( !$request->has('lineid_'.$i) ) continue;	// Line was deleted on View
+
+			// $line = new CustomerInvoiceLine();
+			$line = $this->customerInvoiceLine;
+
+			$line->line_sort_order = $request->input('line_sort_order_'.$i);
+			$line->line_type       = $request->input('line_type_'.$i);
+
+			$line->product_id     = $request->input('product_id_'.$i);
+			$line->combination_id = $request->input('combination_id_'.$i);
+			$line->reference      = $request->input('reference_'.$i);
+			$line->name           = $request->input('name_'.$i);
+			$line->quantity       = $request->input('quantity_'.$i);
+
+			$line->cost_price          = $request->input('cost_price_'.$i);
+			$line->unit_price          = $request->input('unit_price_'.$i);
+			$line->unit_customer_price = $request->input('unit_customer_price_'.$i);
+
+			$line->unit_final_price    = $request->input('unit_final_price_'.$i);
+
+			$line->unit_net_price   = $request->input('unit_final_price_'.$i)*(1.0 - $request->input('discount_percent_'.$i)/100.0);
+			
+			$line->discount_percent = $request->input('discount_percent_'.$i);
+			$line->discount_amount_tax_incl = $request->input('discount_amount_tax_incl_'.$i, 0.0);
+			$line->discount_amount_tax_excl = $request->input('discount_amount_tax_excl_'.$i, 0.0);
+
+			$line->total_tax_incl = $request->input('total_tax_incl_'.$i);
+			$line->total_tax_excl = $request->input('total_tax_excl_'.$i);
+
+			$line->tax_percent = $request->input('tax_percent_'.$i);
+			$line->commission_percent = $request->input('commission_percent_'.$i);
+
+			$line->notes = $request->input('notes_'.$i);
+			$line->locked = 0;
+			
+			$line->tax_id = $request->input('tax_id_'.$i);
+			if ($this->customerInvoice->sales_rep_id > 0) {
+
+		            $line->sales_rep_id = $this->customerInvoice->sales_rep_id;
+		            $line->commission_percent = $salesrep->commission_percent;
+
+		    } else {
+
+					$line->sales_rep_id = 0;
+		            $line->commission_percent = 0.0;
+		    }
+
+
+			$customerInvoice->CustomerInvoiceLines()->save($line);
+		}
+
+
 
 
 
 		// 
 		// Vouchers stuff
 		// 
-		if ( !$customerInvoice->draft && 1) {
+		if ( !$customerInvoice->draft OR 1) {
 
-			$customerInvoice->payments()->delete();
-
-			$ototal = $customerInvoice->total_tax_incl - $customerInvoice->down_payment;
+			$ototal = $customerInvoice->total_tax_incl;
 			$ptotal = 0;
 			$pmethod = $customerInvoice->paymentmethod;
 			$dlines = $pmethod->deadlines;
-			$pdays = $customerInvoice->customer->paymentDays();
+			$pday = $customerInvoice->customer->payment_day;
 			// $base_date = \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $customerInvoice->document_date );
 			$base_date = $customerInvoice->document_date;
 
 			for($i = 0; $i < count($pmethod->deadlines); $i++)
         	{
         		$next_date = $base_date->copy()->addDays($dlines[$i]['slot']);
-
         		// Calculate installment due date
-        		$due_date = $customerInvoice->customer->paymentDate( $next_date );
+        		$day   = $next_date->day;
+        		$month = $next_date->month;
+        		$year  = $next_date->year;
+
+        		if ( $pday AND ($day != $pday) ) {
+
+        			if ( $day > $pday) {
+
+        				if ($month == 12) {
+
+        					$month = 1;
+        					$year += 1;
+
+        				} else {
+
+        					$month += 1;
+
+        				}
+
+        			}
+
+        			$day = $pday;
+
+        		}
+
+        		$due_date = \Carbon\Carbon::createFromDate($year, $month, $day);
+
+        		// Check Saturday & Sunday
+        		if ( $due_date->dayOfWeek == 6 ) $due_date->addDays(2);
+        		if ( $due_date->dayOfWeek == 0 ) $due_date->addDays(1);
 
         		if ( $i != (count($pmethod->deadlines)-1) ) {
-        			$installment = $customerInvoice->as_money_numberable( $ototal * $dlines[$i]['percentage'] / 100.0, $customerInvoice->currency, true );
+        			$installment = \App\FP::money_amount( $ototal * $dlines[$i]['percentage'] / 100.0, $customerInvoice->currency );
         			$ptotal += $installment;
         		} else {
-        			// Last Installment
-        			$installment = $ototal - $ptotal;
+        			$installment = $ototal - $ptotal;	// Last Installment
         		}
 
         		// Create Voucher
-        		$data = [	'payment_type' => 'receivable', 
-        					'reference' => null, 
-                            'name' => ($i+1) . ' / ' . count($pmethod->deadlines), 
+        		$data = [	'reference' => null, 
+        					'name' => ($i+1) . ' / ' . count($pmethod->deadlines), 
 //        					'due_date' => \App\FP::date_short( \Carbon\Carbon::parse( $due_date ), \App\Context::getContext()->language->date_format_lite ), 
         					'due_date' => abi_date_short( \Carbon\Carbon::parse( $due_date ) ), 
         					'payment_date' => null, 
                             'amount' => $installment, 
-                            'currency_id' => $customerInvoice->currency_id,
                             'currency_conversion_rate' => $customerInvoice->currency_conversion_rate, 
                             'status' => 'pending', 
                             'notes' => null,
-                            'document_reference' => $customerInvoice->document_reference,
                         ];
 
                 $payment = \App\Payment::create( $data );
-                $customerInvoice->payments()->save($payment);
-                $customerInvoice->customer->payments()->save($payment);
-/*
+
+                $payment->currency_id = $customerInvoice->currency_id;
                 $payment->invoice_id = $customerInvoice->id;
                 $payment->model_name = 'CustomerInvoice';
                 $payment->owner_id = $customerInvoice->customer->id;
                 $payment->owner_model_name = 'Customer';
 
                 $payment->save();
-*/
+
                 // ToDo: update Invoice next due date
         	}
 			
@@ -519,17 +629,7 @@ class CustomerInvoicesController extends Controller {
 
 
 
-
-		/* *********************************************************************** */
-
-		$nextAction = $request->input('nextAction', '');
-
-		if ( $nextAction == 'showInvoice' ) 
-			return $this->show($customerInvoice->id);
 		
-		if ( $nextAction == 'completeInvoice' ) 
-			return redirect('customerinvoices/' . $customerInvoice->id . '/edit')
-				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $customerInvoice->id], 'layouts'));
 
 		return redirect('customerinvoices')
 				->with('info', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $customerInvoice->id], 'layouts'));

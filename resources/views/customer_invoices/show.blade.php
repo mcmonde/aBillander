@@ -17,14 +17,14 @@
 	width: 780px;	
 }
 
-.footer {
+.invoice_footer {
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
 	height: 40px;
 }
-.footer p {
+.invoice_footer p {
 	margin-bottom: 0;
 	font-size: 12px;
 	font-family: 'Dosis', sans-serif;
@@ -154,14 +154,14 @@ table.border td {
 		<div id="invoice">
 			<div class="col-md-6">
 				<h1 class="uppercase">
-				@if (isset($logo->name) OR 1)
-					<img src="{{ URL::to('../../aBillander/public/upload/' . '1425983247.png' ) }}" class="img-responsive thumbnail">
+				@if ($img = \App\Context::getContext()->company->company_logo)
+					<img src="{{ URL::to( \App\Company::$company_path . $img ) }}" class="img-responsive thumbnail">
 				@endif
 				</h1>
 			</div>
 			
 			<div class="col-md-2">
-				<span class="label label-info ">Invoice Status</span>
+				<span class="label label-info ">{{ \App\CustomerInvoice::getStatusList()[ $cinvoice->status ] }}</span>
 			</div>
 			
 			<div class="col-md-4">
@@ -182,7 +182,7 @@ table.border td {
 								<span class="small">BORRADOR</span>
 							@endif
 						</td>
-						<td class="text-center">{{ $cinvoice->document_date }}</td>
+						<td class="text-center">{{ abi_date_short($cinvoice->document_date) }}</td>
 					</tr>
 				</table>				
 			</div>
@@ -191,7 +191,7 @@ table.border td {
 				<h2>{{ $company->name_fiscal }}</h2>
 				<p class="details">NIF/CIF: {{ $company->identification }}</p>
 				<p class="details">{{ $company->address->address1 }} {{ $company->address->address2 }}</p>
-				<p class="details">{{ $company->address->city }}, {{ $company->address->postcode }} {{ $company->address->state }}, {{ $company->address->country }}</p>
+				<p class="details">{{ $company->address->city }}, {{ $company->address->postcode }} {{ $company->address->state->name }}, {{ $company->address->country->name }}</p>
 				<p class="details"></p>
 				<p class="details">{{ $company->address->phone }} / {{ $company->address->email }}</p>
 				<!-- p class="details">{ { $owner->bank }}</p>
@@ -202,7 +202,7 @@ table.border td {
 				<h2>Cliente: <span class="h4">{{ $cinvoice->customer->name_fiscal }}</span></h2>
 				<p class="details">NIF/CIF: {{ $cinvoice->customer->identification }}</p>
 				<p class="details">{{ $cinvoice->invoicingAddress->address1 }} {{ $cinvoice->invoicingAddress->address2 }}</p>
-				<p class="details">{{ $cinvoice->invoicingAddress->city }}, {{ $cinvoice->invoicingAddress->postcode}} {{ $cinvoice->invoicingAddress->state }}, {{ $cinvoice->invoicingAddress->country }}</p>
+				<p class="details">{{ $cinvoice->invoicingAddress->city }}, {{ $cinvoice->invoicingAddress->postcode}} {{ $cinvoice->invoicingAddress->state->name }}, {{ $cinvoice->invoicingAddress->country->name }}</p>
 				<p class="details">{{-- $cinvoice->invoicingAddress->firstname } } { { $cinvoice->invoicingAddress->lastname --}}</p>
 				<p class="details">{{ $cinvoice->invoicingAddress->phone }} &nbsp; {{ $cinvoice->invoicingAddress->mail }}</p>
 				<!-- p class="details">{ { $invoice->bank }}</p>
@@ -348,6 +348,9 @@ table.border td {
 		<div class="col-md-12">
 			
 	        <a href="{{{ URL::to('customerinvoices') }}}" class="btn btn-sm btn-default pull-right"><i class="fa fa-mail-reply"></i> {{l('Back to Customer Invoices')}}</a>
+            
+            <a href="{{ URL::to('customerinvoices/' . $cinvoice->id . '/edit') }}" class="btn btn-sm btn-warning pull-right" style="margin-right:5px;"><i class="fa fa-pencil"></i>
+            {{l('Edit', [], 'layouts')}}</a> 
 
 	        <a class="btn btn-primary" href="{{ URL::to('customerinvoices/pdf/' . $cinvoice->id) }}"><i class="fa fa-file-pdf-o"></i> {{l('PDF Export', [], 'layouts')}}</a>
 

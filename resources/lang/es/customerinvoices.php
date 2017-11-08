@@ -147,8 +147,13 @@ return [
 	'Commission'     => 'Comisión',
 	'Order Cost-Benefit Analysis'     => 'Rentabiliada Total de la Venta',
 	'Margin'     => 'Margen',
-	''     => '',
-	''     => '',
+
+	'Finish Up'     => 'Emitir',
+	'Invoice This'  => 'Facturar',
+
+	'This Invoice will be saved with a Number for its Sequence, and may not be modified later on. Are you sure?' 
+	=> 'La Factura se guardará como Emitida y ya no podrá modificarse. ¿Está seguro?',
+
 	''     => '',
 	''     => '',
 

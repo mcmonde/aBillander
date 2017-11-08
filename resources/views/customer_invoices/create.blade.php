@@ -6,7 +6,7 @@
 @section('content')
  
             @if ( isset($customer->name_fiscal) )
-              @include('customer_invoices.create_invoice')
+              @include('customer_invoices._form')
             @else
               @include('customer_invoices.search_customer')
             @endif
@@ -31,7 +31,7 @@
 @section('scripts')
 
             @if ( isset($customer->name_fiscal) )
-              @include('customer_invoices.js.create_invoice_js')
+              @include('customer_invoices.js.manage_invoice_js')
             @else
               @include('customer_invoices.js.search_customer_js')
             @endif

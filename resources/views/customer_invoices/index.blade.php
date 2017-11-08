@@ -27,9 +27,9 @@
             <th class="text-left">{{ l('Customer') }}</th>
             <th class="text-left">{{ l('Payment Method') }}</th>
             <th class="text-left" colspan="3"> </th>
-            <th class="text-left">{{ l('Total') }}</th>
-            <th class="text-left">{{ l('Open Balance') }}</th>
-            <th class="text-left">{{ l('Next Due Date') }}</th>
+            <th class="text-right"">{{ l('Total') }}</th>
+            <th class="text-right">{{ l('Open Balance') }}</th>
+            <th class="text-right">{{ l('Next Due Date') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -41,20 +41,20 @@
                 @else
                 <span class="label label-default" title="{{ l('Draft') }}">{{ l('Draft') }}</span>
                 @endif</td>
-            <td>{{ \App\FP::date_short($invoice->document_date) }}</td>
+            <td>{{ abi_date_short($invoice->document_date) }}</td>
             <td><a class="" href="{{ URL::to('customers/' .$invoice->customer->id . '/edit') }}" title="{{ l('Show Customer') }}">
             	{{ $invoice->customer->name_fiscal }}
             	</a>
             </td>
             <td>{{ $invoice->paymentmethod->name }}
-            	<a class="btn btn-xs btn-info" href="{{ URL::to('customerinvoices/' . $invoice->id) }}" title="{{ l('Show Payments') }}"><i class="fa fa-eye"></i></a>
+            	<a class="btn btn-xs btn-success" href="{{ URL::to('customerinvoices/' . $invoice->id) }}" title="{{ l('Show Payments') }}"><i class="fa fa-eye"></i></a>
         	</td>
             <td>@if ( $invoice->editable) <span class="label label-default" title="{{ l('Draft') }}">{{ l('D') }}</span> @endif</td>
             <td>@if (!$invoice->einvoice_sent) <span class="label label-primary" title="{{ l('Pending: Send by eMail') }}">{{ l('eM') }}</span> @endif
             	@if (!$invoice->printed) <span class="label label-warning" title="{{ l('Pending: Print and Send') }}">{{ l('Pr') }}</span> @endif</td>
             <td>@if ( $invoice->status == 'paid') <span class="label label-success" title="{{ l('Paid') }}">{{ l('OK') }}</span> @endif</td>
-            <td>{{ \App\FP::money_amount($invoice->total_tax_incl) }}</td>
-            <td>{{ \App\FP::money_amount($invoice->open_balance) }}</td>
+            <td class="text-right">{{ $invoice->as_money_amount('total_tax_incl') }}</td>
+            <td class="text-right">{{ $invoice->as_money_amount('open_balance') }}</td>
             <td  @if( $invoice->next_due_date AND ( $invoice->next_due_date < \Carbon\Carbon::now() ) ) class="danger" @endif>
                 @if ($invoice->open_balance < pow( 10, -$invoice->currency->decimalPlaces ) AND 0 ) 
                 @else

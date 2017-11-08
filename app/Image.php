@@ -1,4 +1,6 @@
-<?php namespace App;
+<?php 
+
+namespace App;
 
 // use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -12,6 +14,7 @@ class Image extends Model {
     public static $products_path = '/uploads/images_p/';
     protected static $access_rights = 0775;   
     // See: https://laracasts.com/discuss/channels/general-discussion/where-do-you-set-public-directory-laravel-5
+    
     public static $products_types = array(
             'mini_default'   => ['width' => 45,  'height' => 45 ],
             'small_default'  => ['width' => 98,  'height' => 98 ],

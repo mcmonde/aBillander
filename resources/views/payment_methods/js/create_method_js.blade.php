@@ -12,23 +12,26 @@ $(document).ready(function() {
 function add_line_to_method()
 {
   var nbrlines = parseInt($("#nbrlines").val());
-  var pl = 0, plc = 0;
+  var pl = 0, plc = 0, lastline = 0;
   
    for(var i=0; i<nbrlines; i++)
    {
       if($("#line_"+i).length > 0)
       {         
          pl += parseFloat( $("#percentage_"+i).val() );
+         lastline = i;
       }
    }
 
    plc = 100.0-pl;
    if (plc<0) plc = 0;
 
+   vlc = parseFloat($("#slot_"+lastline).val()) + parseFloat($("#slot_0").val());
+
    $("#method_lines").append('<tr id="line_'+nbrlines+'">\n\
     \n\
         <td><input type="hidden" id="lineid_'+nbrlines+'" name="lineid_'+nbrlines+'" value="'+nbrlines+'"/>\n\
-        <input type="text" name="slot_'+nbrlines+'" id="slot_'+nbrlines+'" value="0" '+
+        <input type="text" name="slot_'+nbrlines+'" id="slot_'+nbrlines+'" value="'+vlc+'" '+
           'onclick="this.select()" class="form-control" autocomplete="off"/></td>\n\
     \n\
         <td><input type="text" name="percentage_'+nbrlines+'" id="percentage_'+nbrlines+'" value="'+plc+'" '+

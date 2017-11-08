@@ -9,7 +9,7 @@
 	<div class="col-md-6 col-md-offset-3" style="margin-top: 50px">
 		<div class="panel panel-info">
 			<div class="panel-heading">
-				<h3 class="panel-title">{{ l('Edit Customer Voucher') }} :: {{ l('Invoice') }}: {{ $payment->customerInvoice->document_reference }} . {{ l('Due Date') }}: {{ $payment->due_date }}</h3>
+				<h3 class="panel-title">{{ l('Edit Customer Voucher') }} :: {{ l('Invoice') }}: {{ $payment->paymentable->document_reference }} . {{ l('Due Date') }}: {{ $payment->due_date }}</h3>
 		        <h3 class="panel-title" style="margin-top:10px;">{{ l('Amount') }}: {{ $payment->amount }} . {{ l('Currency') }}: {{ $payment->currency->name }}</h3>
 		    </div>
 			<div class="panel-body">

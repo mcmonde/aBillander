@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 use App\Payment as Payment;
 
-class CustomerVouchersController extends Controller {
+class CustomerDownPaymentsController extends Controller {
 
 
    protected $payment;

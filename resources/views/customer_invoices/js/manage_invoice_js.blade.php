@@ -423,8 +423,6 @@ function add_service_to_document()
     add_other_to_document( text );
 
 //    JSON.stringify(val).replace(new RegExp('"', 'g'), '&quot;');
-
-    // Reset form?
 }
 
 function add_discount_to_document()
@@ -456,8 +454,6 @@ function add_discount_to_document()
       ' "line_type":"'      + type                                + '"   ' + '}';
 
     add_other_to_document( text );
-
-    // Reset form?
 }
 
 // **********************************************************************************************
@@ -497,6 +493,11 @@ function add_other_to_document(other_json)
          $("#modal_product_search").modal('hide');
 
          $(id( (nbrlines-1), 'quantity' )).focus();
+
+         // Disable currency
+         $("select[name='currency_id']").on('focus click', function(){
+                $(this).blur();               
+         });
 
       }
    });
@@ -541,6 +542,14 @@ function add_product_to_document(product_id, combination_id)    // , customer_id
          // $("#lines[" + (nbrlines-1) +"][quantity]").focus();
          // $('input[name="lines[' + (nbrlines-1) +'][quantity]"]').focus();
          $(id( (nbrlines-1), 'quantity' )).focus();
+
+         // $("input[name='is_shipping'][value=0]")
+         // $("#currency_id").focus(function(){
+
+         // Disable currency
+         $("select[name='currency_id']").on('focus click', function(){
+                $(this).blur();               
+         });
 
          // alert( i( (nbrlines-1), 'line_type' ) );
 /*
@@ -810,9 +819,15 @@ function calculate_document()
    $("#order_gross_tax_incl").val( jsp_money(gross) );
    $("#order_gross_taxes").val( jsp_money(gross_tax) );
 
+   // With order discount applied
    $("#order_total_tax_excl").val( jsp_money(total_net) );
    $("#order_total_tax_incl").val( jsp_money(total) );
    $("#order_total_taxes").val( jsp_money(total_tax) );
+
+   if ( total == 0 ) {
+      // Enable currency
+       $("select[name='currency_id']").off('focus click');
+   }
 }
 
 // 
@@ -873,8 +888,9 @@ function calculate_line(line_id)
          l_net = l_qty*l_pri  *(100.0-l_disp)/100.0;
          l_tot = l_qty*l_pri_t*(100.0-l_disp)/100.0;
          
-         $( id(i, "discount_amount_tax_excl") ).val( l_dis  );
-         $( id(i, "discount_amount_tax_incl") ).val( l_dist );
+// discount_amount is a discount in addition to (or instead of) discount percent
+//        $( id(i, "discount_amount_tax_excl") ).val( l_dis  );
+//        $( id(i, "discount_amount_tax_incl") ).val( l_dist );
 
          $( id(i, "total_tax_excl") ).val( jsp_money(l_net) );
          $( id(i, "total_tax"     ) ).val( jsp_money( l_tot - l_net ) );

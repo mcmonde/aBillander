@@ -5,7 +5,7 @@
          @if ($invoice->status == 'draft')
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('sequence_id') ? 'has-error' : '' }}">
             {{ l('Invoice Sequence') }}
-            {!! Form::select('sequence_id', array('0' => l('-- Please, select --', [], 'layouts')) + $sequenceList, null, array('class' => 'form-control', 'id' => 'sequence_id')) !!}
+            {!! Form::select('sequence_id', $sequenceList, null, array('class' => 'form-control', 'id' => 'sequence_id')) !!}
             {!! $errors->first('sequence_id', '<span class="help-block">:message</span>') !!}
          </div>
          @else
@@ -21,19 +21,25 @@
             {!! $errors->first('reference', '<span class="help-block">:message</span>') !!}
          </div>
 
-         <div class="col-lg-2 col-md-2 col-sm-2 {{ $errors->has('document_date_form') ? 'has-error' : '' }}">
+         <div class="col-lg-2 col-md-2 col-sm-2 {{ $errors->has('document_date') ? 'has-error' : '' }}">
             <div class="form-group">
                {{ l('Invoice Date') }}
-               {!! Form::text('document_date_form', null, array('class' => 'form-control', 'id' => 'document_date_form', 'autocomplete' => 'off')) !!}
-               {!! $errors->first('document_date_form', '<span class="help-block">:message</span>') !!}
+
+               @if ($invoice->status == 'draft')
+                   {!! Form::text('document_date_form', null, array('class' => 'form-control', 'id' => 'document_date_form', 'autocomplete' => 'off')) !!}
+                   {!! $errors->first('document_date', '<span class="help-block">:message</span>') !!}
+               @else
+                  {!! Form::text('document_date_form_name', $invoice->document_date_form, array('class' => 'form-control', 'id' => 'document_date_form_name', 'disabled' => 'disabled')) !!}
+                  {!! Form::hidden('document_date_form', null, array('id' => 'document_date_form')) !!}
+               @endif
             </div>
          </div>
 
-         <div class="col-lg-2 col-md-2 col-sm-2 {{ $errors->has('delivery_date_form') ? 'has-error' : '' }}">
+         <div class="col-lg-2 col-md-2 col-sm-2 {{ $errors->has('delivery_date') ? 'has-error' : '' }}">
             <div class="form-group">
                {{ l('Delivery Date') }}
                {!! Form::text('delivery_date_form', null, array('class' => 'form-control', 'id' => 'delivery_date_form', 'autocomplete' => 'off')) !!}
-               {!! $errors->first('delivery_date_form', '<span class="help-block">:message</span>') !!}
+               {!! $errors->first('delivery_date', '<span class="help-block">:message</span>') !!}
             </div>
          </div>
 
@@ -43,7 +49,7 @@
             {!! $errors->first('template_id', '<span class="help-block">:message</span>') !!}
          </div>
 
-         @if ($invoice->status == 'draft')
+         @if (($invoice->status == 'draft') && 0)
          <div class="form-group col-lg-2 col-md-2 col-sm-2">
                  {{ l('Save as Draft?') }}<!-- label class="control-label" - - >Guardar como Borrador?< ! - - /label -->
             <div>
@@ -74,28 +80,43 @@
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('currency_id') ? 'has-error' : '' }}">
             {{ l('Currency') }}
-            {!! Form::select('currency_id', array('0' => l('-- Please, select --', [], 'layouts')) + $currencyList, null, array('class' => 'form-control', 'id' => 'currency_id', 'onchange' => 'get_currency_rate($("#currency_id").val())')) !!}
+
+         @if ( ($invoice->status == 'draft') && (count($invoice->customerInvoiceLines)==0) )
+            {!! Form::select('currency_id', $currencyList, null, array('class' => 'form-control', 'id' => 'currency_id', 'onchange' => 'get_currency_rate($("#currency_id").val())')) !!}
             {!! $errors->first('currency_id', '<span class="help-block">:message</span>') !!}
+         @else
+            {!! Form::text('currency_name', $invoice->currency->name, array('class' => 'form-control', 'id' => 'currency_name', 'disabled' => 'disabled')) !!}
+            {!! Form::hidden('currency_id', null, array('id' => 'currency_id')) !!}
+         @endif
+
          </div>
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('currency_conversion_rate') ? 'has-error' : '' }}">
+            @if ( !(($invoice->status == 'draft') && (count($invoice->customerInvoiceLines)==0)) 
+                 && ($invoice->currency_id == \App\Context::getContext()->currency->id) )
+            {!! Form::hidden('currency_conversion_rate', null, array('id' => 'currency_conversion_rate')) !!}
+            
+            @else
             {{ l('Conversion Rate') }}
             <div  class="input-group">
               {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control', 'id' => 'currency_conversion_rate')) !!}
               {!! $errors->first('currency_conversion_rate', '<span class="help-block">:message</span>') !!}
 
               <span class="input-group-btn" title="{{ l('Update Conversion Rate') }}">
-              <button class="btn btn-md btn-blue" type="button" onclick="get_currency_rate($('#currency_id').val());">
+              <button class="btn btn-md btn-lightblue" type="button" onclick="get_currency_rate($('#currency_id').val());">
                   <span class="fa fa-money"></span>
               </button>
               </span>
             </div>
+            @endif
          </div>
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('sales_rep_id') ? 'has-error' : '' }}">
             {{ l('Sales Representative') }}
             {!! Form::select('sales_rep_id', array('0' => l('-- Please, select --', [], 'layouts')) + $salesrepList, null, array('class' => 'form-control', 'id' => 'sales_rep_id')) !!}
             {!! $errors->first('sales_rep_id', '<span class="help-block">:message</span>') !!}
+
+            {!! Form::hidden('commission_percent', null, array('id' => 'commission_percent')) !!}
          </div>
 
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('down_payment') ? 'has-error' : '' }}">
@@ -104,29 +125,25 @@
             {!! $errors->first('down_payment', '<span class="help-block">:message</span>') !!}
          </div>
 
+      </div>
+      <div class="row">
+
+         <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('shipping_address_id') ? 'has-error' : '' }}">
+            {{ l('Shipping Address') }}
+            {!! Form::select('shipping_address_id', $addressbookList, null, array('class' => 'form-control', 'id' => 'shipping_address_id')) !!}
+            {!! $errors->first('shipping_address_id', '<span class="help-block">:message</span>') !!}
+         </div>
+         
+         <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('warehouse_id') ? 'has-error' : '' }}">
+            {{ l('Warehouse') }}
+            {!! Form::select('warehouse_id', $warehouseList, null, array('class' => 'form-control', 'id' => 'warehouse_id')) !!}
+            {!! $errors->first('warehouse_id', '<span class="help-block">:message</span>') !!}
+         </div>
+
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('number_of_packages') ? 'has-error' : '' }}">
             {{ l('Number of Packages') }}
             {!! Form::text('number_of_packages', null, array('class' => 'form-control', 'id' => 'number_of_packages')) !!}
             {!! $errors->first('number_of_packages', '<span class="help-block">:message</span>') !!}
-         </div>
-
-      </div>
-      <div class="row">
-
-         <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('shipping_address_id') ? 'has-error' : '' }}">
-            {{ l('Shipping Address') }}
-            @if ( count($addressbookList)==1 )
-                {!! Form::select('shipping_address_id', $addressbookList, $invoicing_address->id, array('class' => 'form-control', 'id' => 'shipping_address_id', 'disabled '=> 'disabled')) !!}
-            @else
-                {!! Form::select('shipping_address_id', array('0' => l('-- Please, select --', [], 'layouts')) + $addressbookList, null, array('class' => 'form-control', 'id' => 'shipping_address_id')) !!}
-            @endif
-            {!! $errors->first('shipping_address_id', '<span class="help-block">:message</span>') !!}
-         </div>
-         
-         <div class="form-group col-lg-4 col-md-4 col-sm-4 {{ $errors->has('warehouse_id') ? 'has-error' : '' }}">
-            {{ l('Warehouse') }}
-            {!! Form::select('warehouse_id', array('0' => l('-- Please, select --', [], 'layouts')) + $warehouseList, null, array('class' => 'form-control', 'id' => 'warehouse_id')) !!}
-            {!! $errors->first('warehouse_id', '<span class="help-block">:message</span>') !!}
          </div>
          
          <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('carrier_id') ? 'has-error' : '' }}">
@@ -135,7 +152,7 @@
             {!! $errors->first('carrier_id', '<span class="help-block">:message</span>') !!}
          </div>
 
-         <div class="form-group col-lg-2 col-md-2 col-sm-2 {{ $errors->has('tracking_number') ? 'has-error' : '' }}">
+         <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('tracking_number') ? 'has-error' : '' }}">
             {{ l('Tracking Number') }}
             {!! Form::text('tracking_number', null, array('class' => 'form-control', 'id' => 'tracking_number')) !!}
             {!! $errors->first('tracking_number', '<span class="help-block">:message</span>') !!}

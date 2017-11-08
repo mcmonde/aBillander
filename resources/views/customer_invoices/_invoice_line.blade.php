@@ -10,6 +10,9 @@
         <input id="lines[{{ $i }}][combination_id]"  name="lines[{{ $i }}][combination_id]"  value="{{ $line->combination_id }}" type="hidden">
         <input id="lines[{{ $i }}][reference]"       name="lines[{{ $i }}][reference]"       value="{{ $line->reference }}"      type="hidden">
 
+        <input id="lines[{{ $i }}][locked]"          name="lines[{{ $i }}][locked]"          value="{{ $line->locked }}"         type="hidden">
+        <input id="lines[{{ $i }}][notes]"           name="lines[{{ $i }}][notes]"           value="{{ $line->notes }}"          type="hidden">
+
         <input id="lines[{{ $i }}][cost_price]"          name="lines[{{ $i }}][cost_price]"          value="{{ $line->cost_price }}" type="hidden">
         <input id="lines[{{ $i }}][unit_price]"          name="lines[{{ $i }}][unit_price]"          value="{{ $line->unit_price }}" type="hidden">
         <input id="lines[{{ $i }}][unit_customer_price]" name="lines[{{ $i }}][unit_customer_price]" value="{{ $line->unit_customer_price }}" type="hidden">
@@ -24,15 +27,17 @@
 
         <!-- input id="lines[{{ $i }}][sales_equalization]"  name="lines[{{ $i }}][sales_equalization]"  value="{{ $line->sales_equalization }}" type="hidden" -->
 
-        <input id="lines[{{ $i }}][discount_amount_tax_incl]" name="lines[{{ $i }}][discount_amount_tax_incl]" value="" type="hidden">
-        <input id="lines[{{ $i }}][discount_amount_tax_excl]" name="lines[{{ $i }}][discount_amount_tax_excl]" value="" type="hidden">
+        <input id="lines[{{ $i }}][discount_amount_tax_incl]" name="lines[{{ $i }}][discount_amount_tax_incl]" value="{{ $line->discount_amount_tax_incl }}" type="hidden">
+        <input id="lines[{{ $i }}][discount_amount_tax_excl]" name="lines[{{ $i }}][discount_amount_tax_excl]" value="{{ $line->discount_amount_tax_excl }}" type="hidden">
 @php
     $theURL    = $line->product_id > 0 ? URL::to('products').'/'.$line->product_id.'/edit' : 'javascript:void(0)' ;
     $theTarget = $line->product_id > 0 ? 'target="_blank"' : '' ;
 @endphp
        <div class="form-control"><a {{ $theTarget }} href="{{ $theURL }}">{{ $line->reference }}</a></div></td>
 
-    <td><input class="form-control" id="lines[{{ $i }}][name]" name="lines[{{ $i }}][name]" value="{{ $line->name }}" type="text"></td>
+    <td><!-- input class="form-control" id="lines[{{ $i }}][name]" name="lines[{{ $i }}][name]" value="{{ $line->name }}" type="text" -->
+    {!! Form::textarea('lines['.$i.'][name]', $line->name, array('class' => 'form-control', 'id' => 'lines['.$i.'][name]', 'rows' => '1')) !!}
+    </td>
 
     <td><input id="lines[{{ $i }}][quantity]" name="lines[{{ $i }}][quantity]" class="form-control text-right" onkeyup="calculate_line({{ $i }})" onchange="calculate_line({{ $i }})" onclick="this.select()" autocomplete="off" value="{{ $line->quantity }}" type="text"></td>
 
@@ -58,7 +63,6 @@
 
     <td>
         {{ Form::checkbox('lines['. $i .'][sales_equalization]', 1, (bool) $line->sales_equalization, ['class' => 'field']) }}
-        <!-- Controller: $request->merge(['sales_equalization' => $request->input('sales_equalization', 0)]); -->
     </td>
 
 </tr>

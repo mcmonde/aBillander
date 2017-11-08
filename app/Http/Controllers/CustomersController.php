@@ -249,6 +249,8 @@ class CustomersController extends Controller {
         $customer = $this->customer->with('address')->findOrFail($id);
         $address = $customer->address;
 
+//        abi_r(Customer::$rules, true);
+
         $this->validate($request, Customer::$rules);
         
 //        $this->validate($request, Address::related_rules());
