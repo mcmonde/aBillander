@@ -203,7 +203,8 @@ return [
 	'Amount'     => 'Cantidad',
 	'Subject'     => 'Concepto',
 	'Status'     => 'Estado',
-	''     => '',
+
+	'Customer Invoice id=:id does not exist.'     => 'La Factura de Cliente id=:id no existe.',
 	''     => '',
 	''     => '',
 	''     => '',

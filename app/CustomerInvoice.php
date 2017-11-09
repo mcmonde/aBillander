@@ -28,6 +28,7 @@ class CustomerInvoice extends Model {
     					'delivery_date', 
     					'delivery_date_real', 
                         'next_due_date', 
+                        'customer_viewed_at',
     					'edocument_sent_at', 
     					'posted_at'
     					];
@@ -181,4 +182,12 @@ class CustomerInvoice extends Model {
         return $this->hasMany('Address', 'owner_id')->where('model_name', '=', 'Customer');
     }
 */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Data Factory
+    |--------------------------------------------------------------------------
+    */
+
 }

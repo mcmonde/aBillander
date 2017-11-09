@@ -605,10 +605,10 @@ class CustomerInvoicesController extends Controller {
 							->with('template')
 							->findOrFail($id);
 
-        } catch(ModelNotFoundException $e) {
+        } catch(\Exception $e) {
 
             return Redirect::route('customers.index')
-                     ->with('error', 'La Factura de Cliente id='.$id.' no existe.');
+                     ->with('error', 'Customer Invoice id=:id does not exist.');
             // return Redirect::to('invoice')->with('message', trans('invoice.access_denied'));
         }
 

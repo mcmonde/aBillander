@@ -8,9 +8,9 @@
                 <span class="icon-bar"></span>
             </button>
             @auth
-                <a href="{{ URL::to( (Auth::user()->home_page ? Auth::user()->home_page : '/home') ) }}" class="navbar-brand" style="position: relative;">
+                <a href="{{ URL::to( (Auth::user()->home_page ? Auth::user()->home_page : '/home') ) }}" class="navbar-brand" style="xposition: relative;">
                 @if ($img = \App\Context::getContext()->company->company_logo)
-                    <img class="navbar-brand img-rounded" height="{{ '40' }}" src="{{ URL::to( \App\Company::$company_path . $img ) }}" style="position: absolute; margin-top: -15px; padding: 7px; border-radius: 12px;">
+                    <img class="navbar-brand img-rounded" height="{{ '40' }}" src="{{ URL::to( \App\Company::$company_path . $img ) }}" style="xposition: absolute; margin-top: -15px; padding: 7px; border-radius: 12px;">{!! \App\Configuration::get('HEADER_TITLE') !!}
                 @else
                 {!! \App\Configuration::get('HEADER_TITLE') !!}
                 @endif

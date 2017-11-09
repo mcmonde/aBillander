@@ -179,6 +179,26 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
 
 });
 
+/* ********************************************************** */
+
+
+Route::group(['prefix' => 'abcc', 'namespace' => '\CustomerCenter'], function ()
+{
+//    Route::get('/', ['uses' => 'DashboardController@redirectToLogin']);
+    Route::get('/', ['uses' => 'PublicCustomerInvoicesController@index']);
+    Route::get('invoice/{invoiceKey}', ['uses' => 'PublicCustomerInvoicesController@show', 'as' => 'customerCenter.public.invoice.show']);
+    Route::get('invoice/{invoiceKey}/pdf', ['uses' => 'PublicCustomerInvoicesController@pdf', 'as' => 'customerCenter.public.invoice.pdf']);
+
+/*
+    Route::group(['middleware' => 'auth.customerCenter'], function ()
+    {
+        Route::get('dashboard', ['uses' => 'CustomerCenterDashboardController@index', 'as' => 'customerCenter.dashboard']);
+        Route::get('invoices' , ['uses' => 'CustomerCenterInvoiceController@index'  , 'as' => 'customerCenter.invoices']);
+        Route::get('quotes'   , ['uses' => 'CustomerCenterQuoteController@index'    , 'as' => 'customerCenter.quotes']);
+        Route::get('payments' , ['uses' => 'CustomerCenterPaymentController@index'  , 'as' => 'customerCenter.payments']);
+    });
+*/
+});
 
 /* ********************************************************** */
 
