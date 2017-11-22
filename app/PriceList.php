@@ -14,6 +14,12 @@ class PriceList extends Model {
 
 //    protected $dates = ['deleted_at'];
 
+    public static $types = array(
+            'price', 
+            'discount', 
+            'margin',
+        );
+
 	protected $fillable = ['name', 'type', 'price_is_tax_inc', 'amount', 'currency_id'];
 
 	public static $rules = array(
@@ -21,40 +27,50 @@ class PriceList extends Model {
                                     'currency_id' => 'exists:currencies,id'
                                 );
 
+    public static function getTypeList()
+    {
+            $list = [];
+            foreach (self::$types as $type) {
+                $list[$type] = l($type, [], 'appmultilang');;
+            }
+
+            return $list;
+    }
+
     /**
      * Handy method
      * 
      */
-    public function getFeatures()
-    {
-        $features = ' &nbsp; &nbsp;';
-
-        $features .=  $this->getType() . ' ' . getExtra();
-
-        return $features;
-    }
 
     public function getType()
     {
         $features = '';
 
-        $features .=  $this->type == 0 ? l('Fixed price', [], 'appmultilang') : 
-                    ($this->type == 1 ? l('Discount percentage', [], 'appmultilang') : 
-                    ($this->type == 2 ? l('Margin percentage', [], 'appmultilang') : ''))
-        ;
+        $features .=  l($this->type, [], 'appmultilang');
 
         return $features;
     }
 
-    public function getExtra()
+    public function getTypeVerbose()
     {
         $features = '';
 
-        if ($this->type == 0){
-//            $features .=  $this->price_is_tax_inc ? l('Tax Included', [], 'pricelists') : '';
-            ;
-        } else {
-            $features .=  $this->as_percent( 'amount' ).'%';
+        $features .=  l($this->type, [], 'appmultilang');
+
+        switch ($this->type) {
+            case 'price':
+                //
+                break;
+            
+            case 'discount':
+            
+            case 'margin':
+                $features .=  ' ('.$this->as_percent( 'amount' ).'%)';
+                break;
+            
+            default:
+                //
+                break;
         }
 
         return $features;
@@ -64,21 +80,21 @@ class PriceList extends Model {
     {
         switch ($this->type) {
             // Discount percentage
-            case 1:
+            case 'discount':
                 $price = $this->price_is_tax_inc
                          ? $product->price_tax_inc
                          : $product->price;
                 $price = $price*(1.0-($this->amount/100.0));
                 break;
             // Margin percentage
-            case 2:
+            case 'margin':
                 $bprice = \App\Calculator::price($product->cost_price, $this->amount);
                 $price = $this->price_is_tax_inc
                          ? $bprice*(1.0+($product->tax->percent/100.0))
                          : $bprice;
                 break;
             // Fixed price
-            case 0:
+            case 'price':
             default:
                 $price = $this->price_is_tax_inc
                          ? $product->price_tax_inc
@@ -90,18 +106,17 @@ class PriceList extends Model {
         $currency = \App\Currency::find( $this->currency_id );
 
         if ( !$currency ) // Convention: No currency is defaut currency
-            $currency = \App\Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+            // $currency = \App\Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+            ;
         else
-            $price *= $currency->conversion_rate;
+            $price = $price * $currency->conversion_rate;
 
         return $price;
     }
 
     public function getPrice( \App\Product $product )
     {
-        $line = $this->pricelistlines()->where('product_id', '=', $product->id)->first();
-
-        if ( !$line ) $line = $this->addLine( $product );
+        $line = $this->getLine( $product );
 
         $price = new \App\Price( $line->price, $this->price_is_tax_inc, $this->currency);
 
@@ -113,11 +128,19 @@ class PriceList extends Model {
 
     public function addLine( \App\Product $product, $price = null )
     {
+        return $this->addOrUpdateLine( $product, $price );
+    }
+
+    public function updateLine( \App\Product $product, $price = null )
+    {
+        return $this->addOrUpdateLine( $product, $price );
+    }
+
+    public function addOrUpdateLine( \App\Product $product, $price = null )
+    {
         if ($price === null) $price = $this->calculatePrice( $product );
 
-        $line = \App\PriceListLine::create( [ 'product_id' => $product->id, 'price' => $price ] );
-
-        $this->pricelistlines()->save($line);
+        $line = \App\PriceListLine::firstOrCreate( [ 'price_list_id' => $this->id, 'product_id' => $product->id ], [ 'price' => $price ] );
 
         return $line;
     }
@@ -127,18 +150,6 @@ class PriceList extends Model {
         $line = $this->pricelistlines()->where('product_id', '=', $product->id)->first();
 
         if ( !$line ) $line = $this->addLine( $product );
-
-        return $line;
-    }
-
-    public function updateLine( \App\Product $product, $price = null )
-    {
-        if ($price === null) $price = $this->calculatePrice( $product );
-
-        $line = $this->pricelistlines()->where('product_id', '=', $product->id)->first();
-
-        if ( !$line ) $line = $this->addLine( $product, $price );
-        else          $line->update( ['price' => $price] );
 
         return $line;
     }

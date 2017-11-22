@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // use Illuminate\Validation\Rule;
 
 use App\Traits\ViewFormatterTrait;
+use App\Traits\AutoSkuTrait;
 
 class Product extends Model {
 
     use ViewFormatterTrait;
+    use AutoSkuTrait;
     use SoftDeletes;
 
     public static $types = array(
@@ -40,7 +42,7 @@ class Product extends Model {
                             'name'         => 'required|min:2|max:128',
                             'product_type' => 'required|in:simple,virtual,combinable,grouped',
 //                            'product_type' => 'required|'.Rule::in( self::$types ),
-                        	'reference'    => 'required|min:2|max:32|unique:products,reference', 
+//                        	'reference'    => 'sometimes|required|min:2|max:32|unique:products,reference', 
                             'price'         => 'required|numeric|min:0',
                             'price_tax_inc' => 'required|numeric|min:0',
                             'cost_price'    => 'required|numeric|min:0',
@@ -71,6 +73,18 @@ class Product extends Model {
                     ),
         );
     
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function($product)
+        {
+            if ( \App\Configuration::get('SKU_AUTOGENERATE') )
+                if ( !$product->reference )
+                    $product->autoSKU();
+        });
+    }
     
     /*
     |--------------------------------------------------------------------------

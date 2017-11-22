@@ -2,17 +2,17 @@
 
 $(function() {
 
-    if ($('#type').val() > 0) {
+    if ($('#type').val() == 'price') {
  //           $('#div-price_is_tax_inc').hide();
  //           $('#div-amount').show();
-        }
-        else {
+ //       }
+ //       else {
             $('#div-amount').hide();
             $('#amount').val( 0.0 );
     };
 
     $('#type').change(function () {
-        if ($(this).val() > 0) {
+        if ($(this).val() != 'price') {
 //            $('#div-price_is_tax_inc').hide();
             $('#div-amount').show();
         }

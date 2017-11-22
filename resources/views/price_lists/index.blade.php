@@ -26,7 +26,6 @@
             <th class="text-left">{{l('Price List Name')}}</th>
             <th class="text-left">{{l('Currency')}}</th>
             <th class="text-left">{{l('Price List Type')}}</th>
-            <th class="text-left">{{l('Amount')}} (%)</th>
             <th class="text-left">{{l('Price is Tax Included?')}}</th>
             <th class="text-right"> </th>
         </tr>
@@ -37,25 +36,25 @@
             <td>{{ $pricelist->id }}</td>
             <td>{{ $pricelist->name }}</td>
             <td>{{ $pricelist->currency->name }}</td>
-		    <td>    @if     ($pricelist->type == 0) 
-		                    {{ l('Fixed price', [], 'appmultilang') }}
-		            @elseif ($pricelist->type == 1)
-		            		{{ l('Discount percentage', [], 'appmultilang') }}
-		            @elseif ($pricelist->type == 2)
-		            		{{ l('Margin percentage', [], 'appmultilang') }}
-		            @elseif ($pricelist->type  > 2)
-		            		Error!
-		            @endif
-		            </td>
-            <td>@if ($pricelist->type > 0)
-                    {{ $pricelist->as_percent('amount') }}
-                @else
-                    -
-                @endif</td>
+		    <td>{{ $pricelist->getTypeVerbose() }}</td>
             <td>@if ($pricelist->price_is_tax_inc) <i class="fa fa-check-square" style="color: #38b44a;"></i> @else <i class="fa fa-square-o" style="color: #df382c;"></i> @endif</td>
+            
             <td class="text-right">
                 @if (  is_null($pricelist->deleted_at))
                 <a class="btn btn-sm btn-warning" href="{{ URL::to('pricelists/' . $pricelist->id . '/edit') }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
+
+                <div class="btn-group">
+                  <a href="#" class="btn btn-sm btn-info"><i class="fa fa-plus"></i> {{l('Actions', [], 'layouts')}}</a>
+                  <a href="#" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></a>
+                  <ul class="dropdown-menu" xstyle="color: #333333; background-color: #ffffff;">
+                    <li><a href="#" xstyle="color: #333333; background-color: #ffffff;"><i class="fa fa-chevron-circle-up"></i> {{l('Export', [], 'layouts')}}</a></li>
+                    <li><a href="#"><i class="fa fa-chevron-circle-down"></i> {{l('Import', [], 'layouts')}}</a></li>
+                    <li><a href="#"><i class="fa fa-undo"></i> {{l('Reset', [], 'layouts')}}</a></li>
+                    <!-- li class="divider"></li>
+                    <li><a href="#">Separated link</a></li -->
+                  </ul>
+                </div>
+
                 <a class="btn btn-sm btn-danger delete-item" data-html="false" data-toggle="modal" 
                 		href="{{ URL::to('pricelists/' . $pricelist->id ) }}" 
                 		data-content="{{l('You are going to PERMANENTLY delete a record. Are you sure?', [], 'layouts')}}" 

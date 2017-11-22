@@ -55,7 +55,7 @@ class Calculator {
     {
         
       if ($currency === null)
-            $currency = Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+            $currency = \App\Context::getContext()->currency;
 
         $jscode = "
                 var crate = " . $currency->conversion_rate . ";
@@ -127,10 +127,12 @@ class Calculator {
     }
 
     // PHP Discount Calculator
+    // $product_price : Default currency ( DEF_CURRENCY )
+    // $line_price : $currency
     public static function discount($product_price, $line_price, \App\Currency $currency = null)
     {
       if ($currency === null)
-            $currency = Currency::find( intval(Configuration::get('DEF_CURRENCY')) );
+            $currency = \App\Context::getContext()->currency;
 
       $discount = 100.0*(1.0-($line_price/$currency->conversion_rate)/$product_price);
 

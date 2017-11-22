@@ -199,7 +199,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ Auth::user()->getFullName() }} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                          <li>
-                            <a href="{{ URL::to('soon') }}">
+                            <a href="https://abillander.gitbooks.io/abillander-tutorial-spanish/content/" target="_blank">
                                  {{l('Documentation', [], 'layouts')}}
                             </a>
                         </li>

@@ -1,0 +1,13 @@
+{
+    "name": "josesan/woo-connect",
+    "description": "Connects aBillander with WooCommerce",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lara Billander",
+            "email": "wasp@abillander.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

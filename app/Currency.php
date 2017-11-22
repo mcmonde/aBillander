@@ -46,20 +46,20 @@ class Currency extends Model {
     /**
     * Return price with currency sign & currency decimal places
     *
-    * @param float $price Product price
+    * @param float $amount Product price
     * @param object $currency Current currency ( NULL => context currency)
     * @return string Price correctly formated (sign, decimal separator...)
     * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
     */
-    public static function viewPriceWithSign($price, Currency $currency = null)
+    public static function viewMoneyWithSign($amount, Currency $currency = null)
     {
-        if (!is_numeric($price))
-            return $price;
+        if (!is_numeric($amount))
+            return $amount;
 
         if ($currency === null)
             $currency = \App\Context::getContext()->currency;
 
-        $number = number_format($price, $currency->decimalPlaces, $currency->decimalSeparator, $currency->thousandsSeparator);
+        $number = number_format($amount, $currency->decimalPlaces, $currency->decimalSeparator, $currency->thousandsSeparator);
 
         $blank = $currency->blank ? ' ' : '';
         if ( $currency->signPlacement > 0 )
@@ -73,42 +73,24 @@ class Currency extends Model {
     }
 
     /**
-     * Alias function
-     */
-    
-    public static function viewMoneyWithSign($amount, Currency $currency = null)
-    {
-        return self::viewPriceWithSign($amount, $currency);
-    }
-
-    /**
     * Return price with currency decimal places
     *
-    * @param float $price Product price
+    * @param float $amount Product price
     * @param object $currency Current currency ( NULL => context currency)
     * @return string Price correctly formated (sign, decimal separator...)
     * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
     */
-    public static function viewPrice($price, Currency $currency = null)
+    public static function viewMoney($amount, Currency $currency = null)
     {
-        if (!is_numeric($price))
-            return $price;
+        if (!is_numeric($amount))
+            return $amount;
 
         if ($currency === null)
             $currency = \App\Context::getContext()->currency;
 
-        $number = number_format($price, $currency->decimalPlaces, $currency->decimalSeparator, $currency->thousandsSeparator);
+        $number = number_format($amount, $currency->decimalPlaces, $currency->decimalSeparator, $currency->thousandsSeparator);
 
         return $number;
-    }
-
-    /**
-     * Alias function
-     */
-    
-    public static function viewMoney($amount, Currency $currency = null)
-    {
-        return self::viewPrice($amount, $currency);
     }
 
     /**

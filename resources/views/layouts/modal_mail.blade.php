@@ -58,7 +58,7 @@
             </div>
             <div class="modal-footer" id="modal-footer-mail">
                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">{{l('Cancel', [], 'layouts')}}</button>
-               <button type="submit" class="btn btn-sm btn-primary">
+               <button type="submit" name="submit_mail" id="submit_mail" class="btn btn-sm btn-primary" onclick="this.disabled=true;">
                   <i class="fa fa-send"></i>
                   &nbsp; {{l('Send', [], 'layouts')}}
                </button>
@@ -131,6 +131,7 @@
                      $("#modal-body-mail_success").show();
                      $("#modal-footer-mail_success").show();
                  }
+                 $("#submit_mail").prop('disabled', false);
               });
            });
         });

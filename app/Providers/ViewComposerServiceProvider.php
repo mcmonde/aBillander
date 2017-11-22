@@ -79,6 +79,14 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		    
 		});
 
+		// Price List types
+		view()->composer(array('price_lists._form', 'price_lists.index'), function($view) {
+
+		    $list = \App\PriceList::getTypeList();
+
+		    $view->with('price_list_typeList', $list);
+		});
+
 		// Warehouses
 		view()->composer(array('products.create', 'stock_movements.create', 'stock_counts.create', 'stock_adjustments.create', 'configuration_keys.key_group_2', 'customer_invoices.create', 'customer_invoices.edit'), function($view) {
 		    
@@ -191,6 +199,20 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		view()->composer(array('sequences.index', 'sequences.create', 'sequences.edit'), function($view) {
 		    
 		    $view->with('document_typeList', \App\Sequence::documentList());
+		    
+		});
+
+		// Months
+		view()->composer(array('customers._panel_commercial'), function($view) {
+		    
+		    $a=l('monthNames', [], 'layouts');
+
+			$monthList = [];
+			for($m=1; $m<=12; ++$m){
+				$monthList[$m] = $a[$m-1];
+			}
+
+			$view->with('monthList', $monthList);
 		    
 		});
 	}

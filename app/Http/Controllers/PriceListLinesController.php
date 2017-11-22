@@ -85,7 +85,7 @@ class PriceListLinesController extends Controller {
 
 		$back_route = $request->has('back_route') ? urldecode($request->input('back_route')) : '' ;
 
-		if ( ($price->pricelist->type == 0) AND $price->pricelist->price_is_tax_inc )
+		if ( ($price->pricelist->type == 'price') AND $price->pricelist->price_is_tax_inc )
 			$price->price = $price->price / (1.0+($price->product->tax->percent/100.0));
 
 		return view('price_list_lines.edit', compact('price', 'back_route'));
@@ -107,7 +107,7 @@ class PriceListLinesController extends Controller {
 		$back_route = $request->has('back_route') ? urldecode($request->input('back_route')) : '404' ;
 
         // $this->validate($request, Price::related_rules());
-		$price->price = ( ($price->pricelist->type == 0) AND $price->pricelist->price_is_tax_inc ) 
+		$price->price = ( ($price->pricelist->type == 'price') AND $price->pricelist->price_is_tax_inc ) 
 						? $request->input('price_tax_inc')
 						: $request->input('price') ;
 

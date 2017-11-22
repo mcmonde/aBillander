@@ -107,6 +107,9 @@ return [
 	'Filter Records'     => 'Filtrar Registros',
 
 	'Filter'     => 'Filtrar',
+	'Actions'     => 'Acciones',
+	'Export'     => 'Exportar',
+	'Import'     => 'Importar',
 	'Reset'     => 'Reiniciar',
 	'View'     => 'Ver',
 	'View more'     => 'Ver más',

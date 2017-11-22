@@ -184,6 +184,7 @@ function get_currency_rate(currency_id)
               theHTML = '<div class="alert alert-warning alert-block"><i class="fa fa-warning"></i> {{l('No records found', [], 'layouts')}}</div>';
          }
          $("#currency_conversion_rate").val(theHTML);
+         crate = data;
       }
    });
 }
@@ -255,8 +256,15 @@ if (val.blocked || !val.active)
 
                   tr_aux1 = '';
 } else {
+                  
+          tr_aux1 = '  \
+                            <a href="javascript:void(0);" onclick="get_customer_price(\''+val.id+'\', \''+$("#customer_id").val()+'\')" title=" {{l('View more', [], 'layouts')}} ">  \
+                               <button class="btn btn-xs btn-success" type="button"><i class="fa fa-eye"></i></button></a>';
+
           if(val.product_type == 'combinable') 
           {
+               tr_aux += ' ' + tr_aux1;
+
                tr_aux += '   \
                                     <span class="label xlabel-info" style="border: 1px solid #cccccc"><a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products') }}'+'/'+val.id+'/edit">{{l('Combinations')}}</a></span>  ';
 
@@ -271,10 +279,6 @@ if (val.blocked || !val.active)
                                     <a title=" {{l('Go to Product')}} " target="_blank" href="{{ URL::to('products') }}'+'/'+val.id+'/edit">'+val.reference+'</a></td>  ';
 
           }
-                  
-          tr_aux1 = '  \
-                            <a href="javascript:void(0);" onclick="get_customer_price(\''+val.id+'\', \''+$("#customer_id").val()+'\')" title=" {{l('View more', [], 'layouts')}} ">  \
-                               <button class="btn btn-xs btn-success" type="button"><i class="fa fa-eye"></i></button></a>';
 }
 
 
@@ -980,17 +984,20 @@ function calculate_profit()
    {
       if($("#line_"+i).length > 0)
       {
-         q = $("#quantity_"+i).val();
-         p = $("#unit_final_price_"+i).val();
-         d = $("#discount_percent_"+i).val();
+         q = $( id(i, "quantity") ).val();
+         p = $( id(i, "unit_final_price") ).val();
+         d = $( id(i, "discount_percent") ).val();
          n = p*(1.0-d/100.0);
-         c = $("#cost_price_"+i).val();
+         c = $( id(i, "cost_price") ).val();
          m1 = margincalc(c, n);
          co = p*commission/100.0;
          m2 = margincalc(c, n-co);
 
+         // Apply Currency conversion rate
+         p = p/crate;
+
          line += '<td>'+q+'</td>';
-         line += '<td>'+$("#reference_"+i).val()+'</td>';
+         line += '<td>'+$( id(i, "reference") ).val()+'</td>';
          line += '<td>'+p+'</td>';
          line += '<td>'+d+'</td>';
          line += '<td>'+n+'</td>';
@@ -1003,6 +1010,8 @@ function calculate_profit()
          d_t += q*p*d/100.0;
          c_t += q*c;
          co_t += q*p*commission/100.0;
+
+         line = '<tr>' + line + '</tr>';
       }
    }
   n_t = p_t-d_t;
@@ -1017,6 +1026,7 @@ function calculate_profit()
    line_t += '<td class="text-right">'+co_t+'</td>';
    line_t += '<td class="text-right">'+m2_t+'</td>';
 
+   line_t = '<tr>' + line_t + '</tr>';
 
 
   $("#profit_detail_lines").html('');

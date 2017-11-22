@@ -131,6 +131,9 @@ class Customer extends Model {
 
         }
 
+        // Check No-Payment Month
+        if ($month==$this->no_payment_month) $month++;
+
         $payday = \Carbon\Carbon::createFromDate($year, $month, $day);
 
         // Check Saturday & Sunday

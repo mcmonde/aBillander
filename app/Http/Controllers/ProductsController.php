@@ -362,7 +362,8 @@ class ProductsController extends Controller {
 
             $combination = \App\Combination::create(
                 array(
-                    'reference'        => $product->reference.'-'.$i,
+//                    'reference'        => $product->reference.'-'.$i,
+                    'reference'        => '',
                     'reorder_point'    => $product->reorder_point,
                     'maximum_stock'    => $product->maximum_stock,
                     'supply_lead_time' => $product->supply_lead_time,
@@ -374,6 +375,8 @@ class ProductsController extends Controller {
                     'active'         => $product->active,
                     'blocked'        => $product->blocked,
                     'publish_to_web' => $product->publish_to_web,
+
+                    'product_id'     => $product->id,               // Needed by autoSKU()
                 )
             );
             $product->combinations()->save($combination);

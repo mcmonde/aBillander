@@ -478,7 +478,7 @@ class CustomerInvoicesController extends Controller {
         		$due_date = $customerInvoice->customer->paymentDate( $next_date );
 
         		if ( $i != (count($pmethod->deadlines)-1) ) {
-        			$installment = $customerInvoice->as_money_numberable( $ototal * $dlines[$i]['percentage'] / 100.0, $customerInvoice->currency, true );
+        			$installment = $customerInvoice->as_priceable( $ototal * $dlines[$i]['percentage'] / 100.0, $customerInvoice->currency, true );
         			$ptotal += $installment;
         		} else {
         			// Last Installment

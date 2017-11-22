@@ -125,9 +125,9 @@ return array(
 	|
 	*/
 
-	'Fixed price' => 'Precio fijo',
-	'Discount percentage' => 'Porcentaje de descuento',
-	'Margin percentage' => 'Porcentaje de margen',
+	'price' => 'Precio fijo',
+	'discount' => 'Porcentaje de descuento',
+	'margin' => 'Porcentaje de margen',
 
 	/*
 	|--------------------------------------------------------------------------

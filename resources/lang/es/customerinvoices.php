@@ -103,6 +103,7 @@ return [
 	'Carrier'     => 'Transportista',
 	'Tracking Number'     => 'Número de Seguimiento (tracking)',
 	'Shipping Conditions'     => 'Condiciones de Entrega',
+	'Notes to Customer'     => 'Notas para el Cliente',
 	
 	// _invoice_lines
 	'Reference'     => 'Referencia',

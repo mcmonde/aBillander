@@ -124,7 +124,7 @@
             @foreach ($pricelists as $pricelist)
                 @php 
                       $theprice = $product->getPriceByList($pricelist);
-                      $line_price = ( ( ($pricelist->type == 0) AND $pricelist->price_is_tax_inc ) 
+                      $line_price = ( ( ($pricelist->type == 'price') AND $pricelist->price_is_tax_inc ) 
                               ? $theprice->amount/(1.0+($product->tax->percent/100.0))
                               : $theprice->amount 
                                     ); 
@@ -133,13 +133,23 @@
                 <td>{{ $pricelist->id }}</td>
                 <td>{{ $pricelist->name }}<br />
                     <span class="label label-success">{{ $pricelist->getType() }}</span>
-                    <span class="label label-default">{{ $pricelist->getExtra() }}</span>
-                    <span class="label label-info">{{ $pricelist->price_is_tax_inc ? l('Tax Included', [], 'pricelists') : '' }}</span></td>
+                    @if ($pricelist->type != 'price')
+                      <span class="label label-default">{{ $pricelist->as_percent('amount') }}%</span>
+                    @endif
+                    @if ( $pricelist->price_is_tax_inc )
+                        <br />
+                        <span class="label label-info">{{ l('Tax Included', [], 'pricelists') }}</span>
+                    @endif
+                    </td>
                 <td>{{ $pricelist->currency->name }}</td>
                 <td>{{ $product->as_priceable($line_price) }}</td>
                 <td>{{ $product->as_percentable( \App\Calculator::discount( $product->price, $line_price, $pricelist->currency ) ) }}</td>
                 <td>{{ $product->as_percentable( \App\Calculator::margin( $product->cost_price, $line_price, $pricelist->currency ) ) }}</td>
-                <td>{{ $product->as_priceable( $line_price*(1.0+($product->tax->percent/100.0)) ) }}</td>
+                <td>
+                @if ( $pricelist->currency->id == intval(\App\Configuration::get('DEF_CURRENCY')) )
+                  {{ $product->as_priceable( $line_price*(1.0+($product->tax->percent/100.0)) ) }}
+                @endif
+                </td>
                 <td class="text-right">
                     <a class="btn btn-sm btn-warning" href="{{ URL::to('pricelistlines/' . $theprice->price_list_line_id . '/edit?back_route=' . urlencode('products/' . $product->id . '/edit#sales')) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
                 </td>

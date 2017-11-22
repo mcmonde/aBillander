@@ -18,7 +18,7 @@ class CreatePaymentsTable extends Migration {
 		Schema::create('payments', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('payment_type', 32)->nullable(false)->default('receivable');
+			$table->string('payment_type', 32)->nullable(false);
 			// 'receivable' => Payment from customer (receive money, inbound)
 			// 'payable'    => Payment to supplier (send money, outbound)
 			

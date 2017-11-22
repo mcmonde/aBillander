@@ -42,7 +42,7 @@ class CustomerInvoice extends Model {
 //                            'total_discounts_tax_incl', 'total_discounts_tax_excl', 'total_products_tax_incl', 'total_products_tax_excl', 
 //                            'total_shipping_tax_incl', 'total_shipping_tax_excl', 'total_other_tax_incl', 'total_other_tax_excl', 
 //                            'total_tax_incl', 'total_tax_excl', 'commission_amount', 
-                            'notes', 'status', 
+                            'notes', 'notes_to customer', 'status', 
 //                            'einvoice', 'printed', 'customer_viewed', 'posted', 
                             'invoicing_address_id', 'shipping_address_id', 'warehouse_id', 'carrier_id', 
                             'sales_rep_id', 'currency_id', 'payment_method_id', 'template_id', 

@@ -7,11 +7,7 @@
 <div class="row">
     <div class="form-group col-lg-6 col-md-6 col-sm-6">
     		{!! Form::label('type', l('Price List Type')) !!}
-    		{!! Form::select('type', array(	
-    											0 => l('Fixed price', [], 'appmultilang'),
-    											1 => l('Discount percentage', [], 'appmultilang'),
-    											2 => l('Margin percentage', [], 'appmultilang')
-    									), null, array('class' => 'form-control')) !!}
+    		{!! Form::select('type', $price_list_typeList, null, array('class' => 'form-control', 'id' => 'type')) !!}
     </div>
     <div class="form-group col-lg-6 col-md-6 col-sm-6" id="div-amount">
     		{!! Form::label('amount', l('Amount')) !!}
@@ -46,7 +42,10 @@
 
 </div>
 
+<input type="hidden" id="addAction" name="addAction" value="" />
+
 {!! Form::submit(l('Save', [], 'layouts'), array('class' => 'btn btn-success')) !!}
+{!! Form::submit(l('Save & Update', [], 'layouts'), array('class' => 'btn btn-info', 'onclick' => "this.disabled=true;$('#addAction').val('updateProducts');this.form.submit();")) !!}
 {!! link_to_route('pricelists.index', l('Cancel', [], 'layouts'), null, array('class' => 'btn btn-warning')) !!}
 
 
@@ -67,5 +66,52 @@
 
     </script>
 
+
+@endsection
+
+
+
+
+@section('scripts')  @parent 
+
+<script type="text/javascript">
+
+$(function() {
+
+    if ($('#type').val() == 'price') {
+ //           $('#div-price_is_tax_inc').hide();
+ //           $('#div-amount').show();
+ //       }
+ //       else {
+            $('#div-amount').hide();
+            $('#amount').val( 0.0 );
+    };
+
+    $('#type').change(function () {
+        if ($(this).val() != 'price') {
+//            $('#div-price_is_tax_inc').hide();
+            $('#div-amount').show();
+        }
+        else {
+            $('#div-amount').hide();
+            $('#amount').val( 0.0 );
+//            $('#div-price_is_tax_inc').show();
+        }
+    });
+
+/*
+    $('input[name=recurring]:radio').change(function () {
+        if ($(this).val() == 1) {
+            $('#div-recurring-options').show();
+        }
+        else {
+            $('#div-recurring-options').hide();
+        }
+    });
+*/
+
+});
+
+</script>
 
 @endsection

@@ -24,9 +24,3 @@
 </div>
 
 @stop
-
-@section('scripts')
-
-  @include('price_lists.js.pricelist_js')
-
-@stop

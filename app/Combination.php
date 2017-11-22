@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Traits\ViewFormatterTrait;
+use App\Traits\AutoSkuTrait;
 
 use DB;
 
 class Combination extends Model {
 
     use ViewFormatterTrait;
+    use AutoSkuTrait;
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
@@ -22,9 +24,23 @@ class Combination extends Model {
                             'reorder_point', 'maximum_stock', 'price', 'cost_price', 'supply_lead_time', 
                             'location', 'width', 'height', 'depth', 'weight', 
                             'notes', 'publish_to_web', 'blocked', 'active', 'is_default',
+                            'product_id',
                           ];
 
     public static $rules = array();
+    
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function($combination)
+        {
+            if ( \App\Configuration::get('SKU_AUTOGENERATE') )
+                if ( !$combination->reference )
+                    $combination->autoSKU();
+        });
+    }
     
     
     /*

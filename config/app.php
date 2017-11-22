@@ -187,6 +187,11 @@ return [
         App\Providers\HelperServiceProvider::class,
         App\Providers\ViewComposerServiceProvider::class,
 
+        /*
+         * aBillander Package Service Providers...
+         */
+        aBillander\WooConnect\WooConnectServiceProvider::class,   
+
     ],
 
     /*

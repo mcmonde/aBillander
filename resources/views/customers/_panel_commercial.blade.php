@@ -140,24 +140,7 @@
                      {!! Form::text('payment_days', null, array('class' => 'form-control', 'id' => 'payment_days')) !!}
                      {!! $errors->first('payment_days', '<span class="help-block">:message</span>') !!}
                   </div>
-@php
-// \Carbon\Carbon::setLocale('es');
-// $date = \Carbon\Carbon::now();
-
-$a=l('monthNames', [], 'layouts');
-
-$monthList = [];
-for($m=1; $m<=12; ++$m){
-//    $date->month = $m;
-    // $monthList[$m] = l(date('F', mktime(0, 0, 0, $m, 1)), [], 'layouts');;
-//    $monthList[$m] = l($date->formatLocalized('%B'), [], 'layouts');
-// $a .= "'".$monthList[$m]."' => '',\n";
-
-$monthList[$m] = $a[$m-1];
-}
-// echo $a;
-
-@endphp
+                  
                   <div class="form-group col-lg-3 col-md-3 col-sm-3 {{ $errors->has('no_payment_month') ? 'has-error' : '' }}">
                      {{ l('No Payment Month') }}
                      {{-- !! Form::text('no_payment_month', null, array('class' => 'form-control', 'id' => 'no_payment_month')) !! --}}

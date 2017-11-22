@@ -35,8 +35,6 @@
     </div>
 </div> 
 
-   @include('errors.list')
-
    @include('customer_invoices.modal_product_search')
 
 <!-- Invoice Menu -->   
@@ -44,7 +42,7 @@
       <li class="lead" id="tab_header"   ><a href="javascript:void(0);" id="b_header"   >{{l('Header')}}</a></li>
       <li class="lead" id="tab_lines"    ><a href="javascript:void(0);" id="b_lines"    >{{l('Lines')}}</a></li>
       <li class="lead" id="tab_profit"   ><a href="javascript:void(0);" id="b_profit"   >{{l('Profitability')}}</a></li>
-      <li class="lead" id="tab_payments" ><a href="javascript:void(0);" id="b_payments" >{{l('Payments')}}</a></li>
+      <!-- li class="lead" id="tab_payments" ><a href="javascript:void(0);" id="b_payments" >{{l('Payments')}}</a></li -->
       
       @if ( $customer->einvoice )
         <li class="pull-right" id="tab_tlights" ><a href="javascript:void(0);" id="b_tlights" ><span class="label label-success">{{l('Accepts eInvoice')}}</span></a></li>

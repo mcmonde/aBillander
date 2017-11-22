@@ -99,7 +99,7 @@
             @else
             {{ l('Conversion Rate') }}
             <div  class="input-group">
-              {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control', 'id' => 'currency_conversion_rate')) !!}
+              {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control', 'id' => 'currency_conversion_rate', 'onchange' => 'crate=$(this).val()')) !!}
               {!! $errors->first('currency_conversion_rate', '<span class="help-block">:message</span>') !!}
 
               <span class="input-group-btn" title="{{ l('Update Conversion Rate') }}">
@@ -165,6 +165,12 @@
             {{ l('Shipping Conditions') }}
             {!! Form::textarea('shipping_conditions', null, array('class' => 'form-control', 'id' => 'shipping_conditions', 'rows' => '3')) !!}
             {!! $errors->first('shipping_conditions', '<span class="help-block">:message</span>') !!}
+         </div>
+
+         <div class="form-group col-lg-6 col-md-6 col-sm-6 {{{ $errors->has('notes_to customer') ? 'has-error' : '' }}}">
+            {{ l('Notes to Customer') }}
+            {!! Form::textarea('notes_to customer', null, array('class' => 'form-control', 'id' => 'notes_to customer', 'rows' => '3')) !!}
+            {{ $errors->first('notes_to customer', '<span class="help-block">:message</span>') }}
          </div>
 
       </div>

@@ -1,12 +1,15 @@
 
+        <input type="hidden" name="action" value="edit"/>
+
 <div class="row">
 <div class="form-group col-lg-8 col-md-8 col-sm-8">
     {!! Form::label('name', l('Subject')) !!}
     {!! Form::text('name', null, array('class' => 'form-control')) !!}
 </div>
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
-    {!! Form::label('status', l('Status', [], 'layouts')) !!}
-    {!! Form::select('status', \App\Payment::getStatusList(), null, array('class' => 'form-control')) !!}
+    {!! Form::label('status_name', l('Status', [], 'layouts')) !!}
+    {!! Form::text('status_name', l($payment->status, [], 'appmultilang'), array('class' => 'form-control', 'onfocus' => 'this.blur()')) !!}
+    {!! Form::hidden('status', null, array('id' => 'status')) !!}
 </div>
 </div>
 
@@ -15,14 +18,25 @@
     {!! Form::label('due_date', l('Due Date')) !!}
     {!! Form::text('due_date', null, array('class' => 'form-control')) !!}
 </div>
-<div class="form-group col-lg-4 col-md-4 col-sm-4">
+<!-- div class="form-group col-lg-4 col-md-4 col-sm-4">
     {!! Form::label('payment_date', l('Payment Date')) !!}
     {!! Form::text('payment_date', null, array('class' => 'form-control')) !!}
-</div>
+</div -->
 <div class="form-group col-lg-4 col-md-4 col-sm-4">
     {!! Form::label('amount', l('Amount')) !!}
     {!! Form::text('amount', null, array('id' => 'amount', 'class' => 'form-control', 'onclick' => 'this.select()', 'onkeyup' => 'checkFields()', 'onchange' => 'checkFields()')) !!}
     {!! Form::hidden('amount_initial', $payment->amount, array('id' => 'amount_initial')) !!}
+</div>
+</div>
+
+<div class="row" name="voucher_next" id="voucher_next" style="display: none;">
+<div class="form-group col-lg-4 col-md-4 col-sm-4">
+    {!! Form::label('due_date_next', l('Next Due Date')) !!}
+    {!! Form::text('due_date_next', null, array('class' => 'form-control')) !!}
+</div>
+<div class="form-group col-lg-4 col-md-4 col-sm-4">
+    {!! Form::label('amount_next', l('Amount')) !!}
+    {!! Form::text('amount_next', 0.0, array('id' => 'amount_next', 'class' => 'form-control', 'onfocus' => 'this.blur()')) !!}
 </div>
 </div>
 
@@ -37,11 +51,22 @@
     {!! Form::text('currency[name]', null, array('class' => 'form-control', 'onfocus' => 'this.blur()')) !!}
 </div>
 
-<div class="form-group col-lg-4 col-md-4 col-sm-4">
+<!-- div class="form-group col-lg-4 col-md-4 col-sm-4">
     {{ l('Conversion Rate') }}
-    {!! Form::text('conversion_rate', null, array('class' => 'form-control', 'id' => 'conversion_rate')) !!}
+    {!! Form::text('currency_conversion_rate', null, array('class' => 'form-control', 'id' => 'currency_conversion_rate')) !!}
+</div -->
 </div>
+
+<div class="row">
+
+ <div class="form-group col-lg-12 col-md-12 col-sm-12 {{{ $errors->has('notes') ? 'has-error' : '' }}}">
+    {{ l('Notes', [], 'layouts') }}
+    {!! Form::textarea('notes', null, array('class' => 'form-control', 'id' => 'notes', 'rows' => '2')) !!}
+    {{ $errors->first('notes', '<span class="help-block">:message</span>') }}
+ </div>
+
 </div>
+
 
         <?php if (!isset($back_route)) $back_route = ''; ?>
         <input type="hidden" name="back_route" value="{{$back_route}}"/>

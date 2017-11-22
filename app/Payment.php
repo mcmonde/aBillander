@@ -34,8 +34,10 @@ class Payment extends Model {
 
 	// Add your validation rules here
 	public static $rules = [
-            'due_date' => 'required|date',
+//            'due_date_next' => 'required_if:amount_next,true',
+//            'due_date' => 'required|date',
 //            'payment_date' => 'date',
+              'amount' => 'numeric|min:0|max:',
 	];
 
 
@@ -43,7 +45,7 @@ class Payment extends Model {
     {
             $list = [];
             foreach (self::$types as $type) {
-                $list[$type] = l($type, [], 'appmultilang');;
+                $list[$type] = l($type, [], 'appmultilang');
             }
 
             return $list;
@@ -53,7 +55,7 @@ class Payment extends Model {
     {
             $list = [];
             foreach (self::$statuses as $status) {
-                $list[$status] = l($status, [], 'appmultilang');;
+                $list[$status] = l($status, [], 'appmultilang');
             }
 
             return $list;

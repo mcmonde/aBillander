@@ -4,6 +4,9 @@ namespace App\Traits;
 
 trait ViewFormatterTrait
 {
+    /**
+    * Return (number) quantity field formatted with DEF_QUANTITY_DECIMALS decimal places
+    */
     public function as_quantity( $key = '' )
     {
         if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
@@ -22,29 +25,50 @@ trait ViewFormatterTrait
         return $data;
     }
 
+    /**
+    * Return (string) money field formatted with currency decimal places and currency sign
+    */
     public function as_money( $key = '', \App\Currency $currency = null )
     {
         if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
 
         $amount = floatval( $this->{$key} );
 
-        return \App\Currency::viewPriceWithSign($amount, $currency);
+        return \App\Currency::viewMoneyWithSign($amount, $currency);
     }
 
+    /**
+    * Return (string) money field formatted with currency decimal places 
+    */
     public function as_money_amount( $key = '', \App\Currency $currency = null )
     {
         if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
 
         $amount = floatval( $this->{$key} );
 
-        return \App\Currency::viewPrice($amount, $currency);
+        return \App\Currency::viewMoney($amount, $currency);
     }
 
+    /**
+    * Return (number) money field with currency decimal places
+    */
     public function as_price( $key = '', \App\Currency $currency = null )
     {
-        return $this->as_money_amount( $key, $currency );
+        if ( !$key || !array_key_exists($key, $this->attributes) ) return null;
+
+        $amount = floatval( $this->{$key} );
+
+        if (!$currency)
+            $currency = \App\Context::getContext()->currency;
+
+        $number = round($amount, $currency->decimalPlaces);
+
+        return $number;
     }
 
+    /**
+    * Return (number) percent field formatted with DEF_PERCENT_DECIMALS decimal places
+    */
     public function as_percent( $key = '', $decimalPlaces = null )
     {
         // abi_r($this->{$key}); 
@@ -90,34 +114,29 @@ trait ViewFormatterTrait
     {
         $amount = floatval( $val );
 
-        return \App\Currency::viewPriceWithSign($amount, $currency);
+        return \App\Currency::viewMoneyWithSign($amount, $currency);
     }
 
-    public function as_priceable( $val = 0.0, \App\Currency $currency = null )
+    public function as_money_amountable( $val = 0.0, \App\Currency $currency = null )
     {
-        $data = floatval( $val );
+        $amount = floatval( $val );
 
-        if (!$currency)
-            $currency = \App\Context::getContext()->currency;
-
-        $number = number_format($data, $currency->decimalPlaces, '.', '');
-
-        return $number;
+        return \App\Currency::viewMoney($amount, $currency);
     }
 
-    public function as_money_numberable( $val = 0.0, \App\Currency $currency = null)      // , $round_sup = false )
+    public function as_priceable( $val = 0.0, \App\Currency $currency = null)      // , $round_sup = false )
     {
-        $data = floatval( $val );
+        $amount = floatval( $val );
 
         if (!$currency)
             $currency = \App\Context::getContext()->currency;
 
 //        if ( $round_sup ) {
 //            $p = pow(10, $currency->decimalPlaces);
-//            $data = ceil(round($data * $p, 1)) / $p;
+//            $amount = ceil(round($amount * $p, 1)) / $p;
 //        }
 
-        $number = number_format($data, $currency->decimalPlaces);
+        $number = round($amount, $currency->decimalPlaces);
 
         return $number;
     }

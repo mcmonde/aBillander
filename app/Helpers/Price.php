@@ -9,6 +9,18 @@ use \App\Currency as Currency;
 class Price {
 
     use ViewFormatterTrait;
+
+    public $amount;
+    public $price_is_tax_inc;
+    public $tax_percent;
+    public $currency;
+    public $currency_conversion_rate;
+
+    public $price;
+    public $price_tax_inc;
+
+    public $price_list_id;
+    public $price_list_line_id;
 	
     public function __construct( $amount = 0, $amount_is_tax_inc = 0, Currency $currency = null, $currency_conversion_rate = null )
     {

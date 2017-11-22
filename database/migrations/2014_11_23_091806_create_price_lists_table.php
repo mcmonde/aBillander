@@ -13,13 +13,15 @@ class CreatePriceListsTable extends Migration {
 	 */
 	public function up()
 	{
+		Schema::dropIfExists('price_lists');
+
 		Schema::create('price_lists', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->string('name', 32)->nullable(false);
 
 
-			$table->tinyInteger('type')->default(0);				// 0 -> amount; 1 - > percent of discount: 2 -> percent of margin
+			$table->string('type', 32)->nullable(false);	// 'price' -> amount; 'discount' - > percent of discount: 'margin' -> percent of margin
 
 			$table->tinyInteger('price_is_tax_inc')->default(0);	// Price is tax included (VAT)? (only if type = 0)
 			$table->decimal('amount', 20, 6)->default(0.0);			// Amount if type = 1,2
@@ -38,7 +40,7 @@ class CreatePriceListsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('price_lists');
+		Schema::dropIfExists('price_lists');
 	}
 
 }

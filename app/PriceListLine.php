@@ -14,7 +14,7 @@ class PriceListLine extends Model {
 
 //    protected $dates = ['deleted_at'];
     
-    protected $fillable = [ 'product_id', 'price' ];
+    protected $fillable = [ 'price_list_id', 'product_id', 'price' ];
 
     public static $rules = array(
     	'product_id' => array('required|exists:products,id'),

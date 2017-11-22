@@ -463,7 +463,11 @@ table.border td {
             	{{l( $payment->status, [], 'appmultilang' )}}</span></td>
 
 			<td class="text-right">
-                <a class="btn btn-sm btn-warning" href="{{ URL::to('customervouchers/' . $payment->id  . '/edit?back_route=' . urlencode('customerinvoices/' . $cinvoice->id . '#payments') ) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
+                @if ( $payment->status == 'paid' )
+                	<a class="btn btn-sm btn-danger" href="{{ URL::to('customervouchers/' . $payment->id  . '/edit?back_route=' . urlencode('customerinvoices/' . $cinvoice->id . '#payments') ) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
+            	@else
+                	<a class="btn btn-sm btn-warning" href="{{ URL::to('customervouchers/' . $payment->id  . '/edit?back_route=' . urlencode('customerinvoices/' . $cinvoice->id . '#payments') ) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
+            	@endif
 			</td>
 		</tr>
 	@endforeach
