@@ -13,8 +13,19 @@ class WooConnectServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // abi_r(__DIR__ . '/routes/web.php');
+        // Loading routes file
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
+
+        // Load Views
+        $this->loadViewsFrom(__DIR__ . '/../views', 'woo_connect');
+
+        // Migrations
+/*
+        $this->publishes([
+            __DIR__ . '/migrations/migration_name.php' => base_path('database/migrations/migration_name.php'),
+        ]);
+*/
+        // Should publish translation files also: woocommerce.php
     }
 
     /**
@@ -24,6 +35,9 @@ class WooConnectServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Devolver singleton de conexion según configuracion (ver Intervention/Image)
+        // Amitav Roy
+        // https://www.youtube.com/watch?v=f5jCS-PT99I
+        // https://www.youtube.com/watch?v=upJlS7xn7bYcl
     }
 }

@@ -1,0 +1,1 @@
+{{ abi_r( $order ) }} /opt/lampp/htdocs/aBillander/app/views/currencies/show.blade.php
