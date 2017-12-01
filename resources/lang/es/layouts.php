@@ -118,6 +118,7 @@ return [
 	'Save'     => 'Guardar',
 	'Save & Complete'     => 'Guardar y Completar',
 	'Save & Continue'     => 'Guardar y Continuar',
+	'Update'     => 'Actualizar',
 	'Cancel'     => 'Cancelar',
 	'Confirm'     => 'Confirmar',
 	'Select'     => 'Seleccionar',
