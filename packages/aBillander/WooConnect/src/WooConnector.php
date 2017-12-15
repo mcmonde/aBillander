@@ -31,6 +31,16 @@ class WooConnector extends Model {
             return $list;
     }
 
+    public static function getTaxKey( $slug = '' )
+    {
+            return 'WOOC_TAX_'.strtoupper($slug);
+    }
+
+    public static function getPaymentGatewayKey( $id = '' )
+    {
+            return 'WOOC_PAYMENT_GATEWAY_'.strtoupper($id);
+    }
+
     /**
      * Alias function
      */

@@ -13,9 +13,9 @@ This project is currently in pre-alpha state. After SDG3 will be ready for testi
 
 > SDG2: Stock Movements without a document (90% done)
 
-> SDG3: Customers, Customer Invoices and Payments (80% done)
+> SDG3: Customers, Customer Invoices and Payments (85% done)
 
-> SDG4: WooCommerce connect (10% done) **MVP ready**
+> SDG4: WooCommerce connect (60% done) **MVP ready**
 
 > SDG5: Quotes, Customer Orders and Shipping Slips 
 

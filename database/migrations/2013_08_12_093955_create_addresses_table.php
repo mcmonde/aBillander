@@ -17,7 +17,7 @@ class CreateAddressesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('alias', 32)->nullable(false);
-			$table->string('webshop_id', 16)->nullable();			// Address ID in the Web Shop
+			$table->string('webshop_id', 32)->nullable();			// Address ID in the Web Shop
 
 			$table->string('name_commercial', 64)->nullable();
 			
@@ -25,8 +25,8 @@ class CreateAddressesTable extends Migration {
 			$table->string('address2', 128)->nullable();
 			$table->string('postcode', 12)->nullable();
 			$table->string('city', 64)->nullable();
-//			$table->string('state', 64)->nullable();
-//			$table->string('country', 64)->nullable();
+			$table->string('state_name', 64)->nullable();				// State name, if no state id found (mainly for data import from WooCommerce, etc.)
+			$table->string('country_name', 64)->nullable();				// Country name, if no country id found
 			
 			$table->string('firstname', 32)->nullable();			// Contact information
 			$table->string('lastname', 32)->nullable();

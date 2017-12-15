@@ -1,4 +1,6 @@
-<?php namespace App;
+<?php 
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +13,7 @@ class Address extends Model {
     
     protected $fillable = [ 'alias', 'webshop_id', 'name_commercial', 
                             'address1', 'address2', 'postcode', 'city', 'state_id', 'country_id', 
+                            'state_name', 'country_name',
                             'firstname', 'lastname', 'email', 
                             'phone', 'phone_mobile', 'fax', 'notes', 'active', 
                             'latitude', 'longitude',

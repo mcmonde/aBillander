@@ -6,10 +6,20 @@
 @section('content')
 
 <div class="page-header">
-    <!-- div class="pull-right" style="padding-top: 4px;">
-        <a href="{{ URL::to('orders/create') }}" class="btn btn-sm btn-success" 
-        		title="{{l('Add New Item', [], 'layouts')}}"><i class="fa fa-plus"></i> {{l('Add New', [], 'layouts')}}</a>
-    </div -->
+    <div class="pull-right" style="padding-top: 4px;">
+
+    <div class="btn-group">
+        <a href="#" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="{{l('Configuration', [], 'layouts')}}"><i class="fa fa-cog"></i> {{l('Configuration', [], 'layouts')}} &nbsp;<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{{ URL::route('wooconnect.configuration.taxes') }}">{{l('Taxes Dictionary')}}</a></li>
+          <li><a href="{{ URL::route('wooconnect.configuration.paymentgateways') }}">{{l('Payment Gateways Dictionary')}}</a></li>
+          <li class="divider"></li>
+          <!-- li><a href="#">Separated link</a></li -->
+        </ul>
+    </div>
+
+    </div>
+
     <h2>
         {{ l('WooCommerce Orders') }}
     </h2>        
@@ -22,7 +32,7 @@
             <div class="panel-heading"><h3 class="panel-title">{{ l('Filter Records', [], 'layouts') }}</h3></div>
             <div class="panel-body">
 
-                {!! Form::model(Request::all(), array('route' => 'worders', 'method' => 'GET')) !!}
+                {!! Form::model(Request::all(), array('route' => 'worders.index', 'method' => 'GET')) !!}
 
 <div class="row">
 <div class="form-group col-lg-2 col-md-2 col-sm-2">
@@ -40,7 +50,7 @@
 
 <div class="form-group col-lg-2 col-md-2 col-sm-2" style="padding-top: 22px">
 {!! Form::submit(l('Filter', [], 'layouts'), array('class' => 'btn btn-success')) !!} &nbsp; 
-{!! link_to_route('worders', l('Reset', [], 'layouts'), null, array('xclass' => 'btn btn-warning')) !!}
+{!! link_to_route('worders.index', l('Reset', [], 'layouts'), null, array('xclass' => 'btn btn-warning')) !!}
 </div>
 
 </div>
@@ -63,26 +73,50 @@
 			<th>{{l('Customer')}}</th>
 			<th>{{l('Address')}}</th>
 			<th>{{l('Contact')}}</th>
-			<th>{{l('Order Date')}}</th>
-			<th>{{l('Status')}}</th>
+      <th>{{l('Order Date')}}</th>
+      <th>{{l('Download Date')}}</th>
+      <th>{{l('Status')}}</th>
+      <th>{{l('Total')}}</th>
 			<th> </th>
 		</tr>
 	</thead>
 	<tbody>
 	@foreach ($orders as $order)
+
+@php
+
+$date_downloaded = '';
+$collection = collect($order['meta_data']);
+
+// abi_r($collection);
+
+$meta = 
+
+$collection->first(function ($item, $key) {
+    if ($item['key']=='date_abi_exported') return $item;
+});
+
+// abi_r($meta);
+
+if ($meta) $date_downloaded = $meta['value'];
+
+@endphp
+
 		<tr>
 			<td>{{ $order["id"] }}</td>
 			<td>{{ $order["billing"]["first_name"].' '.$order["billing"]["last_name"] }}</td>
 			<td>{{ $order["shipping"]["address_1"] }}</td>
 			<td>{{ $order["billing"]["phone"] }}</td>
-			<td>{{ $order["date_created"] }}</td>
-			<td>{{ $order["status"] }}</td>
+      <td>{{ $order["date_created"] }}</td>
+      <td>{{ $date_downloaded }}</td>
+      <td>{{ $order["status"] }}</td>
+      <td>{{ $order['total'] }}</td>
 
 			<td class="text-right">
 
-                <a class='open-AddBookDialog btn btn-sm btn-warning' href="{{ URL::route('wostatus', [$order["id"]] + $query ) }}" data-target='#myModal' data-id="{{ $order["id"] }}" data-status="{{ $order["status"] }}" data-statusname="{{ \aBillander\WooConnect\WooConnector::getOrderStatusList()[ $order["status"] ] }}" data-toggle='modal'><i class="fa fa-pencil-square-o"></i> &nbsp; {{l('Update', [], 'layouts')}}</a>
+                <a class='open-AddBookDialog btn btn-sm btn-warning' href="{{ URL::route('worders.update', [$order["id"]] + $query ) }}" data-target='#myModalOrder' data-id="{{ $order["id"] }}" data-status="{{ $order["status"] }}" data-statusname="{{ \aBillander\WooConnect\WooConnector::getOrderStatusList()[ $order["status"] ] }}" data-toggle="modal" onClick="return false;"><i class="fa fa-pencil-square-o"></i> &nbsp; {{l('Update', [], 'layouts')}}</a>
 
-                <a class="btn btn-sm btn-success" href="{{ URL::to('wooc/orders/' . $order["id"]) }}" title="{{l('Show', [], 'layouts')}}"><i class="fa fa-eye"></i></a>
+                <a class="btn btn-sm btn-success" href="{{ URL::to('wooc/worders/' . $order["id"]) }}" title="{{l('Show', [], 'layouts')}}"><i class="fa fa-eye"></i></a>
 
                 <!-- a class='open-deleteDialog btn btn-danger' data-target='#myModal1' data-id="{{ $order["id"] }}" data-toggle='modal'>{{l('Delete', [], 'layouts')}}</a -->
 
@@ -113,7 +147,7 @@
 
 @parent
 
-<div class="modal fade" id="myModal" role="dialog">
+<div class="modal fade" id="myModalOrder" role="dialog">
 
    <div class="modal-dialog">
 
@@ -136,25 +170,46 @@
                <!-- p>Some text in the modal.</p -->
 
 
-{!! Form::open(array('url' => '', 'id' => 'change_woo_order_status', 'name' => 'change_woo_order_status', 'class' => 'form')) !!}
+{!! Form::open(array('url' => '', 'method' => 'PATCH', 'id' => 'change_woo_order_status', 'name' => 'change_woo_order_status', 'class' => 'form')) !!}
 
                   
 <div class="row">
 		<div class="form-group col-lg-6 col-md-6 col-sm-6">
 		                       <label for="bookId" xclass="col-sm-3 control-label text-right">{{l('Order ID')}}</label>
-		                       <input type="text" class="form-control" name="bookId" id="bookId" value="">
+		                       <input type="text" class="form-control" name="bookId" id="bookId" value="" onfocus="this.blur();">
 		</div>
 
 		<div class="form-group col-lg-6 col-md-6 col-sm-6">
 		                       <label for="bookStatus" xclass="col-sm-3 control-label text-right">{{l('Order Status')}}</label>
-		                       <input type="text" class="form-control" name="bookStatus" id="bookStatus" value="">
+		                       <input type="text" class="form-control" name="bookStatus" id="bookStatus" value="" onfocus="this.blur();">
 		</div>
 </div>
 
-<div class="form-group">
-                       <label for="order_status">{{l('New Order Status')}}</label>
+<div class="row">
+  <div class="form-group">
+                         <label for="order_status">{{l('New Order Status')}}</label>
 
-                       {!! Form::select('order_status', \aBillander\WooConnect\WooConnector::getOrderStatusList(), null, array('class' => 'form-control', 'id' => 'order_status')) !!}
+                         {!! Form::select('order_status', \aBillander\WooConnect\WooConnector::getOrderStatusList(), null, array('class' => 'form-control', 'id' => 'order_status')) !!}
+  </div>
+
+  <div class="form-group col-lg-4 col-md-4 col-sm-4" id="div-order_set_paid">
+   {!! Form::label('order_set_paid', l('Mark as Paid'), ['class' => 'control-label']) !!}
+   <div>
+     <div class="radio-inline">
+       <label>
+         {!! Form::radio('order_set_paid', '1', false, ['id' => 'order_set_paid_on']) !!}
+         {!! l('Yes', [], 'layouts') !!}
+       </label>
+     </div>
+     <div class="radio-inline">
+       <label>
+         {!! Form::radio('order_set_paid', '0', true, ['id' => 'order_set_paid_off']) !!}
+         {!! l('No', [], 'layouts') !!}
+       </label>
+     </div>
+   </div>
+  </div>
+
 </div>
 
 
@@ -191,19 +246,29 @@
 
 <script>
 
-           $(document).on("click", ".open-AddBookDialog", function() {
+    $(document).ready(function () {
+          // $(document).on("click", ".open-AddBookDialog", function() {
+            $('.open-AddBookDialog').click(function (evnt) {
 
                var href = $(this).attr('href');
-               var myBookId = $(this).data('id');
-               var myBookStatus = $(this).data('status');
-               var myBookStatusname = $(this).data('statusname');
+               var myBookId = $(this).attr('data-id');
+               var myBookStatus = $(this).attr('data-status');
+               var myBookStatusname = $(this).attr('data-statusname');
 
                $('#change_woo_order_status').attr('action', href);
                $(".modal-body #bookId").val(myBookId);
                $(".modal-body #bookStatus").val(myBookStatusname);
                $(".modal-body #order_status").val(myBookStatus);
 
+               // https://blog.revillweb.com/jquery-disable-button-disabling-and-enabling-buttons-with-jquery-5e3ffe669ece
+               // $('#btn-update').prop('disabled', false);
+
+               $('#myModalOrder').modal({show: true});
+
+               return false;
+
            });
+    });
 
 </script>
 

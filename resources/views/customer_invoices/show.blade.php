@@ -352,7 +352,7 @@ table.border td {
             <a href="{{ URL::to('customerinvoices/' . $cinvoice->id . '/edit') }}" class="btn btn-sm btn-warning pull-right" style="margin-right:5px;"><i class="fa fa-pencil"></i>
             {{l('Edit', [], 'layouts')}}</a> 
 
-	        <a class="btn btn-primary" href="{{ URL::to('customerinvoices/pdf/' . $cinvoice->id) }}"><i class="fa fa-file-pdf-o"></i> {{l('PDF Export', [], 'layouts')}}</a>
+	        <a class="btn btn-primary" href="{{ URL::to('customerinvoices/' . $cinvoice->id) . '/pdf' }}" target="_blank"><i class="fa fa-file-pdf-o"></i> {{l('PDF Export', [], 'layouts')}}</a>
 
 			<button class="btn btn-info" data-toggle="modal" data-target="#sendEmailCustomerInvoice">
 				<i class="fa fa-envelope"></i> {{l('Send', [], 'layouts')}}

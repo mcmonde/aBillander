@@ -18,7 +18,7 @@ class Customer extends Model {
                             'payment_days', 'no_payment_month', 
                            'outstanding_amount_allowed', 'unresolved_amount', 
                            'notes', 'sales_equalization', 'accept_einvoice', 'blocked', 'active', 
-                           'sales_rep_id', 'currency_id', 'customer_group_id', 'payment_method_id', 'sequence_id', 
+                           'sales_rep_id', 'currency_id', 'language_id', 'customer_group_id', 'payment_method_id', 'sequence_id', 
                            'invoice_template_id', 'carrier_id', 'price_list_id', 'direct_debit_account_id', 
                            'invoicing_address_id', 'shipping_address_id', 
                 ];
@@ -170,15 +170,26 @@ class Customer extends Model {
     }
 
 
+    public function getAddressAttribute()
+    {
+        // https://laracasts.com/discuss/channels/eloquent/first-item-in-laravel-53-relationships
+        return $this->address()->first();
+    }
+
     public function address()
     {
-        return $this->invoicing_address();
+        // Chainable relationship to use in customer index & more
+        return $this->morphMany('App\Address', 'addressable')
+                   ->where('addresses.id', $this->invoicing_address_id);
     }
     
     public function invoicing_address()
     {   
-        return $this->belongsTo('App\Address', 'invoicing_address_id')
-                   ->where('addresses.addressable_type', 'App\Customer');
+        if ($this->invoicing_address_id>0)
+            return $this->morphMany('App\Address', 'addressable')
+                   ->where('addresses.id', $this->invoicing_address_id)->first();
+        else
+            return null;
     }
     
     public function shipping_address()

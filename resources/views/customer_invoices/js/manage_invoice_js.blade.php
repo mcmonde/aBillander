@@ -973,7 +973,7 @@ function calculate_line_dist(line_id, val)
 
 function calculate_profit() 
 {
-  var commission = {{ $customer->salesrep->commission_percent }};
+  var commission = {{ isset($customer->salesrep) ? $customer->salesrep->commission_percent : 0 }};
   var line = '', line_t = '';
   var q, p, d, c, n, m1, co, m2;
   var p_t=0, d_t=0, c_t=0, n_t=0, m1_t=0, co_t=0, m2_t=0;

@@ -41,7 +41,8 @@ class CustomerInvoice extends Model {
                             'prices_entered_with_tax', 'round_prices_with_tax',
 //                            'total_discounts_tax_incl', 'total_discounts_tax_excl', 'total_products_tax_incl', 'total_products_tax_excl', 
 //                            'total_shipping_tax_incl', 'total_shipping_tax_excl', 'total_other_tax_incl', 'total_other_tax_excl', 
-//                            'total_tax_incl', 'total_tax_excl', 'commission_amount', 
+                            'total_tax_incl', 'total_tax_excl',  // Not fillable?
+ //                           'commission_amount', 
                             'notes', 'notes_to customer', 'status', 
 //                            'einvoice', 'printed', 'customer_viewed', 'posted', 
                             'invoicing_address_id', 'shipping_address_id', 'warehouse_id', 'carrier_id', 

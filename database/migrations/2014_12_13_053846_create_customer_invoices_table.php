@@ -61,7 +61,7 @@ class CreateCustomerInvoicesTable extends Migration {
 			$table->decimal('commission_amount', 20, 6)->default(0.0);			// Sales Representative commission amount
 
 			$table->text('notes')->nullable();					// Private notes ( notes to self ;) )
-			$table->text('notes_to customer')->nullable();		// Notes for the Customer
+			$table->text('notes_to_customer')->nullable();		// Notes for the Customer
 
 //			$table->enum('status', array('draft', 'pending', 'halfpaid', 'paid', 'doubtful'))->default('draft');
 			$table->string('status', 32)->nullable(false);

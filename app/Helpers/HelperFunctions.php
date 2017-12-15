@@ -38,8 +38,10 @@ function abi_r($foo, $exit=false)
 		if ($exit) die();
 	}
 
-function abi_date_short(\Carbon\Carbon $date, $format = '')
+function abi_date_short(\Carbon\Carbon $date = null, $format = '')
     {
+        if (!$date) return null;
+
         // http://laravel.io/forum/03-11-2014-date-format
         // https://laracasts.com/forum/?p=764-saving-carbon-dates-from-user-input/0
 

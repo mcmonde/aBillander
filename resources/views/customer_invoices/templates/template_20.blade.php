@@ -25,7 +25,10 @@
                                     @endif
                 </span><br />
                 <b>Date: </b> {{ $cinvoice->document_date }}<br />
+                <b>Order Number: </b> {{ $cinvoice->reference }}<br />
                 <b>Agent: </b> {{ $cinvoice->sales_rep_id }}<br />
+                <b>Payment: </b> {{ $cinvoice->paymentmethod->name }}<br />
+                            
             </div>
         </div>
         <br />
@@ -160,8 +163,7 @@
                     <h4>Notes:</h4>
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <b>Payment: </b> {{ $cinvoice->paymentmethod->name }}<br />
-                            {{ $cinvoice->notes }}
+                            {{ $cinvoice->notes_to_customer }}
                         </div>
                     </div>
                 </div>

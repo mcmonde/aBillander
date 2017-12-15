@@ -26,6 +26,8 @@ return [
 	'Unable to delete this record &#58&#58 (:id) '               =>  'No se ha podido borrar el registro solicitado &#58&#58 (:id) ',
 	'This record has been successfully published &#58&#58 (:id) :name as id=:web_id'     => 'El registro se ha publicado correctamente &#58&#58 (:id) :name como id=:web_id',
 
+	'This configuration has been successfully updated'  =>  'La configuración se ha actualizado correctamente',
+
 	'Margin calculation is based on Cost Price'  => 'El Margen se calcula sobre el Precio de Coste',
 	'Margin calculation is based on Sales Price' => 'El Margen se calcula sobre el Precio de Venta',
 	'Discount on Product Price' => 'Descuento sobre el Precio del Producto',
@@ -55,6 +57,7 @@ return [
 	'Products'     => 'Productos',
 
 	'Warehouse'     => 'Almacén',
+	'Purchase Orders'     => 'Pedidos de Compra',
 	'Stock Movements'     => 'Movimientos de Almacén',
 	'Inventory Count'     => 'Inventario de Almacén',
 	'Inventory Adjustments'     => 'Regularización de Almacén',

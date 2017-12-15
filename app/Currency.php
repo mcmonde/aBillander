@@ -42,6 +42,15 @@ class Currency extends Model {
 
         return $format;
     }
+    
+    /**
+     * Find ISO Code
+     * 
+     */
+    public static function findByIsoCode($code)
+    {
+        return self::where('iso_code', $code)->first();
+    }
 
     /**
     * Return price with currency sign & currency decimal places

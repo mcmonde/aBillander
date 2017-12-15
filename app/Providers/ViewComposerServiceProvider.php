@@ -40,7 +40,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
 		// Payment Methods
 		view()->composer(array('customers.edit', 'customer_invoices.create', 'customer_invoices.edit', 'customer_groups.create', 'customer_groups.edit'), function($view) {
 		    
-		    $view->with('payment_methodList', \App\PaymentMethod::pluck('name', 'id')->toArray());
+		    $view->with('payment_methodList', \App\PaymentMethod::orderby('name', 'desc')->pluck('name', 'id')->toArray());
 		    
 		});
 

@@ -17,6 +17,15 @@ class State extends Model {
     	);
 
     
+    /**
+     * Find ISO Code
+     * 
+     */
+    public static function findByIsoCode($code)
+    {
+        return self::where('iso_code', $code)->first();
+    }
+    
     /*
     |--------------------------------------------------------------------------
     | Relationships

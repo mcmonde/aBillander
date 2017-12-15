@@ -1,13 +1,16 @@
 <?php 
 
-namespace aBillander\WooConnect\Http;
+namespace aBillander\WooConnect\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
 use WooCommerce;
-// use Automattic\WooCommerce\HttpClient\HttpClient\HttpClientException;
+use Automattic\WooCommerce\HttpClient\HttpClientException as WooHttpClientException;
+
+use \aBillander\WooConnect\WooConnector;
+use \aBillander\WooConnect\WooOrderImporter;
 
 class WooConnectController extends Controller {
 
@@ -198,19 +201,135 @@ class WooConnectController extends Controller {
 	}
 
 	/**
-	 * Display the specified resource.
-	 * GET /currencies/{id}/exchange
+	 * Show the form for editing the specified resource.
+	 * GET /currencies/{id}/edit
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function exchange($id)
+	public function configurationTaxesEdit()
 	{
-		$currency = $this->currency->findOrFail($id);
+		$wootaxes = WooOrderImporter::getWooTaxes();
+		// Save Taxes Cache
+		\App\Configuration::updateValue('WOOC_TAXES_CACHE', json_encode($wootaxes));
+		// Woo Taxes Dictionary
+		$dic = [];
+		$dic_val = [];
+		foreach ($wootaxes as $wootax) {
+			$dic[$wootax['slug']] = WooConnector::getTaxKey( $wootax['slug'] );
+			$dic_val[$wootax['slug']] = \App\Configuration::get($dic[$wootax['slug']]);
+		}
 
-		$ccrs = \App\CurrencyConversionRate::where('currency_id', '=', $currency->id)->with('user')->orderBy('date', 'desc')->get();
+		$taxList = \App\Tax::orderby('name', 'desc')->pluck('name', 'id')->toArray();
 
-        return view('currencies.exchange', compact('currency', 'ccrs'));
+		return view('woo_connect::woo_connect.edit_taxes', compact('wootaxes', 'dic', 'dic_val', 'taxList'));
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 * PUT /currencies/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function configurationTaxesUpdate(Request $request)
+	{
+		// Validation rules
+        $rules = [];
+        
+        foreach ( $request->input('dic') as $key => $val) 
+        {
+            $rules[ 'dic.'.$key ] = 'exists:taxes,id';
+        }
+
+		$this->validate($request, $rules);
+        
+        foreach ( $request->input('dic') as $key => $val) 
+        {
+            \App\Configuration::updateValue($key, $val);
+        }
+		// Save Taxes Dictionary Cache
+		$dic_val = [];
+		$wootaxes = json_decode(\App\Configuration::get('WOOC_TAXES_CACHE'), true);
+		foreach ($wootaxes as $wootax) {
+			$dic_val[$wootax['slug']] = \App\Configuration::get(WooConnector::getTaxKey($wootax['slug']));
+		}
+
+		\App\Configuration::updateValue('WOOC_TAXES_DICTIONARY_CACHE', json_encode($dic_val));
+
+//		abi_r($request->input('dic'));
+//		abi_r($dic_val, true);
+
+		return redirect('wooc/worders')
+				->with('success', l('This configuration has been successfully updated', [], 'layouts'));
+	}
+
+
+/* ********************************************************************************************* */    
+
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * GET /currencies/{id}/edit
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function configurationPaymentGatewaysEdit()
+	{
+		$woopgates = WooOrderImporter::getWooPaymentGateways();
+		// Save Taxes Cache
+		\App\Configuration::updateValue('WOOC_PAYMENT_GATEWAYS_CACHE', json_encode($woopgates));
+		// Woo Taxes Dictionary
+		$dic = [];
+		$dic_val = [];
+		foreach ($woopgates as $woopgate) {
+			$dic[$woopgate['id']] = WooConnector::getPaymentGatewayKey( $woopgate['id'] );
+			$dic_val[$woopgate['id']] = \App\Configuration::get($dic[$woopgate['id']]);
+		}
+
+		$pgatesList = \App\PaymentMethod::orderby('name', 'desc')->pluck('name', 'id')->toArray();
+
+		return view('woo_connect::woo_connect.edit_payment_gateways', compact('woopgates', 'dic', 'dic_val', 'pgatesList'));
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 * PUT /currencies/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function configurationPaymentGatewaysUpdate(Request $request)
+	{
+		// Validation rules
+        $rules = [];
+        
+        foreach ( $request->input('dic') as $key => $val) 
+        {
+            $rules[ 'dic.'.$key ] = 'exists:payment_methods,id';
+        }
+
+		$this->validate($request, $rules);
+        
+        foreach ( $request->input('dic') as $key => $val) 
+        {
+            \App\Configuration::updateValue($key, $val);
+        }
+		// Save Taxes Dictionary Cache
+		$dic_val = [];
+		$woopgates = json_decode(\App\Configuration::get('WOOC_PAYMENT_GATEWAYS_CACHE'), true);
+		foreach ($woopgates as $woopgate) {
+			$dic_val[$woopgate['id']] = \App\Configuration::get(WooConnector::getPaymentGatewayKey($woopgate['id']));
+		}
+
+		\App\Configuration::updateValue('WOOC_PAYMENT_GATEWAYS_DICTIONARY_CACHE', json_encode($dic_val));
+
+//		abi_r($request->input('dic'));
+//		abi_r($dic_val, true);
+
+		return redirect('wooc/worders')
+				->with('success', l('This configuration has been successfully updated', [], 'layouts'));
 	}
 
 

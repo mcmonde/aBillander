@@ -6,16 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Illuminate\Http\Request;
 
 use WooCommerce;
-// use Automattic\WooCommerce\HttpClient\HttpClient\HttpClientException;
+use Automattic\WooCommerce\HttpClient\HttpClientException as WooHttpClientException;
+
+use \aBillander\WooConnect\WooOrder;
 
 class WooOrdersController extends Controller {
 
 
-   protected $currency;
+   protected $order;
 
    public function hello()
    {
@@ -78,14 +81,14 @@ class WooOrdersController extends Controller {
 
    }
 
-   public function __construct()
+   public function __construct( WooOrder $order )
    {
-        //
+        $this->order = $order;
    }
 
 	/**
 	 * Display a listing of the resource.
-	 * GET /currencies
+	 * GET /worders
 	 *
 	 * @return Response
 	 */
@@ -95,6 +98,7 @@ class WooOrdersController extends Controller {
 		// $user = User::query();
 		$queries = [];
 		$columns = ['after', 'before', 'status'];
+		$column_dates = ['after', 'before'];
 
 		// ToDo: convert dates to ISO8601 compliant date
 
@@ -138,6 +142,12 @@ class WooOrdersController extends Controller {
 			}
 		}
 
+		foreach ($column_dates as $column) {
+			if (isset($params[$column])) {
+				$params[$column] .= ' 00:00:00';	// Convert date to ISO8601 compliant date
+			}
+		}
+
 		// abi_r($params, true);
 
 		$results = WooCommerce::get('orders', $params);
@@ -153,41 +163,29 @@ class WooOrdersController extends Controller {
 
 	/**
 	 * Show the form for creating a new resource.
-	 * GET /currencies/create
+	 * GET /worders/create
 	 *
 	 * @return Response
 	 */
 	public function create()
 	{
-		return view('currencies.create');
+		//
 	}
 
 	/**
 	 * Store a newly created resource in storage.
-	 * POST /currencies
+	 * POST /worders
 	 *
 	 * @return Response
 	 */
 	public function store(Request $request)
 	{
-		$this->validate($request, Currency::$rules);
-
-		$currency = $this->currency->create($request->all());
-
-		\App\CurrencyConversionRate::create([
-				'date' => \Carbon\Carbon::now(), 
-				'currency_id' => $currency->id, 
-				'conversion_rate' => $currency->conversion_rate, 
-				'user_id' => \Auth::id(),
-			]);
-
-		return redirect('currencies')
-				->with('info', l('This record has been successfully created &#58&#58 (:id) ', ['id' => $currency->id], 'layouts') . $request->input('name'));
+		//
 	}
 
 	/**
 	 * Display the specified resource.
-	 * GET /currencies/{id}
+	 * GET /worders/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -199,62 +197,173 @@ class WooOrdersController extends Controller {
 
 		// $order = new \StdClass();
 
-		$order = WooCommerce::get('orders/'.$id);	// Array
+		// https://www.tychesoftwares.com/how-to-add-prefix-or-suffix-to-woocommerce-order-number/
+		// https://www.tychesoftwares.com/how-to-reset-woocommerce-order-numbers-every-24-hours/
+		// https://www.tychesoftwares.com/add-new-column-woocommerce-orders-page/
+
+		try {
+			$wc_currency = \App\Currency::findOrFail( intval(\App\Configuration::get('WOOC_DEF_CURRENCY')) );
+		} catch (ModelNotFoundException $ex) {
+			// If Currency does not found. Not any good here...
+			$wc_currency = \App\Context::getContext()->currency;	// Or fallback to Configuration::get('DEF_CURRENCY')
+		}
+
+		$params = [
+		    'dp'   => $wc_currency->decimalPlaces,
+		];
+
+		$order = WooCommerce::get('orders/'.$id, $params);	// Array
+
+		// I am thirsty. Let's get hydrated!
+		$vatNumber = WooOrder::getVatNumber( $order );
+		$order['billing']['vat_number'] = $vatNumber;
+
+		$date_downloaded = '';
+		foreach($order['meta_data'] as $meta) {
+			if ($meta['key']=='date_abi_exported') {
+				$date_downloaded = $meta['key'];
+				break;
+			}
+		}
+		$order["date_downloaded"] = $date_downloaded;
+
+		$country = \App\Country::findByIsoCode( $order['billing']['country'] );
+		$order['billing']['country_name'] = $country ? $country->name : $order['billing']['country'];
+
+		$state = \App\State::findByIsoCode( (strpos($order['billing']['state'], '-') ? '' : $order['billing']['country'].'-').$order['billing']['state'] );
+		$order['billing']['state_name'] = $state ? $state->name : $order['billing']['state'];
 
 		return view('woo_connect::woo_orders.show', compact('order'));
 	}
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * GET /currencies/{id}/edit
+	 * GET /worders/{id}/edit
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function edit($id)
 	{
-		$currency = $this->currency->findOrFail($id);
-		
-		return view('currencies.edit', compact('currency'));
+		//
 	}
 
 	/**
 	 * Update the specified resource in storage.
-	 * PUT /currencies/{id}
+	 * PUT /worders/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function update($id, Request $request)
 	{
-		$query  = $request->query();
-		$status = $request->input('order_status');
+		$query    = $request->query();
+		$status   = $request->input('order_status');
+		$set_paid = $request->input('order_set_paid', 0);	// set_paid 	boolean 	Define if the order is paid. It will set the status to processing and reduce stock items. Default is false. 
+
+//		abi_r((bool) $set_paid, true);
 
 		$data = [
-		    'status' => $status,
+		    'status'   => $status,
+		    'set_paid' => (boolean) $set_paid,
+		    'meta_data' => [[									// Meta para saber cuándo fue descargada
+		    	'key'   => 'date_abi_exported',
+                'value' => (string) \Carbon\Carbon::now(),
+             ]],
 		];
 
 		WooCommerce::put('orders/'.$id, $data);
 
-		return redirect()->route('worders', $query)
+		return redirect()->route('worders.index', $query)
 				->with('success', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts') . ' ['.$status.']');
 	}
 
 	/**
 	 * Remove the specified resource from storage.
-	 * DELETE /currencies/{id}
+	 * DELETE /worders/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function destroy($id)
 	{
-        $this->currency->findOrFail($id)->delete();
+        //
+	}
 
-        // Delete currency conversion rate history
+	/**
+	 * Show the form for editing the specified resource.
+	 * GET /worders/{id}/import
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function import($id)
+	{
+		$importer = \aBillander\WooConnect\WooOrderImporter::makeInvoice( $id ); die();
 
-        return redirect('currencies')
-				->with('success', l('This record has been successfully deleted &#58&#58 (:id) ', ['id' => $id], 'layouts'));
+		// Get Order fromm WooCommerce Shop
+        try {
+
+			$order = WooCommerce::get('orders/'.intval($id));	// Array
+		}
+
+		catch( WooHttpClientException $e ) {
+
+			/*
+			$e->getMessage(); // Error message.
+
+			$e->getRequest(); // Last request data.
+
+			$e->getResponse(); // Last response data.
+			*/
+
+			return redirect()->route('worders.index')
+					->with('error', $e->getMessage()." (id=$id)");
+
+		}
+
+		// Save
+		$data = [
+            'id' => $order['id'],
+
+            'number'    => $order['number'],
+            'order_key' => $order['order_key'],
+            'currency'  => $order['currency'],
+
+            'date_created'      => WooOrder::getDate( $order['date_created'] ),
+            'date_abi_exported' => WooOrder::getExportedAt($order['meta_data']),
+
+            'total'     => $order['total'],
+            'total_tax' => $order['total_tax'],
+            
+            'customer_id'   => $order['customer_id'],
+            'customer_note' => $order['customer_note'],
+
+            'payment_method'        => $order['payment_method'],
+            'payment_method_title'  => $order['payment_method_title'],
+            'shipping_method_id'    => WooOrder::getShippingMethodId($order['shipping_lines']),
+            'shipping_method_title' => WooOrder::getShippingMethodTitle($order['shipping_lines']),
+		];
+
+		
+        try {
+
+        	$wc_order = $this->order->updateOrCreate($data);
+		}
+
+		catch( \Exception $e ) {
+			abi_r($e->getMessage());
+		}
+
+
+		// Customer stuff
+
+		// abi_r($data, true);
+		// abi_r($order, true);
+
+
+		return redirect()->route('worders.show', $id)
+				->with('success', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts'));
 	}
 
 
@@ -262,7 +371,7 @@ class WooOrdersController extends Controller {
 
 	/**
 	 * Show the form for creating a new resource.
-	 * GET /currencies/create
+	 * GET /worders/create
 	 *
 	 * @return Response
 	 */
@@ -292,25 +401,34 @@ class WooOrdersController extends Controller {
 		return $results;
 	} 
 
+}
 
-    /**
-     * Return a json list of records matching the provided query
-     *
-     * @return json
-     */
-    public function ajaxCurrencyRateSearch(Request $request)
-    {
-        // Request data
-        $currency_id     = $request->input('currency_id');
-        
-        $currency = Currency::find(intval($currency_id));
 
-        if ( !$currency ) {
-            // Die silently
-            return '';
-        }
+/* ********************************************************************************************* */   
 
-        return $currency->conversion_rate;
-    }
+// Custom functions
+/*
+function getVatNumber( $order )
+{
+	$vn = '';
+	foreach($order['meta_data']  as $data ) {
+		if( $data['key'] == 'CIF/NIF' ) {
+			$vn = $data['value'];
+			break;
+		}
+	}
 
+	return $vn;
+}
+*/
+
+function getSpanish( $string )
+{
+	$sa = explode('[:es]', $string);
+	$s = $sa[1];
+
+	$i = strpos($s, '[');
+	$s = substr($s, 0, $i);
+
+	return $s;
 }

@@ -270,7 +270,7 @@ class CustomerInvoicesController extends Controller {
 		// STEP 3 : Delete current lines
 
 		// $customerInvoice->customerInvoiceLines()->delete();
-		foreach( $customerInvoice->customerInvoiceLines as $line)
+		foreach( $customerInvoice->customerInvoiceLines as $line)	// To DO: Blocked lines must not be deleted!!!!
 		{
 			$line->delete();		// Trigger ondelete events
 		}

@@ -10,7 +10,9 @@
                <div class="well well-sm" style="background-color: #d9edf7; border-color: #bce8f1; color: #3a87ad;">
 	               <b>{{l('Invoice')}}</b>: {{$invoice->document_reference}} <br>
 	               <b>{{l('Customer')}}</b>: <a href="{$fsc->factura->cliente_url()}">{{ $customer->name_fiscal }}</a><br>
-	               <b>{{l('Agente')}}</b>: <a href="{$fsc->agente->url()}">{{ $customer->salesrep->alias }}</a><br>
+	               @if ($customer->salesrep)
+                 <b>{{l('Agente')}}</b>: <a href="{$fsc->agente->url()}">{{ $customer->salesrep->alias }}</a><br>
+                 @endif
                </div>
 
             <div class="panel-body">

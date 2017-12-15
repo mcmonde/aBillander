@@ -30,7 +30,7 @@ class CreateCustomerInvoiceLineTaxesTable extends Migration {
 			$table->integer('position')->unsigned()->default(0);
 
 			$table->integer('customer_invoice_line_id')->unsigned()->nullable(false);
-			$table->integer('tax_id')->unsigned()->nullable(false);							// ToDo: set relationship to Tax model
+			$table->integer('tax_id')->unsigned()->nullable(false);
 			$table->integer('tax_rule_id')->unsigned()->nullable(false);					// What if it changes/disappears??
 
 			$table->timestamps();

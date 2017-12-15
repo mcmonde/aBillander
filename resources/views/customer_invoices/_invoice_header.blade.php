@@ -167,10 +167,10 @@
             {!! $errors->first('shipping_conditions', '<span class="help-block">:message</span>') !!}
          </div>
 
-         <div class="form-group col-lg-6 col-md-6 col-sm-6 {{{ $errors->has('notes_to customer') ? 'has-error' : '' }}}">
+         <div class="form-group col-lg-6 col-md-6 col-sm-6 {{{ $errors->has('notes_to_customer') ? 'has-error' : '' }}}">
             {{ l('Notes to Customer') }}
-            {!! Form::textarea('notes_to customer', null, array('class' => 'form-control', 'id' => 'notes_to customer', 'rows' => '3')) !!}
-            {{ $errors->first('notes_to customer', '<span class="help-block">:message</span>') }}
+            {!! Form::textarea('notes_to_customer', null, array('class' => 'form-control', 'id' => 'notes_to_customer', 'rows' => '3')) !!}
+            {{ $errors->first('notes_to_customer', '<span class="help-block">:message</span>') }}
          </div>
 
       </div>

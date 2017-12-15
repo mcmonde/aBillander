@@ -28,6 +28,14 @@ class Country extends Model {
         $this->attributes['iso_code'] = strtoupper($value);
     }
 	
+    /**
+     * Find ISO Code
+     * 
+     */
+    public static function findByIsoCode($code)
+    {
+        return self::where('iso_code', $code)->first();
+    }
     
     /*
     |--------------------------------------------------------------------------
