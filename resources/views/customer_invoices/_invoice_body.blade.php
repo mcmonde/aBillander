@@ -11,6 +11,7 @@
                <th class="text-right">{{l('With Tax')}}</th>
                <th class="text-right" width="90">{{l('Disc. %')}}</th>
                <th class="text-center">{{l('Net')}}</th>
+               <th class="text-right" width="90">{{l('Disc.')}}</th>
                <th class="text-right" width="115">{{l('Tax')}}</th>
                <th class="text-right">{{l('Total')}}</th>
                <th class="text-right">{{l('R.E.')}}</th>
@@ -20,7 +21,21 @@
             @if ( count($invoice->customerInvoiceLines) > 0 )
                @foreach ( $invoice->customerInvoiceLines as $i => $line )
 
+                  @if ( $line->locked )
+
                       @include('customer_invoices._invoice_line')
+
+                  @endif
+
+               @endforeach
+
+               @foreach ( $invoice->customerInvoiceLines as $i => $line )
+
+                  @if ( !$line->locked )
+
+                      @include('customer_invoices._invoice_line')
+
+                  @endif
 
                @endforeach
             @endif
@@ -52,6 +67,9 @@
                   {!! Form::text('order_total_tax_excl', null, array('class' => 'form-control text-right', 'id' => 'order_total_tax_excl', 'style' => 'font-weight: bold;', 'onfocus' => 'this.blur();')) !!}
                </td>
                <td>
+
+               </td>
+               <td>
                   {!! Form::text('order_total_taxes', null, array('class' => 'form-control text-right', 'id' => 'order_total_taxes', 'style' => 'font-weight: bold;', 'onfocus' => 'this.blur();')) !!}
                </td>
                <td>
@@ -62,3 +80,31 @@
             </tr>
          </tbody>
       </table>
+
+@section('scripts') 
+
+@parent
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $( "tr.locked > td > input" ).on( "click", function( event ) {
+     
+              event.preventDefault();
+
+              $(this).blur();
+        });
+    }); 
+
+    $(document).ready(function() {
+        $( "tr.locked > td > textarea" ).on( "click", function( event ) {
+     
+              event.preventDefault();
+
+              $(this).blur();
+        });
+    }); 
+
+</script>
+
+@stop

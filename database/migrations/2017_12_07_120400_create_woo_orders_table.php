@@ -25,7 +25,9 @@ class CreateWooOrdersTable extends Migration
             $table->string('currency');
 
             $table->dateTime('date_created');
-            $table->dateTime('date_abi_exported');
+            $table->dateTime('date_paid');              // 
+            $table->dateTime('date_abi_exported');      // Not needed! This is "created_at" date
+            $table->dateTime('date_abi_invoiced');
 
             $table->string('total');
             $table->string('total_tax');

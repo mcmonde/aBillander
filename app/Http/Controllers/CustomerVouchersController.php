@@ -27,10 +27,10 @@ class CustomerVouchersController extends Controller {
 	public function index()
 	{
 		$payments = $this->payment
-					->with('customerInvoice')
-					->with('customer')
-					->where('model_name', '=', 'CustomerInvoice')
-					->orderBy('id', 'asc')->get();
+					->with('paymentable')
+					->with('paymentable.customer')
+					->where('payment_type', 'receivable')
+					->orderBy('due_date', 'desc')->get();
 
         return view('customer_vouchers.index', compact('payments'));
 	}

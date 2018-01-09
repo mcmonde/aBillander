@@ -225,9 +225,17 @@ class CustomerInvoicesController extends Controller {
 		if ( $request->input('shipping_address_id') < 1 ) 
 			$request->merge( array('shipping_address_id' => $request->input('invoicing_address_id')) );
 
+		$document_date = $request->input('document_date_form') ?
+						  \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $request->input('document_date_form') ) : 
+						  \Carbon\Carbon::now();
+		
+		$delivery_date = $request->input('delivery_date_form') ?
+						  \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $request->input('delivery_date_form') ) :
+						  null;
+
 		$dates = [
-						'document_date' => \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $request->input('document_date_form') ),
-						'delivery_date' => \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $request->input('delivery_date_form') ),
+						'document_date' => $document_date,
+						'delivery_date' => $delivery_date,
 				 ];
 		$request->merge( $dates );
 
@@ -237,7 +245,9 @@ class CustomerInvoicesController extends Controller {
 		foreach ($rules as $k => $v) {
 	        $rules[$k] = str_replace('{customer_id}', $customer_id, $v);
 	    }
-	    $rules['nbrlines'] = 'required|in:' . count( $request->input('lines', []) );
+	    $rules['nbrlines'] = 'required|numeric|min:' . count( $request->input('lines', []) );
+
+	    if ( !$request->input('delivery_date') ) unset( $rules['delivery_date'] );
 
 
 		$this->validate($request, $rules);
@@ -270,9 +280,11 @@ class CustomerInvoicesController extends Controller {
 		// STEP 3 : Delete current lines
 
 		// $customerInvoice->customerInvoiceLines()->delete();
-		foreach( $customerInvoice->customerInvoiceLines as $line)	// To DO: Blocked lines must not be deleted!!!!
+		foreach( $customerInvoice->customerInvoiceLines as $line)
 		{
-			$line->delete();		// Trigger ondelete events
+			if ( $line->locked ) continue;		// Skip locked lines
+			
+			$line->delete();					// Trigger ondelete events
 		}
 
 		// STEP 4 : Create new lines
@@ -285,14 +297,28 @@ class CustomerInvoicesController extends Controller {
 
 		// Loop...
 //	    $address  = \App\Address::find( $request->input('invoicing_address_id'));
-	    $customer = \App\Customer::with('invoicing_address')->find( $customerInvoice->customer_id );
-	    $address  = $customer->invoicing_address;
+	    $customer = \App\Customer::with('address')->find( $customerInvoice->customer_id );
+	    $address  = $customer->address;
 //		$n = intval($request->input('nbrlines', 0));
 		$form_lines = $request->input('lines');
 
-        for($i = 0; $i < count($form_lines); $i++)
+		// Locked lines :: Add ammounts to document total
+		foreach( $customerInvoice->customerInvoiceLines as $line)		// only locked lines are left
+		{
+			$total_tax_incl += $line->total_tax_incl;
+			$total_tax_excl += $line->total_tax_excl;
+
+//				abi_r($total_tax_incl.' - '.$total_tax_excl.' - '.$line->total_tax_incl.' - '.$line->total_tax_excl);
+		}
+
+        // Regular lines
+        for($i = 0; $i < $request->input('nbrlines'); $i++)
         {
 			if ( !$request->has('lines.'.$i.'.lineid') ) continue;	// Line was deleted on View
+
+			if ( $form_lines[$i]['locked'] ) {		// Skip locked lines
+				continue;
+			}	// Skip locked lines
 
 			if ( !$request->has('lines.'.$i.'.sales_equalization') ) $form_lines[$i]['sales_equalization'] = 0;
         	// Controller: $request->merge(['sales_equalization' => $request->input('sales_equalization', 0)]);
@@ -390,6 +416,8 @@ class CustomerInvoicesController extends Controller {
 							->findOrFail($id);
 
 		$company = \App\Context::getContext()->company;
+
+//		abi_r($cinvoice, true);
 
 		return view('customer_invoices.show', compact('cinvoice', 'company'));
 	}

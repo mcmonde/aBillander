@@ -11,7 +11,7 @@ return [
 	|
 	*/
 
-	'Customer Vouchers' => 'Recibos',
+	'Customer Vouchers' => 'Recibos de Clientes',
 	'Customer'     => 'Cliente',
 
 	/*
@@ -23,8 +23,8 @@ return [
 	|
 	*/
 
-	'Customer Vouchers - Create' => 'Recibos - Crear',
-	'New Customer Voucher'     => 'Nueva Recibo',
+	'Customer Vouchers - Create' => 'Recibos de Clientes - Crear',
+	'New Customer Voucher'     => 'Nuevo Recibo',
 
 
 	/*
@@ -36,7 +36,7 @@ return [
 	|
 	*/
 
-	'Customer Vouchers - Edit'     => 'Recibos - Modificar',
+	'Customer Vouchers - Edit'     => 'Recibos de Clientes - Modificar',
 	'Edit Customer Voucher'     => 'Modificar Recibo',
 	'Invoice'     => 'Factura',
 	'Due Date'     => 'Fecha Vencimiento',

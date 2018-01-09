@@ -20,6 +20,7 @@ class WooOrderImporter {
 
 	protected $wc_order;
 	protected $run_status = true;		// So far, so good. Can continue export
+	protected $error = null;
 
 	protected $raw_data = array();
 
@@ -65,7 +66,7 @@ class WooOrderImporter {
     {
         // 
     	// Get $order_id data...
-        $data = $this->raw_data = self::getWooOrder( intval($order_id) );
+        $data = $this->raw_data = WooConnector::getWooOrder( intval($order_id) );
         if (!$data) {
             $this->logMessage( 'ERROR', 'Se ha intentado recuperar el Pedido número <b>"'.$order_id.'"</b> y no existe.' );
             $this->run_status = false;
@@ -74,10 +75,62 @@ class WooOrderImporter {
         return $this->run_status;
     }
 
-    public static function makeInvoice( $order_id = null ) {
+
+    public static function makeOrder( $order_id = null ) {
         // See: https://stackoverflow.com/questions/1699796/best-way-to-do-multiple-constructors-in-php
         $importer = new static($order_id);
-        if (!$importer->tell_run_status()) return 0;
+        if (!$importer->tell_run_status()) return $importer;
+
+        // Do stuff
+
+        $order = $importer->raw_data;
+
+		// Save
+		$data = [
+            'id' => $order['id'],
+
+            'number'    => $order['number'],
+            'order_key' => $order['order_key'],
+            'currency'  => $order['currency'],
+
+            'date_created'      => WooOrder::getDate( $order['date_created'] ),
+            'date_abi_exported' => WooOrder::getExportedAt($order['meta_data']),
+
+            'total'     => $order['total'],
+            'total_tax' => $order['total_tax'],
+            
+            'customer_id'   => $order['customer_id'],
+            'customer_note' => $order['customer_note'],
+
+            'payment_method'        => $order['payment_method'],
+            'payment_method_title'  => $order['payment_method_title'],
+            'shipping_method_id'    => WooOrder::getShippingMethodId($order['shipping_lines']),
+            'shipping_method_title' => WooOrder::getShippingMethodTitle($order['shipping_lines']),
+		];
+
+
+        try {
+
+        	$wc_order = WooOrder::updateOrCreate($data);
+		}
+
+		catch( \Exception $e ) {
+			$importer->run_status = false;
+			$importer->error = $e->getMessage();
+		}
+
+
+        return $importer;
+
+    }
+
+
+    public static function makeInvoice( $order_id = null ) {
+        
+        $importer = self::makeOrder($order_id);
+        if (!$importer->tell_run_status()) return $importer;
+
+        // Do stuff
 
         $importer->setCurrency();
 
@@ -445,7 +498,7 @@ foreach ( $order['shipping_lines'] as $item ) {
 			'total_tax_incl' => $item['total'] + $item['total_tax'],
 			'total_tax_excl' => $item['total'],
 
-//			'tax_percent' => $item[''],
+			'tax_percent' => ($item['total_tax']/$item['total'])*100.0,
 //			'commission_percent' => $item[''],
 
 //			'notes' => $item[''],
@@ -822,101 +875,8 @@ foreach ( $order['shipping_lines'] as $item ) {
         return $address;
     }
 
-    
-    public static function getWooOrder( $order_id = 0 )
-    {
-        $oID = intval($order_id);
 
-        if ( !($oID>0) ) {
-        	return [];
-        }
-
-        // Do the Mambo!!!
-		$params = [
-//		    'dp'   => 6,		// WooCommerce serve store some values rounded. Not useful this option. Use WooCommerce API default instead: 2 decimal places
-		    'dp'   => \App\Configuration::get('WOOC_DECIMAL_PLACES'),
-		];
-
-		// Get Order fromm WooCommerce Shop
-        try {
-
-			$order = WooCommerce::get('orders/'.$oID, $params);	// Array
-		}
-
-		catch( WooHttpClientException $e ) {
-
-			/*
-			$e->getMessage(); // Error message.
-
-			$e->getRequest(); // Last request data.
-
-			$e->getResponse(); // Last response data.
-			*/
-
-			$order = [];
-			// So far, we do not know if order_id does not exist, or connection fails. 
-			// does it matter? -> Anyway, no order is issued
-
-		}
-
-//		abi_r($order, true);
-
-		return $order;
-    }
-
-    
-    public static function getWooTaxes()
-    {
-        // Do the Mambo!!!
-        try {
-
-			$taxes = WooCommerce::get('taxes/classes');	// Array
-		}
-
-		catch( WooHttpClientException $e ) {
-
-			/*
-			$e->getMessage(); // Error message.
-
-			$e->getRequest(); // Last request data.
-
-			$e->getResponse(); // Last response data.
-			*/
-
-			$taxes = [];
-
-		}
-
-		return $taxes;
-    }
-
-    
-    public static function getWooPaymentGateways()
-    {
-        // Do the Mambo!!!
-        try {
-
-			$gateways = WooCommerce::get('payment_gateways');	// Array
-		}
-
-		catch( WooHttpClientException $e ) {
-
-			/*
-			$e->getMessage(); // Error message.
-
-			$e->getRequest(); // Last request data.
-
-			$e->getResponse(); // Last response data.
-			*/
-
-			$gateways = [];
-
-		}
-
-//		abi_r($gateways, true);
-
-		return $gateways;
-    }
+/* ********************************************************************************************* */   
 
 
     public function tell_run_status() {

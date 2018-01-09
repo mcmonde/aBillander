@@ -37,8 +37,8 @@
 	@foreach ($payments as $payment)
 		<tr>
 			<td>{{ $payment->id }}</td>
-			<td>{{ $payment->customerInvoice->document_reference }}</td>
-			<td>{{ $payment->customer->name_fiscal }}</td>
+			<td>{{ $payment->customerInvoice->document_reference or '' }}</td>
+			<td>{{ $payment->customerInvoice->customer->name_fiscal or '' }}</td>
 			<td>{{ $payment->name }}</td>
 			<td @if( !$payment->payment_date AND ( \Carbon\Carbon::createFromFormat( \App\Context::getContext()->language->date_format_lite, $payment->due_date) < \Carbon\Carbon::now() ) ) class="danger" @endif>
 				{{ $payment->due_date }}</td>

@@ -21,7 +21,7 @@
                &nbsp; {{l('Show', [], 'layouts')}}
             </a -->
 
-            <button class="btn btn-sm btn-success" type="button" onclick="this.disabled=true;$('#nextAction').val('showInvoice');this.form.submit();">
+            <button class="btn btn-sm btn-success" type="button" onclick="this.disabled=false;$('#nextAction').val('showInvoice');this.form.submit();">
                <i class="fa fa-eye"></i>
                &nbsp; {{l('Show', [], 'layouts')}}
             </button>

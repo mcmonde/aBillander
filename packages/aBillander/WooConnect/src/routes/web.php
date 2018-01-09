@@ -28,6 +28,11 @@ Route::group([
 //	Route::get('orders/{id}', 'WooOrdersController@show');
 //	Route::post('orders/{id}', ['as' => 'wostatus', 'uses' => 'WooOrdersController@update']);
 
+	Route::get( 'wooconnect/configuration', 'WooConnectController@configurationsEdit')
+			->name('wooconnect.configuration');
+	Route::post('wooconnect/configuration', 'WooConnectController@configurationsUpdate')
+			->name('wooconnect.configuration.update');
+
 	Route::get( 'wooconnect/configuration/taxes', 'WooConnectController@configurationTaxesEdit')
 			->name('wooconnect.configuration.taxes');
 	Route::post('wooconnect/configuration/taxes', 'WooConnectController@configurationTaxesUpdate')
@@ -38,9 +43,13 @@ Route::group([
 	Route::post('wooconnect/configuration/paymentgateways', 'WooConnectController@configurationPaymentGatewaysUpdate')
 			->name('wooconnect.configuration.paymentgateways.update');
 
-    Route::resource('worders', 'WooOrdersController');
-    Route::get('worders/{id}/import', array('uses' => 'WooOrdersController@import', 
+    Route::get('worders/{id}/import' , array('uses' => 'WooOrdersController@import', 
                                                         'as'   => 'worders.import' ));
+    Route::get('worders/{id}/invoice', array('uses' => 'WooOrdersController@invoice', 
+                                                        'as'   => 'worders.invoice' ));
+    Route::get('worders/imported', array('uses' => 'WooOrdersController@importedIndex', 
+                                                        'as'   => 'worders.imported' ));
+    Route::resource('worders', 'WooOrdersController');
 
 });
 

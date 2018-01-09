@@ -183,7 +183,23 @@ class CustomerInvoice extends Model {
         return $this->hasMany('Address', 'owner_id')->where('model_name', '=', 'Customer');
     }
 */
+   /**
+     * Get all of the WC Orders that are assigned this Invoice.
+     */
+    public function wc_orders()
+    {
+        return $this->belongsToMany('aBillander\WooConnect\WooOrder', 'parent_child', 'childable_id', 'parentable_id')
+                ->wherePivot('childable_type' , 'App\CustomerInvoice')
+                ->wherePivot('parentable_type', 'aBillander\WooConnect\WooOrder')
+                ->withTimestamps();
+    }
 
+    public function staple_wc_order( $document = null )
+    {
+        if (!$document) return;
+
+        $this->wc_orders()->attach($document->id, ['parentable_type' => 'aBillander\WooConnect\WooOrder', 'childable_type' => 'App\CustomerInvoice']);
+    }
 
     /*
     |--------------------------------------------------------------------------

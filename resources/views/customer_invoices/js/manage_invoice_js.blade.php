@@ -880,17 +880,19 @@ function calculate_line(line_id)
   if( !($("#line_"+i).length > 0) ) return ;    // Invalid line number (does not exist!!)
 
     // 
-         l_qty   = parseFloat( $( id(i, "quantity"                ) ).val() );
-         l_pri   = parseFloat( $( id(i, "unit_final_price"        ) ).val() );
-         l_pri_t = parseFloat( $( id(i, "unit_final_price_tax_inc") ).val() );
-         l_disp  = parseFloat( $( id(i, "discount_percent"        ) ).val() );
-         l_tax   = parseFloat( $( id(i, "tax_percent"             ) ).val() );
+         l_qty    = parseFloat( $( id(i, "quantity"                 ) ).val() );
+         l_pri    = parseFloat( $( id(i, "unit_final_price"         ) ).val() );
+         l_pri_t  = parseFloat( $( id(i, "unit_final_price_tax_inc" ) ).val() );
+         l_disp   = parseFloat( $( id(i, "discount_percent"         ) ).val() );
+         l_disa   = parseFloat( $( id(i, "discount_amount_tax_excl" ) ).val() );
+         l_disa_t = parseFloat( $( id(i, "discount_amount_tax_incl" ) ).val() );
+         l_tax    = parseFloat( $( id(i, "tax_percent"              ) ).val() );
 
          l_dis  = l_qty*l_pri  *(l_disp/100.0);
          l_dist = l_qty*l_pri_t*(l_disp/100.0);
 
-         l_net = l_qty*l_pri  *(100.0-l_disp)/100.0;
-         l_tot = l_qty*l_pri_t*(100.0-l_disp)/100.0;
+         l_net = l_qty*l_pri  *(100.0-l_disp)/100.0 - l_disa;
+         l_tot = l_qty*l_pri_t*(100.0-l_disp)/100.0 - l_disa_t;
          
 // discount_amount is a discount in addition to (or instead of) discount percent
 //        $( id(i, "discount_amount_tax_excl") ).val( l_dis  );

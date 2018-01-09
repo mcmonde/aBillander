@@ -118,10 +118,16 @@ class Payment extends Model {
         return $this->morphTo();
     }
 
-    public function customerInvoice()
+    public function xcustomerInvoice()
     {
-        return $this->belongsTo('App\CustomerInvoice', 'invoice_id');
+        return $this->paymentable();
     }
+
+    public function getCustomerInvoiceAttribute()
+    {
+        return $this->paymentable;        // Only if it is a Customer Invoice...
+    }
+
 
     public function customer()
     {

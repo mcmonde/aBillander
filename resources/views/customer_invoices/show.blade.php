@@ -297,11 +297,11 @@ table.border td {
 							
 							<td colspan="3" class="total">
 								<div class="form-group top10">Sub-Total: 
-									{{ $cinvoice->total_products_tax_excl }} 
+									{{ $cinvoice->total_tax_excl }} 
 								</div>
 								
 								<div class="form-group">Impuestos: 
-									{{ $cinvoice->total_products_tax_incl - $cinvoice->total_products_tax_excl }}
+									{{ $cinvoice->total_tax_incl - $cinvoice->total_tax_excl }}
 								</div>
 						{{--
 								@if ( $discountItems != 0 )

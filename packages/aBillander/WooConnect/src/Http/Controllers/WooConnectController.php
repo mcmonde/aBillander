@@ -200,6 +200,102 @@ class WooConnectController extends Controller {
 				->with('success', l('This record has been successfully deleted &#58&#58 (:id) ', ['id' => $id], 'layouts'));
 	}
 
+
+/* ********************************************************************************************* */    
+
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * GET /currencies/{id}/edit
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function configurationsEdit()
+	{
+		$wooconfs = WooConnector::getWooConfigurations();
+		// Save Configurations Cache
+		// \App\Configuration::updateValue('WOOC_CONFIGURATIONS_CACHE', json_encode($wooconfs));
+		// $wooconfs = ['woocommerce_default_country' => WooConnector::getWooSetting( 'woocommerce_default_country' )];
+
+		return view('woo_connect::woo_connect.edit_configurations', compact('wooconfs'));
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 * PUT /currencies/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function configurationsUpdate(Request $request)
+	{
+		$settings = [];
+
+		// Get Configurations from WooCommerce Shop
+        try {
+
+			$groups = WooCommerce::get('settings');	// Array
+		}
+
+		catch( WooHttpClientException $e ) {
+
+			/*
+			$e->getMessage(); // Error message.
+
+			$e->getRequest(); // Last request data.
+
+			$e->getResponse(); // Last response data.
+			*/
+
+			return redirect()->route('worders.index')
+					->with('error', $e->getMessage());
+
+		}
+
+		// abi_r($groups, true);
+
+		foreach ($groups as $group) {
+
+			try {
+
+				$set = WooCommerce::get( 'settings/'.$group['id'] );	// Array
+
+				$settings = array_merge($settings, $set);
+
+				// abi_r($set);abi_r('* ***************************************** *');
+			}
+
+			catch( WooHttpClientException $e ) {
+
+				// settings/integration : Error: Grupo de ajustes no válido. [rest_setting_setting_group_invalid]
+
+//				return redirect()->route('worders.index')
+//						->with('error', $e->getMessage());
+
+			}
+		}
+
+		// abi_r($settings);
+
+		// Save Settings Cache
+		// Loose some fat first
+		$settings = array_map(function($value){
+			$v = [ 'id' => $value['id'], 'description' => $value['description'], 'value' => $value['value'], ];
+		    return $v;
+		}, $settings);
+		\App\Configuration::updateValue('WOOC_CONFIGURATIONS_CACHE', json_encode($settings));
+
+		// die();
+
+		return redirect('wooc/worders')
+				->with('success', l('This configuration has been successfully updated', [], 'layouts'));
+	}
+
+
+/* ********************************************************************************************* */    
+
+
 	/**
 	 * Show the form for editing the specified resource.
 	 * GET /currencies/{id}/edit
@@ -209,7 +305,7 @@ class WooConnectController extends Controller {
 	 */
 	public function configurationTaxesEdit()
 	{
-		$wootaxes = WooOrderImporter::getWooTaxes();
+		$wootaxes = WooConnector::getWooTaxes();
 		// Save Taxes Cache
 		\App\Configuration::updateValue('WOOC_TAXES_CACHE', json_encode($wootaxes));
 		// Woo Taxes Dictionary
@@ -277,10 +373,15 @@ class WooConnectController extends Controller {
 	 */
 	public function configurationPaymentGatewaysEdit()
 	{
-		$woopgates = WooOrderImporter::getWooPaymentGateways();
-		// Save Taxes Cache
+		$woopgates = WooConnector::getWooPaymentGateways();
+		// Save Payment Gateways Cache
+		// Loose some fat first
+		$woopgates = array_map(function($value){
+			unset($value['settings']);
+		    return $value;
+		}, $woopgates);
 		\App\Configuration::updateValue('WOOC_PAYMENT_GATEWAYS_CACHE', json_encode($woopgates));
-		// Woo Taxes Dictionary
+		// Woo Payment Gateways Dictionary
 		$dic = [];
 		$dic_val = [];
 		foreach ($woopgates as $woopgate) {
@@ -316,7 +417,7 @@ class WooConnectController extends Controller {
         {
             \App\Configuration::updateValue($key, $val);
         }
-		// Save Taxes Dictionary Cache
+		// Save Payment Gateways Dictionary Cache
 		$dic_val = [];
 		$woopgates = json_decode(\App\Configuration::get('WOOC_PAYMENT_GATEWAYS_CACHE'), true);
 		foreach ($woopgates as $woopgate) {

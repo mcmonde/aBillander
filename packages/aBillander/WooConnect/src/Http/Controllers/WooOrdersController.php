@@ -20,70 +20,9 @@ class WooOrdersController extends Controller {
 
    protected $order;
 
-   public function hello()
+   public function __construct(WooOrder $order)
    {
-        return \aBillander\WooConnect\WooConnector::getStatusList();
-
-        try {
-
-
-
-			$results = WooCommerce::get('orders');
-
-			$products = WooCommerce::get('products');
-
-			$customers = WooCommerce::get('customers');
-
-
-
-			$result = count($results);
-
-			$customer = count($customers);
-
-			$product = count($products);
-
-
-
-			//you can set any date which you want
-
-			$query = ['date_min' => '2017-10-01', 'date_max' => '2017-10-30'];
-
-			$sales = WooCommerce::get('reports/sales', $query);
-
-			$sale = $sales[0]["total_sales"];
-
-		}
-
-
-
-			catch(HttpClientException $e) {
-
-			$e->getMessage(); // Error message.
-
-			$e->getRequest(); // Last request data.
-
-			$e->getResponse(); // Last response data.
-
-		}
-
- //       abi_r($endpoints, true);
-
-		return view('woo_connect::woo_connect.hello', compact('results', 'result', 'customers', 'customer', 'products', 'product', 'sale'));
-
-		// Order status. Options: pending, processing, on-hold, completed, cancelled, refunded and failed. Default is pending.
-
-		// WooCommerce, en la instalación por defecto, incluye siete estados distintos en los que un pedido puede encontrarse:
-
-    	// Completado,     Pendiente de pago,    En espera,    Procesando,    Cancelado,    Reembolsado,    Fallido
-
-    	// https://www.enriquejros.com/estados-de-pedido-woocommerce/
-
-
-   }
-
-   public function __construct( WooOrder $order )
-   {
-        $this->order = $order;
+         $this->order = $order;
    }
 
 	/**
@@ -162,6 +101,19 @@ class WooOrdersController extends Controller {
 	}
 
 	/**
+	 * Display a listing of the resource.
+	 * GET worders/imported
+	 *
+	 * @return Response
+	 */
+	public function importedIndex()
+	{
+		$orders = $this->order->with('customer')->orderBy('date_created', 'desc')->get();
+
+        return view('woo_connect::woo_orders.imported_index', compact('orders'));
+	}
+
+	/**
 	 * Show the form for creating a new resource.
 	 * GET /worders/create
 	 *
@@ -215,13 +167,15 @@ class WooOrdersController extends Controller {
 		$order = WooCommerce::get('orders/'.$id, $params);	// Array
 
 		// I am thirsty. Let's get hydrated!
+		$customer = \App\Customer::where('webshop_id', $order['customer_id'])->first();
+
 		$vatNumber = WooOrder::getVatNumber( $order );
 		$order['billing']['vat_number'] = $vatNumber;
 
 		$date_downloaded = '';
 		foreach($order['meta_data'] as $meta) {
 			if ($meta['key']=='date_abi_exported') {
-				$date_downloaded = $meta['key'];
+				$date_downloaded = $meta['value'];
 				break;
 			}
 		}
@@ -233,7 +187,7 @@ class WooOrdersController extends Controller {
 		$state = \App\State::findByIsoCode( (strpos($order['billing']['state'], '-') ? '' : $order['billing']['country'].'-').$order['billing']['state'] );
 		$order['billing']['state_name'] = $state ? $state->name : $order['billing']['state'];
 
-		return view('woo_connect::woo_orders.show', compact('order'));
+		return view('woo_connect::woo_orders.show', compact('order', 'customer'));
 	}
 
 	/**
@@ -290,84 +244,41 @@ class WooOrdersController extends Controller {
         //
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 * GET /worders/{id}/import
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+
+/* ********************************************************************************************* */   
+
+
 	public function import($id)
 	{
-		$importer = \aBillander\WooConnect\WooOrderImporter::makeInvoice( $id ); die();
+		$importer = \aBillander\WooConnect\WooOrderImporter::makeOrder( $id );
 
-		// Get Order fromm WooCommerce Shop
-        try {
-
-			$order = WooCommerce::get('orders/'.intval($id));	// Array
-		}
-
-		catch( WooHttpClientException $e ) {
-
-			/*
-			$e->getMessage(); // Error message.
-
-			$e->getRequest(); // Last request data.
-
-			$e->getResponse(); // Last response data.
-			*/
-
-			return redirect()->route('worders.index')
-					->with('error', $e->getMessage()." (id=$id)");
-
-		}
-
-		// Save
-		$data = [
-            'id' => $order['id'],
-
-            'number'    => $order['number'],
-            'order_key' => $order['order_key'],
-            'currency'  => $order['currency'],
-
-            'date_created'      => WooOrder::getDate( $order['date_created'] ),
-            'date_abi_exported' => WooOrder::getExportedAt($order['meta_data']),
-
-            'total'     => $order['total'],
-            'total_tax' => $order['total_tax'],
-            
-            'customer_id'   => $order['customer_id'],
-            'customer_note' => $order['customer_note'],
-
-            'payment_method'        => $order['payment_method'],
-            'payment_method_title'  => $order['payment_method_title'],
-            'shipping_method_id'    => WooOrder::getShippingMethodId($order['shipping_lines']),
-            'shipping_method_title' => WooOrder::getShippingMethodTitle($order['shipping_lines']),
-		];
-
-		
-        try {
-
-        	$wc_order = $this->order->updateOrCreate($data);
-		}
-
-		catch( \Exception $e ) {
-			abi_r($e->getMessage());
-		}
-
-
-		// Customer stuff
-
-		// abi_r($data, true);
-		// abi_r($order, true);
-
-
-		return redirect()->route('worders.show', $id)
+		if ( $importer->tell_run_status() )
+			
+			return redirect()->route('worders.show', $id)
 				->with('success', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts'));
+		else
+			
+			return redirect()->route('worders.show', $id)
+				->with('error', l('Unable to update this record &#58&#58 (:id) ', ['id' => $id], 'layouts') . $importer->error);
+	}
+
+	public function invoice($id)
+	{
+		$importer = \aBillander\WooConnect\WooOrderImporter::makeInvoice( $id );
+
+		if ( $importer->tell_run_status() )
+			
+			return redirect()->route('worders.show', $id)
+				->with('success', l('This record has been successfully updated &#58&#58 (:id) ', ['id' => $id], 'layouts'));
+		else
+			
+			return redirect()->route('worders.show', $id)
+				->with('error', l('Unable to update this record &#58&#58 (:id) ', ['id' => $id], 'layouts') . $importer->error);
 	}
 
 
 /* ********************************************************************************************* */   
+
 
 	/**
 	 * Show the form for creating a new resource.
@@ -406,21 +317,6 @@ class WooOrdersController extends Controller {
 
 /* ********************************************************************************************* */   
 
-// Custom functions
-/*
-function getVatNumber( $order )
-{
-	$vn = '';
-	foreach($order['meta_data']  as $data ) {
-		if( $data['key'] == 'CIF/NIF' ) {
-			$vn = $data['value'];
-			break;
-		}
-	}
-
-	return $vn;
-}
-*/
 
 function getSpanish( $string )
 {

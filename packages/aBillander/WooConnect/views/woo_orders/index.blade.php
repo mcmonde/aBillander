@@ -8,9 +8,14 @@
 <div class="page-header">
     <div class="pull-right" style="padding-top: 4px;">
 
-    <div class="btn-group">
+    <a href="{{ URL::route('worders.imported') }}" class="btn btn-grey" 
+        title="{{l('Orders')}}"><i class="fa fa-shopping-cart"></i> {{l('Orders')}}</a>
+
+    <div class="btn-group" style="margin-right: 152px">
         <a href="#" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="{{l('Configuration', [], 'layouts')}}"><i class="fa fa-cog"></i> {{l('Configuration', [], 'layouts')}} &nbsp;<span class="caret"></span></a>
         <ul class="dropdown-menu">
+          <li><a href="{{ URL::route('wooconnect.configuration') }}">{{l('Shop Configuration')}}</a></li>
+          <li><a href="{{ URL::route('wooconnect.configuration') }}">{{l('WooConnect Configuration')}}</a></li>
           <li><a href="{{ URL::route('wooconnect.configuration.taxes') }}">{{l('Taxes Dictionary')}}</a></li>
           <li><a href="{{ URL::route('wooconnect.configuration.paymentgateways') }}">{{l('Payment Gateways Dictionary')}}</a></li>
           <li class="divider"></li>
@@ -71,10 +76,12 @@
 		<tr>
 			<th class="text-left">{{l('Order #', [], 'layouts')}}</th>
 			<th>{{l('Customer')}}</th>
-			<th>{{l('Address')}}</th>
+			<!-- th>{{l('Address')}}</th -->
 			<th>{{l('Contact')}}</th>
       <th>{{l('Order Date')}}</th>
+      <th>{{l('Payment Date')}}</th>
       <th>{{l('Download Date')}}</th>
+      <th>{{l('Invoice Date')}}</th>
       <th>{{l('Status')}}</th>
       <th>{{l('Total')}}</th>
 			<th> </th>
@@ -85,38 +92,39 @@
 
 @php
 
-$date_downloaded = '';
-$collection = collect($order['meta_data']);
-
-// abi_r($collection);
-
-$meta = 
-
-$collection->first(function ($item, $key) {
-    if ($item['key']=='date_abi_exported') return $item;
-});
-
-// abi_r($meta);
-
-if ($meta) $date_downloaded = $meta['value'];
+    $order = aBillander\WooConnect\WooOrder::viewIndexTransformer( $order );
 
 @endphp
 
 		<tr>
 			<td>{{ $order["id"] }}</td>
-			<td>{{ $order["billing"]["first_name"].' '.$order["billing"]["last_name"] }}</td>
-			<td>{{ $order["shipping"]["address_1"] }}</td>
+			<td>{{ $order["billing"]["first_name"].' '.$order["billing"]["last_name"] }}<br />
+			    {{ $order["shipping"]["address_1"] }}</td>
 			<td>{{ $order["billing"]["phone"] }}</td>
       <td>{{ $order["date_created"] }}</td>
-      <td>{{ $date_downloaded }}</td>
+      @if ($order["date_paid"]) 
+      <td>{{ $order["date_paid"] }}</td>
+      @else
+      <td class="danger"> </td>
+      @endif
+      @if ($order["date_abi_exported"]) 
+      <td>{{ $order["date_abi_exported"] }}</td>
+      @else
+      <td class="warning"> </td>
+      @endif
+      <td>{{ $order["date_abi_invoiced"] }}</td>
       <td>{{ $order["status"] }}</td>
       <td>{{ $order['total'] }}</td>
 
 			<td class="text-right">
 
-                <a class='open-AddBookDialog btn btn-sm btn-warning' href="{{ URL::route('worders.update', [$order["id"]] + $query ) }}" data-target='#myModalOrder' data-id="{{ $order["id"] }}" data-status="{{ $order["status"] }}" data-statusname="{{ \aBillander\WooConnect\WooConnector::getOrderStatusList()[ $order["status"] ] }}" data-toggle="modal" onClick="return false;"><i class="fa fa-pencil-square-o"></i> &nbsp; {{l('Update', [], 'layouts')}}</a>
+                <a class='open-AddBookDialog btn btn-sm btn-warning' href="{{ URL::route('worders.update', [$order["id"]] + $query ) }}" data-target='#myModalOrder' data-id="{{ $order["id"] }}" data-status="{{ $order["status"] }}" data-statusname="{{ \aBillander\WooConnect\WooConnector::getOrderStatusList()[ $order["status"] ] }}" data-toggle="modal" onClick="return false;" title="{{l('Update', [], 'layouts')}}"><i class="fa fa-pencil-square-o"></i></a>
 
                 <a class="btn btn-sm btn-success" href="{{ URL::to('wooc/worders/' . $order["id"]) }}" title="{{l('Show', [], 'layouts')}}"><i class="fa fa-eye"></i></a>
+
+                <a class="btn btn-sm btn-grey" href="{{ URL::route('worders.import', [$order["id"]] ) }}" title="{{l('Import', [], 'layouts')}}"><i class="fa fa-download"></i></a>
+
+                <a class="btn btn-sm btn-info" href="{{ URL::route('worders.invoice', [$order["id"]] ) }}" title="{{l('Invoice', [], 'layouts')}}"><i class="fa fa-file-text"></i></a>
 
                 <!-- a class='open-deleteDialog btn btn-danger' data-target='#myModal1' data-id="{{ $order["id"] }}" data-toggle='modal'>{{l('Delete', [], 'layouts')}}</a -->
 

@@ -14,7 +14,8 @@
         <div class="btn-group">
             <a href="#" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i> {{l('Actions', [], 'layouts')}} &nbsp;<span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="{{ URL::route('worders.import', [$order["id"]] ) }}">{{l('Import')}}</a></li>
+              <li><a href="{{ URL::route('worders.import' , [$order["id"]] ) }}"><i class="fa fa-download" ></i> &nbsp; {{l('Import')}}</a></li>
+              <li><a href="{{ URL::route('worders.invoice', [$order["id"]] ) }}"><i class="fa fa-file-text"></i> &nbsp; {{l('Invoice')}}</a></li>
               <li class="divider"></li>
               <!-- li><a href="#">Separated link</a></li -->
             </ul>
@@ -22,7 +23,7 @@
         <a href="{{ URL::to('wooc/worders') }}" class="btn xbtn-sm btn-default"><i class="fa fa-mail-reply"></i> {{ l('Back to WooCommerce Orders') }}</a> 
     </div>
     <h2>
-        <a href="{{ URL::to('wooc/worders') }}">{{ l('WooCommerce Orders') }}</a> <span style="color: #cccccc;">/</span> #{{ $order['id'] }} <button type="button" class="btn btn-sm btn-info">{{ $order['currency'] }}</button>
+        <a href="{{ URL::to('wooc/worders') }}">{{ l('WooCommerce Orders') }}</a> <span style="color: #cccccc;">/</span> #{{ $order['id'] }} <button type="button" class="btn btn-sm btn-blue">{{ $order['currency'] }}</button>
     </h2>        
 </div>
 
@@ -67,7 +68,7 @@
         </div>
         
         <div class="form-group col-sm-6">
-            {{l(' ')}}.
+            {{l('Invoiced at')}}
             <div class="form-control"> </div>
         </div>
 
@@ -75,17 +76,17 @@
             Cliente:
             <div class="input-group">
                 <div class="form-control">{{ $order['customer_id'] }} - {{ $order['billing']['first_name'].' '.$order['billing']['last_name'] }}</div>
-                
+@if ( $customer )                
                 <span class="input-group-btn">
-                    <a href="{{ URL::to('customers/' . $order['customer_id']) }}" class="btn btn-success" title="ver cliente">
+                    <a href="{{ URL::to('customers/' . $customer->id) }}" class="btn btn-success" title="{{ l('Go to Customer') }}" target="_blank">
                         <span class="fa fa-eye"></span>
                     </a>
                 </span>
-                
-                <span class="input-group-addon" title="Este cliente todavía no se ha añadido">
+@else               
+                <span class="input-group-addon" title="{{ l('This Customer has not been imported') }}">
                     <span class="fa fa-eye-slash"></span>
                 </span>
-                
+@endif                
             </div>
         </div>
         
@@ -236,6 +237,6 @@
 		</div>
 	</div>
 
-{{!! abi_r($order) !!}}
+{{-- !! abi_r($order) !! --}}
 
 @endsection

@@ -1,5 +1,5 @@
 
- <tr id="line_{{ $i }}">
+ <tr id="line_{{ $i }}" @if ( $line->locked ) class="locked" @endif >
 
     <td><input id="lines[{{ $i }}][line_sort_order]" name="lines[{{ $i }}][line_sort_order]" value="{{ ($i+1)*10 }}" class="form-control" type="text"></td>
 
@@ -29,11 +29,12 @@
 
         <input id="lines[{{ $i }}][discount_amount_tax_incl]" name="lines[{{ $i }}][discount_amount_tax_incl]" value="{{ $line->discount_amount_tax_incl }}" type="hidden">
         <input id="lines[{{ $i }}][discount_amount_tax_excl]" name="lines[{{ $i }}][discount_amount_tax_excl]" value="{{ $line->discount_amount_tax_excl }}" type="hidden">
+        
 @php
     $theURL    = $line->product_id > 0 ? URL::to('products').'/'.$line->product_id.'/edit' : 'javascript:void(0)' ;
     $theTarget = $line->product_id > 0 ? 'target="_blank"' : '' ;
 @endphp
-       <div class="form-control"><a {{ $theTarget }} href="{{ $theURL }}">{{ $line->reference }}</a></div></td>
+       <div class="form-control">@if ( $line->locked ) <i class="fa fa-lock"></i> @endif <a {{ $theTarget }} href="{{ $theURL }}">{{ $line->reference }}</a></div></td>
 
     <td><!-- input class="form-control" id="lines[{{ $i }}][name]" name="lines[{{ $i }}][name]" value="{{ $line->name }}" type="text" -->
     {!! Form::textarea('lines['.$i.'][name]', $line->name, array('class' => 'form-control', 'id' => 'lines['.$i.'][name]', 'rows' => '1')) !!}
@@ -41,8 +42,11 @@
 
     <td><input id="lines[{{ $i }}][quantity]" name="lines[{{ $i }}][quantity]" class="form-control text-right" onkeyup="calculate_line({{ $i }})" onchange="calculate_line({{ $i }})" onclick="this.select()" autocomplete="off" value="{{ $line->quantity }}" type="text"></td>
 
-    <td><button class="btn btn-md btn-danger" type="button" onclick="$('#line_{{ $i }}').remove();calculate_document();">
-       <span class="fa fa-trash"></span></button></td>
+    <td>@if ( !$line->locked )
+        <button class="btn btn-md btn-danger" type="button" onclick="$('#line_{{ $i }}').remove();calculate_document();">
+            <span class="fa fa-trash"></span></button>
+        @endif
+    </td>
 
 
 
@@ -54,6 +58,9 @@
 
     <td id="unit_net_price_{{ $i }}" class="text-center">
     {{ $line->unit_final_price*(1.0 - $line->discount_percent/100.0)}}<br />({{ $line->unit_final_price_tax_inc*(1.0 - $line->discount_percent/100.0)}})</td>
+
+    <td id="discount_amount_{{ $i }}" class="text-center">
+    {{ $line->discount_amount_tax_excl }}<br />({{ $line->discount_amount_tax_incl }})</td>
 
     <td>  
       {{ $line->tax->name }} ({{ $line->tax_percent }}%)</td>
