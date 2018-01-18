@@ -200,7 +200,11 @@ Route::group(['middleware' =>  ['context', 'auth']], function()
 Route::group(['prefix' => 'abcc', 'namespace' => '\CustomerCenter'], function ()
 {
 //    Route::get('/', ['uses' => 'DashboardController@redirectToLogin']);
-    Route::get('/', ['uses' => 'PublicCustomerInvoicesController@index']);
+
+    Route::group(['middleware' =>  ['context', 'auth']], function()
+    {
+        Route::get('/', ['uses' => 'CustomerHomeController@index']);
+    });
     Route::get('invoice/{invoiceKey}', ['uses' => 'PublicCustomerInvoicesController@show', 'as' => 'customerCenter.public.invoice.show']);
     Route::get('invoice/{invoiceKey}/pdf', ['uses' => 'PublicCustomerInvoicesController@pdf', 'as' => 'customerCenter.public.invoice.pdf']);
 
