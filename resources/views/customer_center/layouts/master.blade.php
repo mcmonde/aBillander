@@ -1,7 +1,5 @@
-{{--
-
 <!DOCTYPE html>
-<html lang="{{ \App\Context::getContext()->language->iso_code }}">
+<html lang="{{ Auth::user()->language->iso_code }}">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,15 +22,21 @@
         @yield('styles')
     </head>
     <body>
-        @include('layouts/nav')
+        @include('customer_center/layouts/nav')
         <div class="container-fluid" style="margin: 10px 0px 10px 0px;"> 
-            @include('layouts/notifications')
+            @include('customer_center/layouts/notifications')
             @yield('content')
+
+{{--
+
             @include('layouts/modal_feedback')
             @include('layouts/modal_about')
+
+--}}
+
             @yield('modals')
        </div>
-        @include('layouts/footer')
+        @include('customer_center/layouts/footer')
 
         <!-- Scripts -->
         <script src="{{ asset('assets/plugins/jQuery/jquery.min.js' ) }}" type="text/javascript"></script>
@@ -67,9 +71,3 @@
         @yield('scripts')
     </body>
 </html>
-
---}}
-
-MASTER
-
-@extends('layouts.app')

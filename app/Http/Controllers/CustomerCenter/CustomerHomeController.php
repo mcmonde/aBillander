@@ -25,6 +25,24 @@ class CustomerHomeController extends Controller
      */
     public function index()
     {
-        return view('customer_center.home');
+        $languages = \App\Language::orderBy('name')->get();
+
+        // ToDo: remember language using cookie :: echo Request::cookie('user_language');
+
+        return view('customer_center.home')->with(compact('languages'));
+    }
+
+    /**
+     * Update DEFAULT language (application wide, not logged-in usersS).
+     *
+     * @return Response
+     */
+    public function setLanguage($id)
+    {
+        $language = \App\Language::findOrFail( $id );
+
+        Cookie::queue('user_language', $language->id, 30*24*60);
+        
+        return redirect('/abcc');
     }
 }

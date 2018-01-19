@@ -13,6 +13,8 @@ class CreateCustomerUsersTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('customer_users');
+        
         Schema::create('customer_users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -31,6 +33,7 @@ class CreateCustomerUsersTable extends Migration
             $table->integer('language_id')->unsigned()->nullable(false); 
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -1,4 +1,4 @@
-@extends('layouts.customer_center.master')
+@extends('customer_center.layouts.master')
 
 @section('title') {{ l('Welcome') }} @parent @stop
 
@@ -18,7 +18,7 @@
             {{ csrf_field() }}
         </form>
 
-         <!-- a href="{{{ URL::to('auth/logout') }}}">{{ Auth::user()->getFullName() }}</a --> <span style="color: #cccccc;">/</span> {{ l('Home') }}
+         <!-- a href="{{{ URL::to('auth/logout') }}}">{{ Auth::user()->getFullName() }}</a --> <span style="color: #cccccc;">/</span> {{ l('Home', [], 'customerhome') }}
     </h2>        
 </div>
 
@@ -42,6 +42,7 @@
     </div>
 </div>
 
+{{--
 <div class="jumbotron">
   <!-- h1>Jumbotron</h1>
   <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
@@ -54,7 +55,8 @@
                             -moz-border-radius: 18px;
                             -khtml-border-radius: 18px;
                             -webkit-border-radius: 18px;">
-{{-- HTML::image('img/picture.jpg', 'a picture', array('class' => 'thumb')) --}}
+{ {-- HTML::image('img/picture.jpg', 'a picture', array('class' => 'thumb')) --} }
 </div>
+--}}
 
 @stop
