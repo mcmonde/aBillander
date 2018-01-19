@@ -48,12 +48,15 @@ class CustomerLoginController extends Controller
       return redirect()->back()->withInput($request->only('email', 'remember'));
     }
 
+    // See: /vendor/laravel/framework/src/Illuminate/Foundation/Auth/AuthenticatesUsers.php
+    // No customization: logout ALL users at once!
+/*    
     public function logout()
     {
         Auth::guard('customer')->logout();
         return redirect('/');
     }
-
+*/
 
     /**
      * Update DEFAULT language (application wide, not logged-in usersS).
