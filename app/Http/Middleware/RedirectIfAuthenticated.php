@@ -19,6 +19,12 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
             
+            // Customers
+            if ( $guard == 'customer' ) {
+                return redirect()->route('customer.dashboard');
+            }
+
+            // Regular Users
             if ( Auth::user()->home_page == '/' ) 
                 return redirect('/home');
             else

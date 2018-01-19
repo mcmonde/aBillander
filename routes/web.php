@@ -61,7 +61,7 @@ Route::get('404', function()
 
 Route::group(['prefix' => 'abcc'], function ()
 {
-    Route::get('/login', 'Auth\CustomerLoginController@showLoginForm')->name('customer,login');
+    Route::get('/login', 'Auth\CustomerLoginController@showLoginForm')->name('customer.login');
     Route::post('/login', 'Auth\CustomerLoginController@login')->name('customer.login.submit');
 
     Route::get('/', ['uses' => 'CustomerCenter\CustomerHomeController@index', 'as' => 'customer.dashboard']);
