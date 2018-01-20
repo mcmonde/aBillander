@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Illuminate\Support\Facades\Hash;
+use \App\Notifications\CustomerResetPasswordNotification;
 
 class CustomerUser extends Authenticatable
 {
@@ -34,7 +34,7 @@ class CustomerUser extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'firstname', 'lastname', 
 //        'home_page', 'is_admin', 
-        'active', 'language_id'
+        'active', 'language_id', 'customer_id'
     ];
 
     /**
@@ -56,22 +56,18 @@ class CustomerUser extends Authenticatable
         'language_id' => 'exists:languages,id',
     );
 
-
-    /**
-     * Protect Password on Model update
-     * 
+    /**  trait CanResetPassword
+     *
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
      */
-    /**
-       Laravel's trait does hash the password for you, you need to remove this :
-    public function setPasswordAttribute($value)
+    public function sendPasswordResetNotification($token)
     {
-        if( !empty($value)) 
-        {
-            $this->attributes['password'] = Hash::make($value);
-        }
-
+        $this->notify(new CustomerResetPasswordNotification($token));
     }
-     */
+
 
     /**
      * Handy methods
@@ -80,11 +76,6 @@ class CustomerUser extends Authenticatable
     public function getFullName()
     {
         return $this->firstname.' '.$this->lastname;
-    }
-
-    public function isAdmin()
-    {
-        return $this->is_admin;
     }
 
 
@@ -99,14 +90,8 @@ class CustomerUser extends Authenticatable
         return $this->belongsTo('App\Language');
     }
 
-    
-    public function stockmovements()
+    public function customer()
     {
-        return $this->hasMany('App\StockMovement');
-    }
-    
-    public function currencyconversionrates()
-    {
-        return $this->hasMany('App\CurrencyConversionRate');
+        return $this->belongsTo('App\Customer');
     }
 }

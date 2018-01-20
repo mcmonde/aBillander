@@ -57,6 +57,12 @@ class CustomerLoginController extends Controller
         return redirect('/');
     }
 */
+    
+    public function customerLogout()
+    {
+        Auth::guard('customer')->logout();
+        return redirect('/abcc');
+    }
 
     /**
      * Update DEFAULT language (application wide, not logged-in usersS).

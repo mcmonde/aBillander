@@ -31,6 +31,7 @@ class CreateCustomerUsersTable extends Migration
             $table->tinyInteger('active')->default(1);
 
             $table->integer('language_id')->unsigned()->nullable(false); 
+            $table->integer('customer_id')->unsigned()->nullable(false); 
 
             $table->timestamps();
             $table->softDeletes();

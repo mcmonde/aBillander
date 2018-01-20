@@ -45,6 +45,7 @@ Route::get('404', function()
     Route::get('login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
     Route::post('login', ['uses' => 'Auth\LoginController@login']);
     Route::post('logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
+//    Route::get('/users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 // Registration Routes...
     Route::get('register', ['as' => 'register', 'uses' => 'Auth\RegisterController@showRegistrationForm']);
@@ -63,6 +64,13 @@ Route::group(['prefix' => 'abcc'], function ()
 {
     Route::get('/login', 'Auth\CustomerLoginController@showLoginForm')->name('customer.login');
     Route::post('/login', 'Auth\CustomerLoginController@login')->name('customer.login.submit');
+//    Route::get('/logout', 'Auth\CustomerLoginController@customerLogout')->name('customer.logout');
+
+// Password Reset Routes...
+    Route::post('password/email', ['as' => 'customer.password.email', 'uses' => 'Auth\CustomerForgotPasswordController@sendResetLinkEmail']);
+    Route::get('password/reset', ['as' => 'customer.password.request', 'uses' => 'Auth\CustomerForgotPasswordController@showLinkRequestForm']);
+    Route::post('password/reset', ['uses' => 'Auth\CustomerResetPasswordController@reset']);
+    Route::get('password/reset/{token}', ['as' => 'customer.password.reset', 'uses' => 'Auth\CustomerResetPasswordController@showResetForm']);
 
     Route::get('/', ['uses' => 'CustomerCenter\CustomerHomeController@index', 'as' => 'customer.dashboard']);
 });

@@ -64,7 +64,7 @@
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">{{l('Login', [], 'layouts')}}</button>
 
-								<!-- a class="btn btn-link" href="{{ route('password.request') }}">{{ l('Forgot Your Password?') }}</a -->
+								<a class="btn btn-link" href="{{ route('customer.password.request') }}">{{ l('Forgot Your Password?') }}</a>
 							</div>
 						</div>
 					</form>
