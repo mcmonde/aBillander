@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Auth;
+
 use App\Traits\ViewFormatterTrait;
 
 class CustomerInvoice extends Model {
@@ -201,10 +203,27 @@ class CustomerInvoice extends Model {
         $this->wc_orders()->attach($document->id, ['parentable_type' => 'aBillander\WooConnect\WooOrder', 'childable_type' => 'App\CustomerInvoice']);
     }
 
+
     /*
     |--------------------------------------------------------------------------
-    | Data Factory
+    | Data Factory :: Scopes
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfCustomer($query)
+    {
+        return $query->where('customer_id', Auth::user()->customer_id);
+
+        if ( isset(Auth::user()->customer_id) && ( Auth::user()->customer_id != NULL ) )
+            return $query->where('customer_id', Auth::user()->customer_id)->where('status', '!=', 'draft');
+
+        return $query;
+    }
 
 }

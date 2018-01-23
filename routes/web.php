@@ -222,8 +222,13 @@ Route::group(['prefix' => 'abcc', 'namespace' => '\CustomerCenter'], function ()
 //        Route::post('/login', 'Auth\CustomerLoginController@login')->name('customer,login.submit');
 //        Route::get('/', ['uses' => 'CustomerHomeController@index', 'as' => 'customer.dashboard']);
     });
-    Route::get('invoice/{invoiceKey}', ['uses' => 'PublicCustomerInvoicesController@show', 'as' => 'customerCenter.public.invoice.show']);
-    Route::get('invoice/{invoiceKey}/pdf', ['uses' => 'PublicCustomerInvoicesController@pdf', 'as' => 'customerCenter.public.invoice.pdf']);
+
+    Route::get('/invoices', 'AbccCustomerInvoicesController@index')->name('abcc.invoices.index');
+
+    Route::get('invoice/{invoiceKey}', ['uses' => 'AbccCustomerInvoicesController@show', 'as' => 'abcc.invoice.show']);
+
+//    Route::get('invoice/{invoiceKey}/pdf', ['uses' => 'AbccCustomerInvoicesController@pdf', 'as' => 'customerCenter.public.invoice.pdf']);
+    Route::get('invoice/{invoiceKey}/pdf', ['uses' => 'AbccCustomerInvoicesController@pdf', 'as' => 'abcc.invoice.pdf']);
 
 /*
     Route::group(['middleware' => 'auth.customerCenter'], function ()

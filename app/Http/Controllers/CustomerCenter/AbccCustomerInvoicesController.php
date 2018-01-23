@@ -14,7 +14,7 @@ use App\Events\CustomerInvoiceViewed as CustomerInvoiceViewed;
 
 use App\Configuration as Configuration;
 
-class PublicCustomerInvoicesController extends Controller
+class AbccCustomerInvoicesController extends Controller
 {
     protected $customer, $customerInvoice, $customerInvoiceLine;
 
@@ -24,21 +24,30 @@ class PublicCustomerInvoicesController extends Controller
      * @return void
      */
     public function __construct(Customer $customer, CustomerInvoice $customerInvoice, CustomerInvoiceLine $customerInvoiceLine)
-   {
-        $this->customer = $customer;
-        $this->customerInvoice = $customerInvoice;
+    {
+        $this->middleware('auth:customer')->except('pdf');;
+
+        $this->customer            = $customer;
+        $this->customerInvoice     = $customerInvoice;
         $this->customerInvoiceLine = $customerInvoiceLine;
-   }
+    }
 
     public function index()
     {
-        // Redirect to Customer login
-        // return redirect()->route('login');
-        return 'Nothing to see here...';
+        $customer_invoices = CustomerInvoice::ofCustomer()      // Of Logged in Customer (see scope on Customer Model)
+//                            ->with('customer')
+                            ->with('currency')
+                            ->with('paymentmethod')
+                            ->orderBy('id', 'desc')->get();
+
+        return view('customer_center.invoices.index', compact('customer_invoices'));
     }
 
-    public function show($cinvoiceKey)
+    public function show($cinvoiceKey, Request $request)
     {
+        // Temporary
+        return $this->pdf($cinvoiceKey, $request);
+
         $invoice = $this->invoiceRepository->findByUrlKey($cinvoiceKey);
 
         app()->setLocale($invoice->client->language);

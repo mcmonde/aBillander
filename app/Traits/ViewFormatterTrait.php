@@ -46,6 +46,12 @@ trait ViewFormatterTrait
 
         $amount = floatval( $this->{$key} );
 
+        if ( !$currency ) {
+            if (array_key_exists('currency_id', $this->attributes)) {
+                $currency = $this->currency;
+            }
+        }
+
         return \App\Currency::viewMoney($amount, $currency);
     }
 
