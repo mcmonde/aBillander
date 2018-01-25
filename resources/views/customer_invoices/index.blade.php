@@ -30,6 +30,7 @@
             <th class="text-right"">{{ l('Total') }}</th>
             <th class="text-right">{{ l('Open Balance') }}</th>
             <th class="text-right">{{ l('Next Due Date') }}</th>
+            <th> </th>
         </tr>
     </thead>
     <tbody>

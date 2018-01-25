@@ -19,7 +19,7 @@
                 <!-- h2>{{ 'Invoice' }} {{-- $cinvoice->document_id > 0 ? '#' . $cinvoice->document_reference : 'BORRADOR' --}}</h2 -->
                 <span style="font-size: 24px; margin-bottom: 10px;"><b>Invoice #: </b>  
                                     @if( $cinvoice->document_id > 0 )
-                                        {{ $cinvoice->document_prefix }} {{ $cinvoice->document_id }}
+                                        {{ $cinvoice->document_reference }}
                                     @else
                                         <span class="small">BORRADOR</span>
                                     @endif

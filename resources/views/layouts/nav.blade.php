@@ -221,7 +221,7 @@
 @if (config('app.url') =='http://localhost/aBillander55') {{-- or Config::get('app.myVarname'); see https://laracasts.com/discuss/channels/general-discussion/ho-to-access-config-variables-in-laravel-5 --}}
                         <li class="divider"></li>
                          <li>
-                            <a href="http://bootswatch.com/united/" target="_blank">
+                            <a href="http://bootswatch.com/3/united/" target="_blank">
                                  Plantilla BS3
                             </a>
                         </li>

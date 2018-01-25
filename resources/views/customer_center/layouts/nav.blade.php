@@ -29,7 +29,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-file-text"></i> {{l('Invoicing', [], 'layouts')}} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                          <li>
-                            <a href="{{ URL::to('wooc/worders') }}">
+                            <a href="{{ route('customer.dashboard') }}">
                                  {{l('Sale Orders', [], 'layouts')}} [WooC]
                             </a>
                         <li class="divider"></li>
@@ -40,7 +40,7 @@
                             </a>
                         </li>
                          <li>
-                            <a href="{{ URL::to('customervouchers') }}">
+                            <a href="{{ route('abcc.vouchers.index') }}">
                                  {{l('Customer Vouchers', [], 'layouts')}}
                             </a>
                         </li>
@@ -79,7 +79,7 @@
 @if (config('app.url') =='http://localhost/aBillander55') {{-- or Config::get('app.myVarname'); see https://laracasts.com/discuss/channels/general-discussion/ho-to-access-config-variables-in-laravel-5 --}}
                         <li class="divider"></li>
                          <li>
-                            <a href="http://bootswatch.com/united/" target="_blank">
+                            <a href="http://bootswatch.com/3/united/" target="_blank">
                                  Plantilla BS3
                             </a>
                         </li>

@@ -25,6 +25,7 @@ return [
 	'This record has been successfully deleted &#58&#58 (:id) '  =>  'El registro se ha eliminado correctamente &#58&#58 (:id) ',
 	'Unable to update this record &#58&#58 (:id) '               =>  'No se ha podido actualizar el registro solicitado &#58&#58 (:id) ',
 	'Unable to delete this record &#58&#58 (:id) '               =>  'No se ha podido borrar el registro solicitado &#58&#58 (:id) ',
+	'The record with id=:id does not exist'                      =>  'El registro con id=:id no existe',
 	'This record has been successfully published &#58&#58 (:id) :name as id=:web_id'     => 'El registro se ha publicado correctamente &#58&#58 (:id) :name como id=:web_id',
 
 	'This configuration has been successfully updated'  =>  'La configuración se ha actualizado correctamente',

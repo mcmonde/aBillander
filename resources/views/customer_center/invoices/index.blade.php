@@ -26,6 +26,7 @@
             <th class="text-right"">{{ l('Total') }}</th>
             <th class="text-right">{{ l('Open Balance') }}</th>
             <th class="text-right">{{ l('Next Due Date') }}</th>
+            <th> </th>
         </tr>
     </thead>
     <tbody>
@@ -43,7 +44,7 @@
             	</a>
             </td -->
             <td>{{ $invoice->paymentmethod->name }}
-            	<a class="btn btn-xs btn-success" href="{{ URL::to('customerinvoices/' . $invoice->id) }}" title="{{ l('Show Payments') }}"><i class="fa fa-eye"></i></a>
+            	<!-- a class="btn btn-xs btn-success" href="{{ URL::to('customerinvoices/' . $invoice->id) }}" title="{{ l('Show Payments') }}"><i class="fa fa-eye"></i></a -->
         	</td>
             <td>@if ( $invoice->editable) <span class="label label-default" title="{{ l('Draft') }}">{{ l('D') }}</span> @endif</td>
             <td>@if (!$invoice->einvoice_sent) <span class="label label-primary" title="{{ l('Pending: Send by eMail') }}">{{ l('eM') }}</span> @endif

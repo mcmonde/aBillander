@@ -25,7 +25,7 @@ class AbccCustomerInvoicesController extends Controller
      */
     public function __construct(Customer $customer, CustomerInvoice $customerInvoice, CustomerInvoiceLine $customerInvoiceLine)
     {
-        $this->middleware('auth:customer')->except('pdf');;
+        $this->middleware('auth:customer')->except('pdf');
 
         $this->customer            = $customer;
         $this->customerInvoice     = $customerInvoice;
@@ -43,9 +43,9 @@ class AbccCustomerInvoicesController extends Controller
         return view('customer_center.invoices.index', compact('customer_invoices'));
     }
 
-    public function show($cinvoiceKey, Request $request)
+    public function show($cinvoiceKey)
     {
-        // Temporary
+/*        // Temporary
         return $this->pdf($cinvoiceKey, $request);
 
         $invoice = $this->invoiceRepository->findByUrlKey($cinvoiceKey);
@@ -60,6 +60,20 @@ class AbccCustomerInvoicesController extends Controller
             ->with('urlKey', $cinvoiceKey)
             ->with('merchants', MerchantProperties::setProperties(config('fi.merchant')))
             ->with('attachments', $invoice->clientAttachments);
+*/
+
+        $cinvoice = $this->customerInvoice
+                            ->where('secure_key', $cinvoiceKey)
+                            ->with('customer')
+                            ->with('invoicingAddress')
+                            ->with('customerInvoiceLines')
+                            ->with('currency')
+                            ->firstOrFail();
+
+        // $company = \App\Context::getContext()->company;
+        $company = \App\Company::with('currency')->findOrFail( intval(Configuration::get('DEF_COMPANY')) );
+
+        return view('customer_center.invoices.show', compact('cinvoice', 'company'));
     }
 
     public function pdf($cinvoiceKey, Request $request)

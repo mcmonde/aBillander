@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('customer_center.layouts.master')
 
 @section('title') {{ l('Customer Invoices - Show') }} @parent @stop
 
@@ -154,9 +154,12 @@ table.border td {
 		<div id="invoice">
 			<div class="col-md-6">
 				<h1 class="uppercase">
-				@if ($img = \App\Context::getContext()->company->company_logo)
-					<img src="{{ URL::to( \App\Company::$company_path . $img ) }}" class="img-responsive thumbnail">
-				@endif
+				<!-- 
+				@ if ($img = \App\Context::getContext()->company->company_logo)
+					<img src="{ { URL::to( \App\Company::$company_path . $img ) } }" class="img-responsive thumbnail">
+				@ endif 
+				-->
+				<img src="http://localhost/aBillander55/public/uploads/company/1510135936.png" class="img-responsive thumbnail">
 				</h1>
 			</div>
 			
@@ -347,18 +350,13 @@ table.border td {
 	<div class="row">
 		<div class="col-md-12">
 			
-	        <a href="{{{ URL::to('customerinvoices') }}}" class="btn btn-sm btn-default pull-right"><i class="fa fa-mail-reply"></i> {{l('Back to Customer Invoices')}}</a>
-            
-            <a href="{{ URL::to('customerinvoices/' . $cinvoice->id . '/edit') }}" class="btn btn-sm btn-warning pull-right" style="margin-right:5px;"><i class="fa fa-pencil"></i>
-            {{l('Edit', [], 'layouts')}}</a> 
+	        <a href="{{ route('abcc.invoices.index') }}" class="btn btn-sm btn-default pull-right"><i class="fa fa-mail-reply"></i> {{l('Back to Customer Invoices')}}</a>
 
-	        <a class="btn btn-primary" href="{{ URL::to('customerinvoices/' . $cinvoice->id) . '/pdf' }}" target="_blank"><i class="fa fa-file-pdf-o"></i> {{l('PDF Export', [], 'layouts')}}</a>
+	        <a class="btn btn-primary" href="{{ route('abcc.invoice.pdf',  ['invoiceKey' => $cinvoice->secure_key]) }}" title="{{l('Download', [], 'layouts')}}" target="_blank"><i class="fa fa-file-pdf-o"></i> {{l('PDF Export', [], 'layouts')}}</a>
 
-			<button class="btn btn-info" data-toggle="modal" data-target="#sendEmailCustomerInvoice">
+			<!-- button class="btn btn-info" data-toggle="modal" data-target="#sendEmailCustomerInvoice">
 				<i class="fa fa-envelope"></i> {{l('Send', [], 'layouts')}}
-			</button>
-
-			<a class="btn btn-success" href="{{ URL::to('customers/' . $cinvoice->customer_id) }}" target="_blank"><i class="fa fa-user"></i> {{l('Show Customer')}}</a>		
+			</button -->
 			
 		</div>
 	</div>	
@@ -463,11 +461,13 @@ table.border td {
             	{{l( $payment->status, [], 'appmultilang' )}}</span></td>
 
 			<td class="text-right">
+                <!--
                 @if ( $payment->status == 'paid' )
                 	<a class="btn btn-sm btn-danger" href="{{ URL::to('customervouchers/' . $payment->id  . '/edit?back_route=' . urlencode('customerinvoices/' . $cinvoice->id . '#payments') ) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
             	@else
                 	<a class="btn btn-sm btn-warning" href="{{ URL::to('customervouchers/' . $payment->id  . '/edit?back_route=' . urlencode('customerinvoices/' . $cinvoice->id . '#payments') ) }}" title="{{l('Edit', [], 'layouts')}}"><i class="fa fa-pencil"></i></a>
             	@endif
+            	-->
 			</td>
 		</tr>
 	@endforeach

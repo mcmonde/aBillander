@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php 
+
+namespace App\Http\Controllers;
 
 // See: https://mattstauffer.co/blog/introducing-mailables-in-laravel-5-3/
 

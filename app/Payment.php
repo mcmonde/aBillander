@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Auth;
+
 use App\Traits\ViewFormatterTrait;
 
 class Payment extends Model {
@@ -137,6 +139,29 @@ class Payment extends Model {
     public function currency()
     {
         return $this->belongsTo('App\Currency');
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Data Factory :: Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfCustomer($query)
+    {
+//        abi_r(Auth::user()->customer_id, true);
+
+        if ( isset(Auth::user()->customer_id) && ( Auth::user()->customer_id != NULL ) )
+            return $query->where('paymentorable_id', Auth::user()->customer_id)->where('paymentorable_type', 'App\Customer');
+
+        return $query;
     }
 
 }

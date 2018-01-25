@@ -86,7 +86,7 @@ class CustomerInvoice extends Model {
     {
             $list = [];
             foreach (self::$statuses as $status) {
-                $list[$status] = l($status, [], 'appmultilang');;
+                $list[$status] = l($status, [], 'appmultilang');
             }
 
             return $list;
@@ -95,6 +95,13 @@ class CustomerInvoice extends Model {
     public function getEditableAttribute()
     {
         return $this->status == 'draft';
+    }
+
+    public function getNumberAttribute()
+    {
+        return    $this->document_id > 0
+                ? $this->document_reference
+                : l('draft', [], 'appmultilang') ;
     }
 
 
@@ -218,12 +225,17 @@ class CustomerInvoice extends Model {
      */
     public function scopeOfCustomer($query)
     {
-        return $query->where('customer_id', Auth::user()->customer_id);
+//        return $query->where('customer_id', Auth::user()->customer_id);
 
         if ( isset(Auth::user()->customer_id) && ( Auth::user()->customer_id != NULL ) )
             return $query->where('customer_id', Auth::user()->customer_id)->where('status', '!=', 'draft');
 
         return $query;
+    }
+
+    public function scopeFindByToken($query, $token)
+    {
+        return $query->where('secure_key', $token);
     }
 
 }

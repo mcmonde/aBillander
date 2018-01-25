@@ -230,6 +230,8 @@ Route::group(['prefix' => 'abcc', 'namespace' => '\CustomerCenter'], function ()
 //    Route::get('invoice/{invoiceKey}/pdf', ['uses' => 'AbccCustomerInvoicesController@pdf', 'as' => 'customerCenter.public.invoice.pdf']);
     Route::get('invoice/{invoiceKey}/pdf', ['uses' => 'AbccCustomerInvoicesController@pdf', 'as' => 'abcc.invoice.pdf']);
 
+    Route::get('/vouchers', 'AbccCustomerVouchersController@index')->name('abcc.vouchers.index');
+
 /*
     Route::group(['middleware' => 'auth.customerCenter'], function ()
     {

@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Customer as Customer;
 use App\CustomerInvoice as CustomerInvoice;
@@ -633,10 +634,10 @@ class CustomerInvoicesController extends Controller {
 							->with('template')
 							->findOrFail($id);
 
-        } catch(\Exception $e) {
+        } catch(ModelNotFoundException $e) {
 
-            return Redirect::route('customers.index')
-                     ->with('error', 'Customer Invoice id=:id does not exist.');
+            return redirect('customerinvoices')
+                     ->with('error', l('The record with id=:id does not exist', ['id' => $id], 'layouts'));
             // return Redirect::to('invoice')->with('message', trans('invoice.access_denied'));
         }
 
@@ -655,7 +656,7 @@ class CustomerInvoicesController extends Controller {
 
 		// PDF stuff ENDS
 
-		$pdfName	= 'invoice_' . $cinvoice->secure_key . '_' . $cinvoice->document_date;
+		$pdfName	= 'invoice_' . $cinvoice->secure_key . '_' . $cinvoice->document_date->format('Y-m-d');
 
 		if ($request->has('screen')) return view($template, compact('cinvoice', 'company'));
 		
@@ -673,63 +674,79 @@ class CustomerInvoicesController extends Controller {
 							  with('customer')
 							->with('invoicingAddress')
 							->with('customerInvoiceLines')
+							->with('customerInvoiceLines.CustomerInvoiceLineTaxes')
 							->with('currency')
+							->with('paymentmethod')
 							->with('template')
 							->findOrFail($id);
 
         } catch(ModelNotFoundException $e) {
 
-            return Redirect::route('customers.index')
+            return redirect('customers.index')
                      ->with('error', 'La Factura de Cliente id='.$id.' no existe.');
             // return Redirect::to('invoice')->with('message', trans('invoice.access_denied'));
         }
 
-		$company = \App\Company::find( intval(Configuration::get('DEF_COMPANY')) );
+		// $company = \App\Company::find( intval(Configuration::get('DEF_COMPANY')) );
+		$company = \App\Context::getContext()->company;
 
 		$template = 'customer_invoices.templates.' . $cinvoice->template->file_name;
 		$paper = $cinvoice->template->paper;	// A4, letter
 		$orientation = $cinvoice->template->orientation;	// 'portrait' or 'landscape'.
 		
 		$pdf 		= \PDF::loadView( $template, compact('cinvoice', 'company') )
-							->setPaper( $paper )
-							->setOrientation( $orientation );
+//							->setPaper( $paper )
+//							->setOrientation( $orientation );
+							->setPaper( $paper, $orientation );
 		// PDF stuff ENDS
 
-		$pathToFile 	= storage_path() . '/pdf/' . 'invoice_' . $cinvoice->secure_key . '_' . $cinvoice->document_date .'.pdf';
-		$pdf->save($pathToFile);
+		// MAIL stuff
+		try {
 
-		$template_vars = array(
-			'invoice_num'   => $cinvoice->document_id > 0
-									? $cinvoice->document_prefix . ' ' . $cinvoice->document_id
-									: 'BORRADOR' ,
-			'invoice_date'  => $cinvoice->document_date,
-			'invoice_total' => $cinvoice->total_tax_incl, $cinvoice->currency,
-			'custom_body'   => $request->input('email_body'),
-			);
+			$pdfName	= 'invoice_' . $cinvoice->secure_key . '_' . $cinvoice->document_date->format('Y-m-d');
 
-		$data = array(
-			'from'     => $company->address->email,
-			'fromName' => $company->name_fiscal,
-			'to'       => $cinvoice->customer->address->email,
-			'toName'   => $cinvoice->customer->name_fiscal,
-			'subject'  => $request->input('email_subject'),
-			);
+			$pathToFile 	= storage_path() . '/pdf/' . $pdfName .'.pdf';
+			$pdf->save($pathToFile);
 
-		// http://belardesign.com/2013/09/11/how-to-smtp-for-mailing-in-laravel/
-		\Mail::send('emails.customerinvoice.default', $template_vars, function($message) use ($data, $pathToFile)
-		{
-			$message->from($data['from'], $data['fromName']);
+			$template_vars = array(
+				'company'       => $company,
+				'invoice_num'   => $cinvoice->number,
+				'invoice_date'  => abi_date_short($cinvoice->document_date),
+				'invoice_total' => $cinvoice->as_money('total_tax_incl'),
+				'custom_body'   => $request->input('email_body'),
+				);
 
-			$message->to( $data['to'], $data['toName'] )->bcc( $data['from'] )->subject( $data['subject'] );	// Will send blind copy to sender!
+			$data = array(
+				'from'     => $company->address->email,
+				'fromName' => $company->name_fiscal,
+				'to'       => $cinvoice->customer->address->email,
+				'toName'   => $cinvoice->customer->name_fiscal,
+				'subject'  => $request->input('email_subject'),
+				);
+
 			
-			$message->attach($pathToFile);
 
-		});	
-		
-		unlink($pathToFile);
+			// http://belardesign.com/2013/09/11/how-to-smtp-for-mailing-in-laravel/
+			\Mail::send('emails.customerinvoice.default', $template_vars, function($message) use ($data, $pathToFile)
+			{
+				$message->from($data['from'], $data['fromName']);
+
+				$message->to( $data['to'], $data['toName'] )->bcc( $data['from'] )->subject( $data['subject'] );	// Will send blind copy to sender!
+				
+				$message->attach($pathToFile);
+
+			});	
+			
+			unlink($pathToFile);
+
+        } catch(\Exception $e) {
+
+            return redirect()->back()->with('error', 'La Factura '.$cinvoice->number.' no se pudo enviar al Cliente');
+        }
+		// MAIL stuff ENDS
 		
 
-		return redirect()->back()->with('success', 'La Factura '.$cinvoice->document_prefix . ' ' . $cinvoice->document_id.' se envió correctamente al Cliente');
+		return redirect()->back()->with('success', 'La Factura '.$cinvoice->number.' se envió correctamente al Cliente');
 	}
 
 
